@@ -41,16 +41,18 @@ def rr_escape_rate(T_wind, mu_wind, M_p, F_xuv, nu_0, alpha_rec_B, mu_plus_wind,
     ### finds R_base based on input ###
     #placeholder
 
-    ### calculates rho_s based on input ### 
-    # reference formula: rho_s = rho_base * exp((-G * M_p) / (R_base * c_s**2) * (R_base/R_s - 1 )) 
 
+    ### calculates rho_s based on input ### 
     h = sp.constants.h
     # reference formula: ovesen math calc derivation. Needed to place n_0_base straight into n_plus_base to cancel sigma_nu0
     n_plus_base = np.sqrt( F_xuv * G * M_p / (h * nu_0 * alpha_rec_B * c_s**2 * R_base**2) )
 
     rho_base = n_plus_base * mu_plus_wind * m_p #density at the base of the escaping atmosphere, where n_plus_base: number density of the escaping atmosphere at the base, mu_wind: mean molecular weight, m_p: proton mass
+    
+    #REFERENCE Lopez 2017 eq. 5
     rho_s = rho_base * np.exp((-G * M_p) / (R_base * c_s**2) * (R_base/R_s - 1 )) #rho_s is the density at the sonic point, rho_base: density at the base of the escaping atmosphere, R_base: radius of the base of the escaping atmosphere
 
+    
     M_rr_rate = -4 * np.pi* rho_s * c_s * R_s**2
 
     return M_rr_rate 
