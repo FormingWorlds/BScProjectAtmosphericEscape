@@ -1,7 +1,7 @@
 '''
 Malina Ovesen
 
-Radition-recombination-limited escape mechanism.
+Radiation-recombination-limited escape mechanism.
 '''
 
 import numpy as np
