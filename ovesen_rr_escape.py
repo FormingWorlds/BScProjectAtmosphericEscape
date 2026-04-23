@@ -34,13 +34,10 @@ def rr_escape_rate(T_wind, mu_wind, M_p, F_xuv, sigma_nu0, nu_0, alpha_rec_B, mu
 
     ### calculates rho_s based on input ### 
     # reference formula: rho_s = rho_base * exp((-G * M_p) / (R_base * c_s**2) * (R_base/R_s - 1 )) 
-    g_base = G * M_p / R_base**2 #gravitational acceleration at the base of the escaping atmosphere, where G: gravitational constant, M_p: planetary mass, R_base: radius of the base of the escaping atmosphere
-    H_base = c_s**2 / g_base #scale height at the base of the escaping atmosphere, where c_s: sound speed, g_base: gravitational acceleration at the base of the escaping atmosphere
-
-    n_0_base = 1 / (sigma_nu0 * H_base) #number density at the base of the escaping atmosphere, where sigma_nu0: photoionization cross section at the ionization threshold (?), H_base: scale height at the base of the escaping atmosphere
 
     h = sp.constants.h
-    n_plus_base = np.sqrt( F_xuv * sigma_nu0 * n_0_base / (h * nu_0 * alpha_rec_B) )
+    # reference formula: ovesen math calc derivation. Needed to place n_0_base straight into n_plus_base to cancel sigma_nu0
+    n_plus_base = np.sqrt( F_xuv * G * M_p / (h * nu_0 * alpha_rec_B * c_s**2 * R_base**2) )
 
     rho_base = n_plus_base * mu_plus_wind * m_p #density at the base of the escaping atmosphere, where n_plus_base: number density of the escaping atmosphere at the base, mu_wind: mean molecular weight, m_p: proton mass
     rho_s = rho_base * np.exp((-G * M_p) / (R_base * c_s**2) * (R_base/R_s - 1 )) #rho_s is the density at the sonic point, rho_base: density at the base of the escaping atmosphere, R_base: radius of the base of the escaping atmosphere
