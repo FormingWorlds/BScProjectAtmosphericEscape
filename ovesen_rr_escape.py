@@ -8,7 +8,7 @@ import numpy as np
 import scipy as sp
 
 #In the input box I put the so-far necessary inputs from atmosphere profile for this func to work
-def rr_escape_rate(T_wind, mu_wind, M_p):
+def rr_escape_rate(T_wind, mu_wind, M_p, n_plus_base * mu_plus_wind):
     '''
     Calculates the radiation-recombination-limited escape rate.
 
@@ -16,17 +16,27 @@ def rr_escape_rate(T_wind, mu_wind, M_p):
 
     All calculations done in SI units.
     '''
-
+    #What we want to calculate and return
     #M_rr_rate = -4 * pi* rho_s * c_s * R_s**2   REFERENCE: Lopez 2017 eq. 4
+
 
     ### calculates c_s based on input ###
     k_b = sp.constants.k 
     m_p = sp.constants.m_p
     c_s = np.sqrt((k_b * T_wind) / (mu_wind * m_p)) #sound speed, where k_B: Boltzmann constant, T: temperature, mu: mean molecular weight, m_p: proton mass
     
+
     ### calculates rho_s based on input ###
     G = sp.constants.G
     R_s = G * M_p / (2 * c_s**2) #radius to the sonic point, where G: gravitational constant, M_p: planetary mass, c_s: sound speed
+    #!!!need to remember to check if R_s > R_base, where R_base is the radius of the base of the escaping atmosphere, otherwise the escape rate is not radiation-recombination-limited (?). I can set R_s = R_base if smaller
     
+
+    ### calculates rho_s based on input ### 
+    # reference formula: rho_s = rho_base * exp((-G * M_p) / (R_base * c_s**2) * (R_base/R_s - 1 )) 
+
+    rho_base = n_plus_base * mu_plus_wind * m_p #density at the base of the escaping atmosphere, where n_plus_base: number density of the escaping atmosphere at the base, mu_wind: mean molecular weight, m_p: proton mass
+    rho_s = rho_base * exp((-G * M_p) / (R_base * c_s**2) * (R_base/R_s - 1 )) #rho_s is the density at the sonic point, rho_base: density at the base of the escaping atmosphere, R_base: radius of the base of the escaping atmosphere
+
     return None # Placeholder for the actual implementation
 
