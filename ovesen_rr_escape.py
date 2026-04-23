@@ -14,7 +14,7 @@ def find_R_base():
 
 
 #In the input box I put the so-far necessary inputs from atmosphere profile for this func to work
-def rr_escape_rate(T_wind, mu_wind, M_p, F_xuv, nu_0, alpha_rec_B, mu_plus_wind, R_base):
+def rr_escape_rate(T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, R_base):
     '''
     Calculates the radiation-recombination-limited escape rate.
 
@@ -24,7 +24,8 @@ def rr_escape_rate(T_wind, mu_wind, M_p, F_xuv, nu_0, alpha_rec_B, mu_plus_wind,
     '''
     #What we want to calculate and return
     #M_rr_rate = -4 * pi* rho_s * c_s * R_s**2   REFERENCE: Lopez 2017 eq. 4
-
+    
+    alpha_rec_B = 2.7 * 10**(-13) * (T_wind / 10**4)**0.9 #recombination coefficient for case B recombination, where T_wind: temperature of the escaping atmosphere
 
     ### calculates c_s based on input ###
     k_b = sp.constants.k 
