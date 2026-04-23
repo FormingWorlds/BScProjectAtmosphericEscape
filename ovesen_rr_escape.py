@@ -7,6 +7,7 @@ Radiation-recombination-limited escape mechanism.
 import numpy as np
 import scipy as sp
 from ovesen_conversions import *
+from ovesen_atmospheres.simple_H2 import T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, R_base
 
 def find_R_base():
     #placeholder for finding R_base based on input parameters
@@ -60,3 +61,4 @@ def rr_escape_rate(T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, R_base):
 
     return M_rr_rate 
 
+print(rr_escape_rate(T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, R_base))
