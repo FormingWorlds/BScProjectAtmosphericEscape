@@ -7,13 +7,31 @@ Radiation-recombination-limited escape mechanism.
 import numpy as np
 import scipy as sp
 from ovesen_conversions import *
-from ovesen_atmospheres.simple_H2 import T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, R_base
+from ovesen_atmospheres.simple_H2 import T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, radii, pressures
 
-def find_R_base():
-    #placeholder for finding R_base based on input parameters
-    R_base = None
+P_base = 10**(-4) #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
+
+def find_R_base(P_base, radii, pressures):
+    '''
+    Finds the radius of the base of the escaping atmosphere.
+
+    Takes input parameters: x [unit], y [unit], z [unit], ...
+
+    All calculations done in SI units.
+    '''
+    #finds the absolute difference between the pressure profile and the target pressure at the base of the escaping atmosphere
+    difference_array = np.absolute(pressures - P_base) #[Pa] array of the absolute difference between the pressure profile and the pressure at the base of the escaping atmosphere, where pressures: pressure profile of the atmosphere based on the barometric formula, P_base: pressure at the base of the escaping atmosphere
+
+    #finds the index of minimum element from the array
+    index = difference_array.argmin()
+    R_base = radii[index] #[m] radius of the base of the escaping atmosphere, where radii: array of radii from the planetary radius to 10 times the planetary radius, index: index of minimum element from the array of the absolute difference between the pressure profile and the pressure at the base of the escaping atmosphere
+    print(pressures[index])
     return R_base
 
+
+
+R_base = find_R_base(P_base, radii, pressures)
+print(R_base)
 
 #In the input box I put the so-far necessary inputs from atmosphere profile for this func to work
 def rr_escape_rate(T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, R_base):
