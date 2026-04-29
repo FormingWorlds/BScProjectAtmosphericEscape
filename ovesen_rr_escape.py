@@ -57,8 +57,14 @@ def rr_escape_rate(T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, R_base):
     ### calculates rho_s based on input ###
     G = sp.constants.G #[m^3 kg^-1 s^-2] 
     R_s = G * M_p / (2 * c_s**2) #[m] radius to the sonic point, where G: gravitational constant, M_p: planetary mass, c_s: sound speed
-    #!!!need to remember to check if R_s > R_base, where R_base is the radius of the base of the escaping atmosphere, otherwise the escape rate is not radiation-recombination-limited (?). I can set R_s = R_base if smaller
     
+    # checks if R_s is smaller than R_base, if so, sets R_s = R_base and prints a message, otherwise keeps R_s = G * M_p / (2 * c_s**2) and prints a message
+    If R_s < R_base:
+        print("R_s is smaller than R_base, escape is not radiation-recombination-limited. Setting R_s = R_base.")
+        R_s = R_base
+    else: 
+        print("R_s is larger than R_base, escape is radiation-recombination-limited. Keeping R_s = G * M_p / (2 * c_s**2).")
+        
 
     ### finds R_base based on input ###
     #placeholder
