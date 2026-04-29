@@ -15,7 +15,7 @@ mu_plus_wind = 1.0                          #[dimless]   mean molecular weight o
 #testcase values for the other necessary input parameters for the rr_escape_rate function using jupiter mass and radius, and a typical XUV flux for a close-in exoplanet
 M_p          = 1.898 * 10**27               #[kg]        planetary mass
 #R_base     = 7.1492 * 10**7                #[m]         radius of the base of the escaping atmosphere
-F_xuv        = 1.0 * 10**9                  #[W m^-2]    XUV flux
+F_xuv        = 1.0 * 10**9                  #[kg s^-3]    XUV flux
 nu_0         = 3.288467085473 * 10**15      #[Hz]        frequency of Lyman-alpha radiation, which is the ionising radiation for HI
 R_p          = 7.0 * 10**7                  #[m]         planetary radius
 P_0          = 2000                         #[Pa]        pressure at the optical photosphere
