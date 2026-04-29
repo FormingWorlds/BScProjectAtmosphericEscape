@@ -25,7 +25,7 @@ def find_R_base(P_base, radii, pressures):
     #finds the index of minimum element from the array
     index = difference_array.argmin()
     R_base = radii[index] #[m] radius of the base of the escaping atmosphere, where radii: array of radii from the planetary radius to 10 times the planetary radius, index: index of minimum element from the array of the absolute difference between the pressure profile and the pressure at the base of the escaping atmosphere
-    print(pressures[index])
+  
     return R_base
 
 
@@ -72,7 +72,7 @@ def rr_escape_rate(T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, R_base):
     rho_base = n_plus_base * mu_plus_wind * m_p #[kg m^-3] density at the base of the escaping atmosphere, where n_plus_base: number density of the escaping atmosphere at the base, mu_wind: mean molecular weight, m_p: proton mass
     
     #REFERENCE Lopez 2017 eq. 5
-    rho_s = rho_base * np.exp((-G * M_p) / (R_base * c_s**2) * (R_base/R_s - 1 )) #[kg m^-3] rho_s is the density at the sonic point, rho_base: density at the base of the escaping atmosphere, R_base: radius of the base of the escaping atmosphere
+    rho_s = rho_base * np.exp((G * M_p) / (R_base * c_s**2) * (R_base/R_s - 1 )) #[kg m^-3] rho_s is the density at the sonic point, rho_base: density at the base of the escaping atmosphere, R_base: radius of the base of the escaping atmosphere
 
     
     M_rr_rate = -4 * np.pi* rho_s * c_s * R_s**2 #[kg s^-1] radiation-recombination-limited escape rate, where rho_s: density at the sonic point, c_s: sound speed, R_s: radius to the sonic point
