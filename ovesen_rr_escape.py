@@ -59,7 +59,7 @@ def rr_escape_rate(T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, R_base):
     R_s = G * M_p / (2 * c_s**2) #[m] radius to the sonic point, where G: gravitational constant, M_p: planetary mass, c_s: sound speed
     
     # checks if R_s is smaller than R_base, if so, sets R_s = R_base and prints a message, otherwise keeps R_s = G * M_p / (2 * c_s**2) and prints a message
-    If R_s < R_base:
+    if R_s < R_base:
         print("R_s is smaller than R_base, escape is not radiation-recombination-limited. Setting R_s = R_base.")
         R_s = R_base
     else: 
