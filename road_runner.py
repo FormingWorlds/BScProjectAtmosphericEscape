@@ -1,27 +1,15 @@
 from rr_escape import *
-from atmospheres.atmosphere_setting import Atmosphere
-import atmospheres.simple_H2 as simple_H2
-import atmospheres.simple_H2He_mix as simple_H2He_mix
 
 ### Importing the atmospheres we want to examine ###
-atm_H2 = Atmosphere(
-    T_wind=simple_H2.T_wind, 
-    mu_wind=simple_H2.mu_wind, 
-    M_p=simple_H2.M_p, 
-    F_xuv=simple_H2.F_xuv, 
-    nu_0=simple_H2.nu_0, 
-    mu_plus_wind=simple_H2.mu_plus_wind, 
-    R_p=simple_H2.R_p, 
-    pressures=simple_H2.pressures, 
-    temperatures=simple_H2.T_eq, #using the constant T_eq as a starting array
-    heights=simple_H2.radii - simple_H2.R_p
-)
+
+from proteus_fetch import atm_H2_case1
+from atmospheres.simple_H2 import atm_H2
 
 
 ### Calculating the escape parameters ###
 
 #I want to examine this atmosphere:
-atm = atm_H2
+atm = atm_H2_case1
 P_base = 10**(-4) #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
 
 

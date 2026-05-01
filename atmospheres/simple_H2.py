@@ -1,6 +1,7 @@
 import scipy as sp
 import numpy as np
 from conversions import *
+from atmospheres.atmosphere_setting import Atmosphere
 
 G = sp.constants.G #[m^3 kg^-1 s^-2]
 m_p = sp.constants.m_p #[kg]
@@ -27,3 +28,15 @@ radii = np.linspace(R_p, 5*R_p, 1000) #[m] array of radii from the planetary rad
 
 pressures = P_0 * np.exp(G * M_p * mu_photo * m_p / (k_b * T_eq) * (1/radii - 1/R_p) ) #[Pa] pressure profile of the atmosphere based on the barometric formula, where P_0: pressure at the optical photosphere, G: gravitational constant, M_p: planetary mass, mu_photo: mean molecular weight at the optical photosphere, m_p: proton mass, k_b: Boltzmann constant, T_eq: equilibrium temperature of the planet, radii: array of radii from the planetary radius to 10 times the planetary radius
 
+atm_H2 = Atmosphere(
+    T_wind=T_wind, 
+    mu_wind=mu_wind, 
+    M_p=M_p, 
+    F_xuv=F_xuv, 
+    nu_0=nu_0, 
+    mu_plus_wind=mu_plus_wind, 
+    R_p=R_p, 
+    pressures=pressures, 
+    temperatures=T_eq, #using the constant T_eq as a starting array
+    heights=radii - R_p
+)
