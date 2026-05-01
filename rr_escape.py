@@ -52,7 +52,7 @@ def calc_sonic_point_radius(M_p, c_s, R_base):
     ### calculates R_s based on input ###
     G = sp.constants.G #[m^3 kg^-1 s^-2] 
     R_s = G * M_p / (2 * c_s**2) #[m] radius to the sonic point, where G: gravitational constant, M_p: planetary mass, c_s: sound speed
-    
+    print("Calculated R_s:", R_s, "m")
     # checks if R_s is smaller than R_base, if so, sets R_s = R_base and prints a message, otherwise keeps R_s = G * M_p / (2 * c_s**2) and prints a message
     if R_s < R_base:
         print("R_s is smaller than R_base, escape is not radiation-recombination-limited. Setting R_s = R_base.")
