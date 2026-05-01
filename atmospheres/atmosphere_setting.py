@@ -3,14 +3,14 @@ This is useful for testing the function with different atmospheric compositions,
 
 
 class Atmosphere:
-    def __init__(self, T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, radii, pressures, temperatures, heights):
+    def __init__(self, T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, R_p, pressures, temperatures, heights, vmrs=None):
 
         #from planet bulk proerties
         self.M_p = M_p
         self.R_p = R_p
         self.F_xuv = F_xuv
 
-        #composition dependent properties
+        #composition dependent properties, might need to add some function which calculates these based on what is found in the vmrs
         self.T_wind = T_wind
         self.nu_0 = nu_0
         self.mu_wind = mu_wind 
@@ -18,5 +18,7 @@ class Atmosphere:
 
         #imported atmospheric profiles of different properties as a function of radius
         self.T = temperatures
-        self.radii = M_p + heights
+        self.radii = R_p + heights
         self.pressures = pressures
+        self.vmrs = vmrs if vmrs is not None else {}
+        
