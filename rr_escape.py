@@ -52,7 +52,6 @@ def calc_sonic_point_radius(M_p, c_s, R_base):
     ### calculates R_s based on input ###
     G = sp.constants.G #[m^3 kg^-1 s^-2] 
     R_s = G * M_p / (2 * c_s**2) #[m] radius to the sonic point, where G: gravitational constant, M_p: planetary mass, c_s: sound speed
-    print("Calculated R_s:", R_s, "m")
     # checks if R_s is smaller than R_base, if so, sets R_s = R_base and prints a message, otherwise keeps R_s = G * M_p / (2 * c_s**2) and prints a message
     if R_s < R_base:
         print("R_s is smaller than R_base, escape is not radiation-recombination-limited. Setting R_s = R_base.")
@@ -102,3 +101,24 @@ def rr_escape_rate(rho_s, c_s, R_s):
 
     return M_rr_rate 
 
+def get_rr_escape_diagnostics(atm, P_base):
+    '''
+    Calculates the radiation-recombination-limited escape rate and all the necessary parameters for the calculation.
+
+    Takes input parameters: x [unit], y [unit], z [unit], ...
+
+    All calculations done in SI units.
+    '''
+    R_base = find_R_base(P_base, atm.radii, atm.pressures)
+    c_s = calc_sound_speed(atm.T_wind, atm.mu_wind)
+    R_s = calc_sonic_point_radius(atm.M_p, c_s, R_base)
+    rho_s = calc_density_at_sonic_point(atm.M_p, atm.F_xuv, atm.nu_0, atm.T_wind, R_s, c_s, R_base, atm.mu_plus_wind)
+    escape_rate = rr_escape_rate(rho_s, c_s, R_s)
+
+    return {
+        "R_base [m]": R_base,
+        "c_s [m/s]": c_s,
+        "R_s [m]": R_s,
+        "rho_s [kg/m^3]": rho_s,
+        "escape_rate [kg/s]": escape_rate
+    }
