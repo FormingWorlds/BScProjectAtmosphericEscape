@@ -7,9 +7,6 @@ Radiation-recombination-limited escape mechanism.
 import numpy as np
 import scipy as sp
 from conversions import *
-from atmospheres.simple_H2He_mix import T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, radii, pressures
-
-P_base = 10**(-4) #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
 
 def find_R_base(P_base, radii, pressures):
     '''
@@ -27,11 +24,6 @@ def find_R_base(P_base, radii, pressures):
     R_base = radii[index] #[m] radius of the base of the escaping atmosphere, where radii: array of radii from the planetary radius to 10 times the planetary radius, index: index of minimum element from the array of the absolute difference between the pressure profile and the pressure at the base of the escaping atmosphere
   
     return R_base
-
-
-
-R_base = find_R_base(P_base, radii, pressures)
-print(R_base)
 
 
 def calc_sound_speed(T_wind, mu_wind):
