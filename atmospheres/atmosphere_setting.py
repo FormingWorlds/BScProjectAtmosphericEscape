@@ -20,5 +20,4 @@ class Atmosphere:
         self.T = temperatures
         self.radii = R_p + heights
         self.pressures = pressures
-        self.vmrs = vmrs if vmrs is not None else {}
-        
+        self.vmrs = vmrs if vmrs is not None else {} #must be a dictonary even if no vmrs are given so that functions later don't throw a fit.
