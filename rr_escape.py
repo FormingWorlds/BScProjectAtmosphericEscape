@@ -92,7 +92,7 @@ def calc_density_at_sonic_point(M_p, F_xuv, nu_0, T_wind, R_s, c_s, R_base, mu_p
     rho_base = n_plus_base * mu_plus_wind * m_p #[kg m^-3] density at the base of the escaping atmosphere, where n_plus_base: number density of the escaping atmosphere at the base, mu_wind: mean molecular weight, m_p: proton mass
     
     #REFERENCE Lopez 2017 eq. 5
-    rho_s = rho_base * np.exp((G * M_p) / (R_base * c_s**2) * (R_base/R_s - 1 )) #[kg m^-3] rho_s is the density at the sonic point, rho_base: density at the base of the escaping atmosphere, R_base: radius of the base of the escaping atmosphere
+    rho_s = rho_base * np.exp((G * M_p) / (R_base * c_s**2) * (R_base/R_s - 1 ) - 1/2) #[kg m^-3] rho_s is the density at the sonic point, rho_base: density at the base of the escaping atmosphere, R_base: radius of the base of the escaping atmosphere
 
     return rho_s
 
