@@ -37,5 +37,5 @@ print("R_s:", R_s, "m")
 rho_s = calc_density_at_sonic_point(atm.M_p, atm.F_xuv, atm.nu_0, atm.T_wind, R_s, c_s, R_base, atm.mu_plus_wind)
 print("rho_s:", rho_s, "kg/m^3")
 
-escape_rate = rr_escape_rate(R_s, c_s, rho_s)
+escape_rate = rr_escape_rate(rho_s, c_s, R_s)
 print("escape_rate:", escape_rate, "kg/s")
