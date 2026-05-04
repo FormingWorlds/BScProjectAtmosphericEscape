@@ -16,7 +16,7 @@ atm_H2_case1 = Atmosphere(
     #bulk properties
     M_p=case1['M_planet [kg]'],
     R_p=case1['R_int [m]'],
-    F_xuv=case1['F_ins [W/m2]'],
+    F_ins=case1['F_ins [W/m2]'],
 
     #composition dependent properties
     T_wind=10**4, 
@@ -34,7 +34,7 @@ atm_H2_case1000 = Atmosphere(
     #bulk properties
     M_p=case1000['M_planet [kg]'],
     R_p=case1000['R_int [m]'],
-    F_xuv=case1000['F_ins [W/m2]'],
+    F_ins=case1000['F_ins [W/m2]'],
 
     #composition dependent properties
     T_wind=10**4, 
