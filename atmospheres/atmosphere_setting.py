@@ -3,12 +3,12 @@ This is useful for testing the function with different atmospheric compositions,
 
 
 class Atmosphere:
-    def __init__(self, T_wind, mu_wind, M_p, F_xuv, nu_0, mu_plus_wind, R_p, pressures, temperatures, heights, vmrs=None):
+    def __init__(self, T_wind, mu_wind, M_p, F_ins, nu_0, mu_plus_wind, R_p, pressures, temperatures, heights, vmrs=None):
 
         #from planet bulk proerties
         self.M_p = M_p
         self.R_p = R_p
-        self.F_xuv = F_xuv
+        self.F_xuv = F_ins * 10**(-6) #take XUV fraction of the total insolation. Assumes sunlike star. From Murray-Clay et. al. 2009
 
         #composition dependent properties, might need to add some function which calculates these based on what is found in the vmrs
         self.T_wind = T_wind
