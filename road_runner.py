@@ -5,6 +5,7 @@ from rr_escape import *
 from proteus_fetch import atm_H2_case1
 from proteus_fetch import atm_H2_case1000
 from atmospheres.simple_H2 import atm_H2
+from plotter import plot_P_over_R
 
 
 ### Calculating the escape parameters ###
@@ -13,6 +14,7 @@ from atmospheres.simple_H2 import atm_H2
 atm = atm_H2_case1000
 P_base = 10**(-4) #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
 
+plot_P_over_R(atm) 
 results = get_rr_escape_diagnostics(atm, P_base)
 
 print("Escape diagnostics for the atmosphere:")
