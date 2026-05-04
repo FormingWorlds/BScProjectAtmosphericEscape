@@ -6,13 +6,28 @@ from proteus_fetch import atm_H2_case1
 from proteus_fetch import atm_H2_case1000
 from atmospheres.simple_H2 import atm_H2
 from plotter import plot_P_over_R, plot_T_over_R
+from scipy.constants import G
 
 
 ### Calculating the escape parameters ###
 
 #I want to examine this atmosphere:
 atm = atm_H2
+print("Examining the following atmosphere:")
+print(f"Bulk properties: M_p = {atm.M_p:.2g} kg, R_p = {atm.R_p:.2g} m, F_xuv = {atm.F_xuv:.2g} W/m^2")
+print(f"Wind properties: T_wind = {atm.T_wind:.2g} K, mu_wind = {atm.mu_wind:.2f}, nu_0 = {atm.nu_0:.2e} Hz, mu_plus_wind = {atm.mu_plus_wind:.2f}")
+print(f"Photosphere properties: P_0 = {atm.pressures[0]:.2g} Pa, T_eq = {atm.T[0]:.2g} K")
 P_base = 10**(-4) #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
+print()
+
+### compare with salz et al 2016 if can host hydrodynamic escape ###
+grav_pot_SI = - G * atm.M_p / atm.R_p #[m^2 s^-2] gravitational potential at the planetary radius, where G: gravitational constant, M_p: planetary mass, R_p: planetary radius
+grav_pot_cgs = grav_pot_SI * cm_to_m**(-2) #[cm^2 s^-2] gravitational potential at the planetary radius in cgs units, where grav_pot_SI: gravitational potential at the planetary radius in SI units
+grav_compare = np.log10(-grav_pot_cgs) #[log10(cm^2 s^-2)] logarithm of the gravitational potential at the planetary radius in cgs units, where grav_pot_cgs: gravitational potential at the planetary radius in cgs units
+salz_strong_grav_threshold = 13.6 #Larger than this value and gravity is too high for el escape, smaller than this value and gravity is low enough for hydrodynamic escape, REFERENCE Salz et. al. 2016
+salz_weak_grav_threshold = 13.11 #Smaller than this value and gravity is so weak the envelope will blowout. Too small for el escape REFERENCE Salz et. al. 2016
+print(f"Planet can host hydrodynamic (el) escape at least: {grav_compare < salz_strong_grav_threshold and grav_compare > salz_weak_grav_threshold} (log10(grav pot [cm^2 s^-2]) = {grav_compare:.2f}, where the strong gravity threshold is {salz_strong_grav_threshold} and the weak gravity threshold is {salz_weak_grav_threshold})")
+print()
 
 plot_P_over_R(atm) 
 plot_T_over_R(atm)
