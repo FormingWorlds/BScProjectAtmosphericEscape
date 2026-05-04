@@ -28,39 +28,39 @@ df = pd.read_csv("diffusion_coefficients.csv", comment="#")
 row = df[df["system"] == "H_in_CO2"].iloc[0]
 A = row["A"]
 s = row["s"]
-b = A*(T**s) * 10e-2  #[1/m*sec]
+b = A*(T**s)  #[cgs]
 
 
-#2. density profile
+#2. density profile and homopause location
 
 #we follow Yelle and a Martian example and set the bottom of the atmosphere, z_0 at 80 km, with p_0 = 0.1 Pa
 #the top of the atmosphere is set at 500 km
 
 p_0   = 0.1                                               #pressure at bottom of the atmosphere [Pa]
 z_0   = 80e3                                              #bottom of atmosphere [m]
-z_top = 500e3                                             #top of atmosphere, [m]
+z_top = 100e3                                             #top of atmosphere, [m]
 steps = 1000                                              #layers of the atmosphere for computation 
-z     = np.linspace(z_0+Mars_rad, z_top+Mars_rad, steps)  #altitude grid, [m]
+z     = np.linspace(z_0, z_top, steps)                    #altitude grid, [m]
 
 
-def density_scale_height(z, M_planet, T_z, temp_grad, ma_z):
-    '''the integrable function of the density profile'''
-    g_z = G*M_planet/(z**2)
-    return((1/T_z)*(temp_grad) + (g_z*ma_z/k*T_z))
-
-
-def density_profile(z, mu_z, T_z, p_0):
-    '''calculates the density profile of the atmosphere in kg/m^3''' #currently for a constant T and mu profile
-    rho_0 = (mu_z*p_0)/(k*T_z)
+def density_profile(z):
+    '''calculates the density profile of the atmosphere in particles/cm^3, with m_a, p_0, T, M_p and Mars_rad defined above''' #analytical solution
+    rho_0 = (m_a*p_0)/(k*T)
     
     integrals = []
-    for i in range(1, np.shape(z)[0]):
-        I, err = quad(density_scale_height, z[0], z[i], args=(M_p, T, temp_grad, m_a))
+    for i in range(0, np.shape(z)[0]):
+        I = ((G*M_p*m_a)/(k*T))*((1/(Mars_rad+z[i]))-(1/(Mars_rad+z[0]))) 
         integrals.append(I)
     
     ints = np.asarray(integrals, dtype='float64')
-    return(rho_0 * np.e**(-ints))
+    return((rho_0 * np.exp(ints))/(m_a*10e6))
 
 
-print(density_profile(z, m_a, T, p_0))
+#now we locate the homopause by finding the altitude where D is closest to K
+D = b/density_profile(z)
+differences = np.abs(K-D)
+homopause = z[np.argmin(differences)]
+
+print(f"homopause at z index {np.argmin(differences)}, so z = {homopause} m")
+
     
