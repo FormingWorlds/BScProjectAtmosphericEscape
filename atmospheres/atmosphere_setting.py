@@ -34,3 +34,13 @@ class Atmosphere:
         F_xuv = F_ins * xuv_fraction #take XUV fraction of the total insolation. Assumes sunlike star. From Murray-Clay et. al. 2009
 
         return F_xuv
+
+        def determine_composition_dependent_properties(self):
+            '''
+            Determines the composition dependent properties of the atmosphere based on the vmrs.
+
+            Takes input parameters: x [unit], y [unit], z [unit], ...
+
+            All calculations done in SI units.
+            '''
+            #this function will determine the composition dependent properties of the atmosphere based on the vmrs. For example, if the vmrs indicate that the atmosphere is primarily composed of H2, then the mean molecular weight will be close to 2, and the ionising radiation will be Lyman-alpha. If the vmrs indicate that the atmosphere is primarily composed of He, then the mean molecular weight will be close to 4, and the ionising radiation will be 24.6 eV. This function will need to be updated as we add more compositions to our test cases.
