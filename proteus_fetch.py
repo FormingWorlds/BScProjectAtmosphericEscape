@@ -29,3 +29,21 @@ atm_H2_case1 = Atmosphere(
     pressures=df_atmospheric_profile_case1['Pressure [Pa]'].values,
     heights=df_atmospheric_profile_case1['Height [m]'].values
 )
+
+atm_H2_case1000 = Atmosphere(
+    #bulk properties
+    M_p=case1000['M_planet [kg]'],
+    R_p=case1000['R_int [m]'],
+    F_xuv=case1000['F_ins [W/m2]'],
+
+    #composition dependent properties
+    T_wind=10**4, 
+    nu_0 = 3.288467085473 * 10**15, 
+    mu_wind=0.5, 
+    mu_plus_wind=1,
+
+    #atmospheric profiles
+    temperatures=df_atmospheric_profile_case1000['Temperature [K]'].values,
+    pressures=df_atmospheric_profile_case1000['Pressure [Pa]'].values,
+    heights=df_atmospheric_profile_case1000['Height [m]'].values
+)
