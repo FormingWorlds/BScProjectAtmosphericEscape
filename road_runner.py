@@ -24,8 +24,8 @@ print()
 grav_pot_SI = - G * atm.M_p / atm.R_p #[m^2 s^-2] gravitational potential at the planetary radius, where G: gravitational constant, M_p: planetary mass, R_p: planetary radius
 grav_pot_cgs = grav_pot_SI * cm_to_m**(-2) #[cm^2 s^-2] gravitational potential at the planetary radius in cgs units, where grav_pot_SI: gravitational potential at the planetary radius in SI units
 grav_compare = np.log10(-grav_pot_cgs) #[log10(cm^2 s^-2)] logarithm of the gravitational potential at the planetary radius in cgs units, where grav_pot_cgs: gravitational potential at the planetary radius in cgs units
-salz_strong_grav_threshold = 13.6 #Larger than this value and gravity is too high for el escape, smaller than this value and gravity is low enough for hydrodynamic escape, REFERENCE Salz et. al. 2016
-salz_weak_grav_threshold = 13.11 #Smaller than this value and gravity is so weak the envelope will blowout. Too small for el escape REFERENCE Salz et. al. 2016
+salz_strong_grav_threshold = 13.6 #Larger than this value and gravity is too high for hydrodynamic escape. No EL and no wind for RR. REFERENCE Salz et. al. 2016
+salz_weak_grav_threshold = 13.11 #Smaller than this value and gravity is so weak the envelope will blowout. EL escape but no RR since no subsonic region. REFERENCE Salz et. al. 2016
 print(f"Planet can host hydrodynamic (el) escape at least: {grav_compare < salz_strong_grav_threshold and grav_compare > salz_weak_grav_threshold} (log10(grav pot [cm^2 s^-2]) = {grav_compare:.2f}, where the strong gravity threshold is {salz_strong_grav_threshold} and the weak gravity threshold is {salz_weak_grav_threshold})")
 print()
 
