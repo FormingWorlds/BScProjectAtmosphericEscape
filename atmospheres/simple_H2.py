@@ -21,7 +21,7 @@ F_xuv        = 10**2.93 * erg_to_joule * cm_to_m**(-2) #[kg s^-3]    XUV flux
 nu_0         = 3.288467085473 * 10**15      #[Hz]        frequency of Lyman-alpha radiation, which is the ionising radiation for HI
 R_p          = 2.73 * 6.371 * 10**6         #[m]         planetary radius
 P_0          = 2000                         #[Pa]        pressure at the optical photosphere
-T_eq         = 553                         #[K]         equilibrium temperature of the planet
+T_eq         = np.full(1000, 553)           #[K]         equilibrium temperature of the planet
 mu_photo     = 2                            #[dimless]   mean molecular weight at the optical photosphere, assumed to be entirely molecular hydrogen
 
 radii = np.linspace(R_p, 5*R_p, 1000) #[m] array of radii from the planetary radius to 10 times the planetary radius

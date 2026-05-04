@@ -11,7 +11,7 @@ from plotter import plot_P_over_R, plot_T_over_R
 ### Calculating the escape parameters ###
 
 #I want to examine this atmosphere:
-atm = atm_H2_case1000
+atm = atm_H2
 P_base = 10**(-4) #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
 
 plot_P_over_R(atm) 
