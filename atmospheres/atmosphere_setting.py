@@ -8,7 +8,7 @@ class Atmosphere:
         #from planet bulk proerties
         self.M_p = M_p
         self.R_p = R_p
-        self.F_xuv = F_ins * 10**(-6) #take XUV fraction of the total insolation. Assumes sunlike star. From Murray-Clay et. al. 2009
+        self.F_xuv = self.calc_xuv_from_insolation(F_ins)
 
         #composition dependent properties, might need to add some function which calculates these based on what is found in the vmrs
         self.T_wind = T_wind
@@ -21,3 +21,16 @@ class Atmosphere:
         self.radii = R_p + heights
         self.pressures = pressures
         self.vmrs = vmrs if vmrs is not None else {} #must be a dictonary even if no vmrs are given so that functions later don't throw a fit.
+
+    def calc_xuv_from_insolation(self, F_ins):
+        '''
+        Calculates the XUV flux from the total insolation.
+
+        Takes input parameters: x [unit], y [unit], z [unit], ...
+
+        All calculations done in SI units.
+        '''
+        xuv_fraction = 10**(-6) #REFERENCE Murray-Clay et. al. 2009, XUV flux is typically 10^-6 times the total insolation for a sunlike star
+        F_xuv = F_ins * xuv_fraction #take XUV fraction of the total insolation. Assumes sunlike star. From Murray-Clay et. al. 2009
+
+        return F_xuv
