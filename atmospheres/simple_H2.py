@@ -1,5 +1,10 @@
 import scipy as sp
 import numpy as np
+import sys
+import os
+
+# This adds the parent directory to the search path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from conversions import *
 from atmospheres.atmosphere_setting import Atmosphere
 
