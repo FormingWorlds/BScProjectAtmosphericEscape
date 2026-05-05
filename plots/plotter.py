@@ -18,6 +18,7 @@ def plot_R_over_P(atm):
     plt.plot(atm.pressures, atm.radii)
     plt.ylabel("Radius (m)")
     plt.xlabel("Pressure (Pa)")
+    plt.gca().invert_xaxis() #pressure decreases with increasing radius, so we invert the x-axis to make it more intuitive
     plt.title("Pressure profile of the atmosphere")
     plt.xscale("log")
     plt.yscale("log")
@@ -55,6 +56,7 @@ def plot_P_over_T(atm):
     plt.figure(figsize=(8,6))
     plt.plot(atm.T, atm.pressures)
     plt.ylabel("Pressure (Pa)")
+    plt.gca().invert_yaxis() #pressure decreases with increasing radius, so we invert the x-axis to make it more intuitive
     plt.xlabel("Temperature (K)")
     plt.title("Temperature profile of the atmosphere")
     plt.xscale("log")
