@@ -5,6 +5,7 @@ from rr_escape import *
 from proteus_fetch import atm_H2_case1
 from proteus_fetch import atm_H2_case1000
 from atmospheres.simple_H2 import atm_H2
+from atmospheres.simple_H2He_mix import atm_H2He_mix
 from plots.plotter import plot_P_over_R, plot_T_over_R
 from scipy.constants import G
 
@@ -12,7 +13,7 @@ from scipy.constants import G
 ### Calculating the escape parameters ###
 
 #I want to examine this atmosphere:
-atm = atm_H2
+atm = atm_H2He_mix
 print("Examining the following atmosphere:")
 print(f"Bulk properties: M_p = {atm.M_p:.2g} kg, R_p = {atm.R_p:.2g} m, F_xuv = {atm.F_xuv:.2g} W/m^2")
 print(f"Wind properties: T_wind = {atm.T_wind:.2g} K, mu_wind = {atm.mu_wind:.2f}, nu_0 = {atm.nu_0:.2e} Hz, mu_plus_wind = {atm.mu_plus_wind:.2f}")
