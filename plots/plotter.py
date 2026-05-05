@@ -65,3 +65,20 @@ def plot_P_over_T(atm):
     plt.savefig(f"{output_dir}/pressure_over_temperature.png", dpi=300)
     plt.close()
 
+def plot_M_planet_over_M_dot(masses, M_dots):
+    '''
+    Plots the mass loss rate of the atmosphere as a function of planetary mass.
+
+    Takes input parameters: atmosphere object with attribute M_p, and mass loss rate M_dot.
+
+    All calculations done in SI units.
+    '''
+    plt.figure(figsize=(8,6))
+    plt.plot(M_dots, masses)
+    plt.xlabel("Mass loss rate (kg/s)")
+    plt.ylabel("Planetary mass (kg)")
+    plt.title("Mass loss rate as a function of planetary mass")
+    plt.grid()
+    plt.savefig(f"{output_dir}/planetary_mass_over_mass_loss_rate.png", dpi=300)
+    plt.close()
+
