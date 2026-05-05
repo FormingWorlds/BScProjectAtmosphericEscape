@@ -6,7 +6,7 @@ from proteus_fetch import atm_H2_case1
 from proteus_fetch import atm_H2_case1000
 from atmospheres.simple_H2 import atm_H2
 from atmospheres.simple_H2He_mix import atm_H2He_mix
-from plots.plotter import plot_P_over_R, plot_T_over_R
+from plots.plotter import plot_R_over_P, plot_R_over_T, plot_P_over_T
 from scipy.constants import G
 
 
@@ -30,8 +30,9 @@ salz_weak_grav_threshold = 13.11 #Smaller than this value and gravity is so weak
 print(f"Planet can host hydrodynamic (el) escape at least: {grav_compare < salz_strong_grav_threshold and grav_compare > salz_weak_grav_threshold} (log10(grav pot [cm^2 s^-2]) = {grav_compare:.2f}, where the strong gravity threshold is {salz_strong_grav_threshold} and the weak gravity threshold is {salz_weak_grav_threshold})")
 print()
 
-plot_P_over_R(atm) 
-plot_T_over_R(atm)
+plot_R_over_P(atm)
+plot_R_over_T(atm)
+plot_P_over_T(atm)
 results = get_rr_escape_diagnostics(atm, P_base)
 
 print("Escape diagnostics for the atmosphere:")
