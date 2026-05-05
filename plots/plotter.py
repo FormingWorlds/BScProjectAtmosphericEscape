@@ -1,7 +1,10 @@
 #functions for plotting parameters of the planets and the escape stuff
+import os
 import matplotlib.pyplot as plt
 import scienceplots
 plt.style.use('science') 
+
+output_dir = "plots/latest_plots"
 
 def plot_P_over_R(atm):
     '''
@@ -19,7 +22,8 @@ def plot_P_over_R(atm):
     plt.xscale("log")
     plt.yscale("log")
     plt.grid()
-    plt.show()
+    plt.savefig(f"{output_dir}/pressure_over_radius.png", dpi=300)
+    plt.close()
 
 def plot_T_over_R(atm):
     '''
@@ -37,4 +41,5 @@ def plot_T_over_R(atm):
     plt.xscale("log")
     plt.yscale("log")
     plt.grid()
-    plt.show()
+    plt.savefig(f"{output_dir}/temperature_over_radius.png", dpi=300)
+    plt.close()
