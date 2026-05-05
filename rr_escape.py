@@ -23,7 +23,7 @@ def find_R_base(P_base, radii, pressures):
     index = difference_array.argmin()
     R_base = radii[index] #[m] radius of the base of the escaping atmosphere, where radii: array of radii from the planetary radius to 10 times the planetary radius, index: index of minimum element from the array of the absolute difference between the pressure profile and the pressure at the base of the escaping atmosphere
   
-    return R_base
+    return R_base, index
 
 
 def calc_sound_speed(T_wind, mu_wind):
@@ -109,7 +109,7 @@ def get_rr_escape_diagnostics(atm, P_base):
 
     All calculations done in SI units.
     '''
-    R_base = find_R_base(P_base, atm.radii, atm.pressures)
+    R_base, _ = find_R_base(P_base, atm.radii, atm.pressures)
     c_s = calc_sound_speed(atm.T_wind, atm.mu_wind)
     R_s = calc_sonic_point_radius(atm.M_p, c_s, R_base)
     rho_s = calc_density_at_sonic_point(atm.M_p, atm.F_xuv, atm.nu_0, atm.T_wind, R_s, c_s, R_base, atm.mu_plus_wind)
@@ -122,3 +122,17 @@ def get_rr_escape_diagnostics(atm, P_base):
         "rho_s [kg/m^3]": rho_s,
         "escape_rate [kg/s]": escape_rate
     }
+
+def read_off_wind_base_parameters(atm, P_base):
+    '''
+    Reads off the necessary parameters for the radiation-recombination-limited escape rate calculation at the base of the escaping atmosphere.
+
+    Takes input parameters: x [unit], y [unit], z [unit], ...
+
+    All calculations done in SI units.
+    '''
+    R_base, index = find_R_base(P_base, atm.radii, atm.pressures) #can be moved outside later and replaced with index input if moved into the escape diagnostics functions
+    T_base = atm.T[index] #[K] temperature at the base of the escaping atmosphere, where atm.T: array of temperatures as a function of radius, index: index of the radius of the base of the escaping atmosphere
+    #some function for finding dominant species
+    return R_base, T_base
+
