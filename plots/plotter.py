@@ -6,7 +6,7 @@ plt.style.use('science')
 
 output_dir = "plots/latest_plots"
 
-def plot_P_over_R(atm):
+def plot_R_over_P(atm):
     '''
     Plots the pressure profile of the atmosphere as a function of radius.
 
@@ -15,17 +15,17 @@ def plot_P_over_R(atm):
     All calculations done in SI units.
     '''
     plt.figure(figsize=(8,6))
-    plt.plot(atm.radii, atm.pressures)
-    plt.xlabel("Radius (m)")
-    plt.ylabel("Pressure (Pa)")
+    plt.plot(atm.pressures, atm.radii)
+    plt.ylabel("Radius (m)")
+    plt.xlabel("Pressure (Pa)")
     plt.title("Pressure profile of the atmosphere")
     plt.xscale("log")
     plt.yscale("log")
     plt.grid()
-    plt.savefig(f"{output_dir}/pressure_over_radius.png", dpi=300)
+    plt.savefig(f"{output_dir}/radius_over_pressure.png", dpi=300)
     plt.close()
 
-def plot_T_over_R(atm):
+def plot_R_over_T(atm):
     '''
     Plots the temperature profile of the atmosphere as a function of radius.
 
@@ -34,17 +34,17 @@ def plot_T_over_R(atm):
     All calculations done in SI units.
     '''
     plt.figure(figsize=(8,6))
-    plt.plot(atm.radii, atm.T)
-    plt.xlabel("Radius (m)")
-    plt.ylabel("Temperature (K)")
+    plt.plot(atm.T, atm.radii)
+    plt.ylabel("Radius (m)")
+    plt.xlabel("Temperature (K)")
     plt.title("Temperature profile of the atmosphere")
     plt.xscale("log")
     plt.yscale("log")
     plt.grid()
-    plt.savefig(f"{output_dir}/temperature_over_radius.png", dpi=300)
+    plt.savefig(f"{output_dir}/radius_over_temperature.png", dpi=300)
     plt.close()
 
-def plot_T_over_P(atm):
+def plot_P_over_T(atm):
     '''
     Plots the temperature profile of the atmosphere as a function of pressure.
 
@@ -53,13 +53,13 @@ def plot_T_over_P(atm):
     All calculations done in SI units.
     '''
     plt.figure(figsize=(8,6))
-    plt.plot(atm.pressures, atm.T)
-    plt.xlabel("Pressure (Pa)")
-    plt.ylabel("Temperature (K)")
+    plt.plot(atm.T, atm.pressures)
+    plt.ylabel("Pressure (Pa)")
+    plt.xlabel("Temperature (K)")
     plt.title("Temperature profile of the atmosphere")
     plt.xscale("log")
     plt.yscale("log")
     plt.grid()
-    plt.savefig(f"{output_dir}/temperature_over_pressure.png", dpi=300)
+    plt.savefig(f"{output_dir}/pressure_over_temperature.png", dpi=300)
     plt.close()
 
