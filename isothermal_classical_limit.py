@@ -9,15 +9,13 @@ from scipy.integrate import quad
 
 T         = 100                                        #temperature profile, [K]
 K         = 3e6                                        #eddy diffusion coefficient, [cm^2/sec]
-alpha     = -0.25                                      #thermal diffusion factor
 M_p       = 6.417e23                                   #mass of Mars, [kg]
 Mars_rad  = 3389.5e3                                   #radius of Mars, [m]
 M_CO2     = 44.0095*10e-3                              #molar mass, [kg/mol]
 M_H       = 1*10e-3                                    #molar mass, [kg/mol]
-mole_frac = 0.01                                       #mole fraction of H
+mole_frac = 10e-3                                      #mole fraction of H
 m_a       = (mole_frac*M_H + (1-mole_frac)*M_CO2)/N_A  #mean molecular mass, [kg]
 m_i       = M_H/N_A                                    #minor constituent mean molecular mass, [kg]
-temp_grad = 0                                          #temperature gradient, [K/m]
 
 
 
@@ -57,10 +55,24 @@ def density_profile(z):
 
 
 #now we locate the homopause by finding the altitude where D is closest to K
-D = b/density_profile(z)
+densities = density_profile(z)
+D = b/densities
 differences = np.abs(K-D)
-homopause = z[np.argmin(differences)]
+homopause = z[np.argmin(differences)] #[m]
+ 
+b_homopause = D[np.argmin(differences)]*10e2*densities[np.argmin(differences)]*10e6  #binary diffusion parameter at homopause, [1/m*s]
 
-print(f"homopause at z index {np.argmin(differences)}, so z = {homopause} m")
+
+#3. limiting flux calculation
+
+def classical_limiting_flux(b_hom, T_hom, z_hom):
+    '''calculates the classical limiting flux of the species at question for an isothermal atmosphere'''
+    H_a = (k*T_hom*(z_hom**2))/(G*M_p*m_a)   #the scale height at the homopause, [m]
+    
+    return ((mole_frac*(b_hom/H_a)*(1-(m_i/m_a))), (mole_frac*(b_hom/H_a)*(1-(m_i/m_a)) * 4*np.pi*((z_hom+Mars_rad)**2)))  #flux in particles/second*m^2 and flux from entire planet in particles/second
+
+res = classical_limiting_flux(b_homopause, T, homopause)
+print(f"the classical limiting flux is: {res[0]:g} particles per second per square meter, or {res[1]:g} particles per second overall")
+
 
     
