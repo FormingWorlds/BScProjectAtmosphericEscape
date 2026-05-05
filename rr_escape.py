@@ -133,6 +133,13 @@ def read_off_wind_base_parameters(atm, P_base):
     '''
     R_base, index = find_R_base(P_base, atm.radii, atm.pressures) #can be moved outside later and replaced with index input if moved into the escape diagnostics functions
     T_base = atm.T[index] #[K] temperature at the base of the escaping atmosphere, where atm.T: array of temperatures as a function of radius, index: index of the radius of the base of the escaping atmosphere
-    #some function for finding dominant species
-    return R_base, T_base
+    
+    #find vmrs at base
+    vmrs_base = {species: vmr_array[index] for species, vmr_array in atm.vmrs.items()} #vmrs at the base of the escaping atmosphere, where atm.vmrs: dictonary of arrays of volume mixing ratios as a function of radius, index: index of the radius of the base of the escaping atmosphere
+    #find dominant species at base
+    dominant_species = max(vmrs_base, key=vmrs_base.get)
+    print(f"Dominant species at the base of the escaping atmosphere: {dominant_species} with VMR = {vmrs_base[dominant_species]:.2g}")
+
+    return R_base, T_base, vmrs_base
+
 
