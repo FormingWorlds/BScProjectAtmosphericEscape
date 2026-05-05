@@ -11,6 +11,20 @@ case1000 = df_planet_properties[df_planet_properties['Case'] == '1000_F_earth'].
 df_atmospheric_profile_case1 = pd.read_csv("atmospheres/ProteusGoogleDrive/H2_atmospheres/1_F_earth/H2_atmosphere_1_M_earth_1_F_earth.csv", sep='\t')
 df_atmospheric_profile_case1000 = pd.read_csv("atmospheres/ProteusGoogleDrive/H2_atmospheres/1000_F_earth/H2_atmosphere_1_M_earth_1000_F_earth.csv", sep='\t')
 
+def fetch_vmrs(df_atmospheric_profile):
+    '''
+    Fetches the volume mixing ratios (vmrs) from the atmospheric profile dataframe.
+
+    Takes input parameters: df_atmospheric_profile [pandas dataframe] - dataframe containing the atmospheric profile, including vmrs.
+
+    All calculations done in SI units.
+    '''
+    vmrs = {}
+    for column in df_atmospheric_profile.columns:
+        if 'VMR' in column:
+            species = column.split(' ')[0] #assumes column name is in format "Species VMR [unit]"
+            vmrs[species] = df_atmospheric_profile[column].values #array of vmr values for the species as a function of radius, where df_atmospheric_profile[column]: column of the dataframe containing the vmr values for the species
+    return vmrs
 
 atm_H2_case1 = Atmosphere(
     #bulk properties
@@ -27,8 +41,9 @@ atm_H2_case1 = Atmosphere(
     #atmospheric profiles
     temperatures=df_atmospheric_profile_case1['Temperature [K]'].values,
     pressures=df_atmospheric_profile_case1['Pressure [Pa]'].values,
-    heights=df_atmospheric_profile_case1['Height [m]'].values
-)
+    heights=df_atmospheric_profile_case1['Height [m]'].values,
+    vmrs=fetch_vmrs(df_atmospheric_profile_case1)
+    )
 
 atm_H2_case1000 = Atmosphere(
     #bulk properties
@@ -45,5 +60,6 @@ atm_H2_case1000 = Atmosphere(
     #atmospheric profiles
     temperatures=df_atmospheric_profile_case1000['Temperature [K]'].values,
     pressures=df_atmospheric_profile_case1000['Pressure [Pa]'].values,
-    heights=df_atmospheric_profile_case1000['Height [m]'].values
-)
+    heights=df_atmospheric_profile_case1000['Height [m]'].values,
+    vmrs=fetch_vmrs(df_atmospheric_profile_case1000)
+    )
