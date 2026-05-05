@@ -5,7 +5,7 @@ from rr_escape import *
 from proteus_fetch import atm_H2_case1
 from proteus_fetch import atm_H2_case1000
 from atmospheres.simple_H2 import atm_H2
-from plotter import plot_P_over_R, plot_T_over_R
+from plots.plotter import plot_P_over_R, plot_T_over_R
 from scipy.constants import G
 
 
