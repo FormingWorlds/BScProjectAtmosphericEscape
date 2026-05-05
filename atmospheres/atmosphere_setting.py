@@ -4,6 +4,9 @@ import numpy as np
 
 class Atmosphere:
     def __init__(self, T_wind, mu_wind, M_p, F_ins, nu_0, mu_plus_wind, R_p, pressures, temperatures, heights, vmrs=None, P_base=10**(-4), microphysics_cap=None):
+        #input chosen by user
+        self.P_base = P_base #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
+        self.microphysics_cap = microphysics_cap if microphysics_cap is not None else 0.01
 
         #from planet bulk proerties
         self.M_p = M_p
@@ -20,8 +23,10 @@ class Atmosphere:
         self.T = temperatures
         self.radii = R_p + heights
         self.pressures = pressures
-        self.vmrs = vmrs if vmrs is not None else {} #must be a dictonary even if no vmrs are given so that functions later don't throw a fit.
-        self.microphysics_cap = microphysics_cap if microphysics_cap is not None else 0.01
+        self.vmrs = vmrs if vmrs is not None else None
+        
+
+        self.read_off_wind_base_parameters()
 
     def calc_xuv_from_insolation(self, F_ins):
         '''
@@ -52,10 +57,11 @@ class Atmosphere:
         self.R_base = self.radii[index] #[m] radius of the base of the escaping atmosphere, where radii: array of radii from the planetary radius to 10 times the planetary radius, index: index of minimum element from the array of the absolute difference between the pressure profile and the pressure at the base of the escaping atmosphere
         self.T_base = self.T[index] #[K] temperature at the base of the escaping atmosphere, where self.T: array of temperatures as a function of radius, index: index of the radius of the base of the escaping atmosphere
         
-        #find vmrs at base
-        self.vmrs_base = {species: vmr_array[index] for species, vmr_array in self.vmrs.items()} #vmrs at the base of the escaping atmosphere, where self.vmrs: dictonary of arrays of volume mixing ratios as a function of radius, index: index of the radius of the base of the escaping atmosphere
-        #find dominant species at base
-        self.dominant_species = max(self.vmrs_base, key=self.vmrs_base.get)
+        if self.vmrs is not None:
+            #find vmrs at base
+            self.vmrs_base = {species: vmr_array[index] for species, vmr_array in self.vmrs.items()} #vmrs at the base of the escaping atmosphere, where self.vmrs: dictonary of arrays of volume mixing ratios as a function of radius, index: index of the radius of the base of the escaping atmosphere
+            #find dominant species at base
+            self.dominant_species = max(self.vmrs_base, key=self.vmrs_base.get)
     
 
     #def determine_wind_microphysics(self):
