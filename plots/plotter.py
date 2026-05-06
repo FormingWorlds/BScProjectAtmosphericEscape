@@ -65,7 +65,7 @@ def plot_P_over_T(atm):
     plt.savefig(f"{output_dir}/pressure_over_temperature.png", dpi=300)
     plt.close()
 
-def plot_M_planet_over_M_dot(masses, M_dots):
+def plot_M_planet_over_M_dot(masses, M_dots, regime_break_index=None):
     '''
     Plots the mass loss rate of the atmosphere as a function of planetary mass.
 
@@ -74,11 +74,34 @@ def plot_M_planet_over_M_dot(masses, M_dots):
     All calculations done in SI units.
     '''
     plt.figure(figsize=(8,6))
-    plt.plot(M_dots, masses)
+    plt.plot(M_dots, masses, label="Mass loss rate per mass")
+    if regime_break_index is not None:
+        plt.axhline(y=masses[regime_break_index], color='red', linestyle='--', label='Regime Break')
     plt.xlabel("Mass loss rate (kg/s)")
     plt.ylabel("Planetary mass (kg)")
     plt.title("Mass loss rate as a function of planetary mass")
     plt.grid()
+    plt.legend()
     plt.savefig(f"{output_dir}/planetary_mass_over_mass_loss_rate.png", dpi=300)
     plt.close()
 
+
+def plot_R_planet_over_M_dot(radii, M_dots, regime_break_index=None):
+    '''
+    Plots the mass loss rate of the atmosphere as a function of planetary mass.
+
+    Takes input parameters: atmosphere object with attribute M_p, and mass loss rate M_dot.
+
+    All calculations done in SI units.
+    '''
+    plt.figure(figsize=(8,6))
+    plt.plot(M_dots, radii, label="Mass loss rate per radius")
+    if regime_break_index is not None:
+        plt.axhline(y=radii[regime_break_index], color='red', linestyle='--', label='Regime Break')
+    plt.xlabel("Mass loss rate (kg/s)")
+    plt.ylabel("Planetary radius (m)")
+    plt.title("Mass loss rate as a function of planetary radius")
+    plt.grid()
+    plt.legend()
+    plt.savefig(f"{output_dir}/planetary_radius_over_mass_loss_rate.png", dpi=300)
+    plt.close()
