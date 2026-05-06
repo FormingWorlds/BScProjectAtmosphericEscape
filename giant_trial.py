@@ -25,9 +25,10 @@ X_loss_iso = 0.4*(v_ratio) + 1.4*(v_ratio)**2 - 0.8*(v_ratio)**3
 
 
 plt.plot(v_ratio, X_loss_iso)
-plt.xlabel((v_imp/v_esc)(m/M))
-plt.ylabel(X_loss)
-plt.xscale('log')
-plt.yscale('log')
+plt.xlabel('(v_imp/v_esc)(m/M)')
+plt.ylabel('X_loss')
+#plt.xscale('log')
+#plt.yscale('log')
 plt.show()
-plt.savefig(isothermal_model_giant)
+plt.savefig(isothermal_model_giant)import numpy as np
+
