@@ -56,8 +56,8 @@ def calc_density_at_sonic_point(M_p, F_xuv, nu_0, T_wind, R_s, c_s, R_base, mu_p
     '''
 
     h = sp.constants.h #[J s] 
-    #REFERENCE: Murray et. al. 2009 after eq. 7
-    alpha_rec_B = 2.7 * 10**(-13) * (T_wind / 10**4)**0.9 * cm_to_m**3 #[m^3 s^-1] recombination coefficient for case B recombination, where T_wind: temperature of the escaping atmosphere
+    #REFERENCE: Murray et. al. 2009 after eq. 7. Only valid for H2 technically.
+    alpha_rec_B = 2.7 * 10**(-13) * (T_wind / 10**4)**0.9 * cm_to_m**3 #[m^3 s^-1] recombination coefficient for case B recombination for H2!!!!, where T_wind: temperature of the escaping atmosphere
 
     G = sp.constants.G #[m^3 kg^-1 s^-2] 
     # reference formula: ovesen math calc derivation. Needed to place n_0_base straight into n_plus_base to cancel sigma_nu0
@@ -132,9 +132,13 @@ def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
     grav_pot_cgs = grav_pot_SI * cm_to_m**(-2) #[cm^2 s^-2] gravitational potential at the planetary radius in cgs units, where grav_pot_SI: gravitational potential at the planetary radius in SI units
     grav_compare = np.log10(-grav_pot_cgs) #[log10(cm^2 s^-2)] logarithm of the gravitational potential at the planetary radius in cgs units, where grav_pot_cgs: gravitational potential at the planetary radius in cgs units
     salz_strong_grav_threshold = 13.6 #Larger than this value and gravity is too high for hydrodynamic escape. No EL and no wind for RR. REFERENCE Salz et. al. 2016
-    salz_weak_grav_threshold = 13.11 #Smaller than this value and gravity is so weak the envelope will blowout. EL escape but no RR since no subsonic region. REFERENCE Salz et. al. 2016
-    print(f"Planet can host hydrodynamic (el) escape at least: {grav_compare < salz_strong_grav_threshold and grav_compare > salz_weak_grav_threshold} (log10(grav pot [cm^2 s^-2]) = {grav_compare:.2f}, where the strong gravity threshold is {salz_strong_grav_threshold} and the weak gravity threshold is {salz_weak_grav_threshold})")
-    print()
+    salz_weak_grav_threshold = 13.11 
+    if grav_compare < salz_weak_grav_threshold:
+        print(f"Planet can host hydrodynamic escape through wind: {grav_compare} < {salz_weak_grav_threshold} (log10(grav pot [cm^2 s^-2])")
+    elif grav_compare > salz_strong_grav_threshold:
+        print(f"Planet cannot host hydrodynamic escape through wind: {grav_compare} > {salz_strong_grav_threshold} (log10(grav pot [cm^2 s^-2])")
+    else:
+        print(f"Planet is in intermediate regime of gravitationally binding atmosphere, wind strength declines rapidly")
 
     plot_R_over_P(atm)
     plot_R_over_T(atm)
