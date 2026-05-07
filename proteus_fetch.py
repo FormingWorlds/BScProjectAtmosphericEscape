@@ -22,7 +22,7 @@ def fetch_vmrs(df_atmospheric_profile):
     vmrs = {}
     for column in df_atmospheric_profile.columns:
         if 'VMR' in column:
-            species = column.split(' ')[0] #assumes column name is in format "Species VMR [unit]"
+            species = column.split()[0].strip() #assumes column name is in format "Species VMR [unit]"
             vmrs[species] = df_atmospheric_profile[column].values #array of vmr values for the species as a function of radius, where df_atmospheric_profile[column]: column of the dataframe containing the vmr values for the species
     return vmrs
 
@@ -34,9 +34,6 @@ atm_H2_case1 = Atmosphere(
 
     #composition dependent properties
     T_wind=10**4, 
-    nu_0 = 3.288467085473 * 10**15, 
-    mu_wind=0.5, 
-    mu_plus_wind=1,
 
     #atmospheric profiles
     temperatures=df_atmospheric_profile_case1['Temperature [K]'].values,
@@ -53,9 +50,6 @@ atm_H2_case1000 = Atmosphere(
 
     #composition dependent properties
     T_wind=10**4, 
-    nu_0 = 3.288467085473 * 10**15, 
-    mu_wind=0.5, 
-    mu_plus_wind=1,
 
     #atmospheric profiles
     temperatures=df_atmospheric_profile_case1000['Temperature [K]'].values,
