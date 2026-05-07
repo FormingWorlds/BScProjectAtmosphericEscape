@@ -3,30 +3,37 @@ This is useful for testing the function with different atmospheric compositions,
 import numpy as np
 
 class Atmosphere:
-    def __init__(self, T_wind, mu_wind, M_p, F_ins, nu_0, mu_plus_wind, R_p, pressures, temperatures, heights, vmrs=None, P_base=10**(-4), microphysics_cap=None):
+    ### Dictionary of the most relevant dominant species for the wind, which comes with their own values for hte microphysics ###
+    wind_microphysics = {
+        #NB, these are the values for the ionised equivalents!!!!!
+        'H2': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1},
+        'H': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1}, 
+        'H2O': {'nu_0': 4.835981008048 * 10**15 , 'mu_wind': 3, 'mu_plus_wind': 6},
+        #'CO2' : {'nu_0' : 3.3368 * 10**15, 'mu_wind': x, 'mu_plus_wind': x}, #not sure about these values for CO2, need to check
+        #'N2' : {'nu_0' : 3.7721 * 10**15, 'mu_wind': x, 'mu_plus_wind': x}
+    }
+
+    def __init__(self, M_p, F_ins, R_p, pressures, temperatures, heights, dominant_species='H2', T_wind=10**(4), vmrs=None, P_base=10**(-4), **kwargs):
         #input chosen by user
         self.P_base = P_base #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
-        self.microphysics_cap = microphysics_cap if microphysics_cap is not None else 0.01
-
+        
         #from planet bulk proerties
         self.M_p = M_p
         self.R_p = R_p
         self.F_xuv = self.calc_xuv_from_insolation(F_ins)
 
-        #composition dependent properties, might need to add some function which calculates these based on what is found in the vmrs
+        #standard wind properties
         self.T_wind = T_wind
-        self.nu_0 = nu_0
-        self.mu_wind = mu_wind 
-        self.mu_plus_wind = mu_plus_wind
-
+       
         #imported atmospheric profiles of different properties as a function of radius
         self.T = temperatures
         self.radii = R_p + heights
         self.pressures = pressures
         self.vmrs = vmrs if vmrs is not None else None
         
-
+        self.dominant_species = dominant_species # Default starting value
         self.read_off_wind_base_parameters()
+        self.determine_wind_microphysics()
 
     def calc_xuv_from_insolation(self, F_ins):
         '''
@@ -62,17 +69,31 @@ class Atmosphere:
             self.vmrs_base = {species: vmr_array[index] for species, vmr_array in self.vmrs.items()} #vmrs at the base of the escaping atmosphere, where self.vmrs: dictonary of arrays of volume mixing ratios as a function of radius, index: index of the radius of the base of the escaping atmosphere
             #find dominant species at base
             self.dominant_species = max(self.vmrs_base, key=self.vmrs_base.get)
-    
-
-    #def determine_wind_microphysics(self):
-        #######if self.microphysics_cap is None:
-            #relevant_species = {species: vmr for species, vmr in self.vmrs_base.items() if vmr > self.microphysics_cap} #finds the relevant species at the base of the escaping atmosphere, where self.vmrs_base: dictonary of volume mixing ratios at the base of the escaping atmosphere, cap: threshold for determining whether a species is relevant or not based on its volume mixing ratio
+            #print(f"Dominant species at the base of the escaping atmosphere: {self.dominant_species} with VMR of {self.vmrs_base[self.dominant_species]:.2e}")
         
-
-
-        
-
-        
-
 
     
+    
+
+    def determine_wind_microphysics(self):
+        '''
+        Determines the microphysics parameters for the escaping wind based on the dominant species at the base of the escaping atmosphere.
+
+        Takes input parameters: 
+        Atmosphere object, must have a vmrs attribute to determine the dominant species at the base of the escaping atmosphere from.
+
+        All calculations done in SI units.
+        '''
+        if self.dominant_species in self.wind_microphysics:
+            self.dominant_species_found_in_dict = True
+            self.nu_0 = self.wind_microphysics[self.dominant_species]['nu_0']
+            self.mu_wind = self.wind_microphysics[self.dominant_species]['mu_wind']
+            self.mu_plus_wind = self.wind_microphysics[self.dominant_species]['mu_plus_wind']
+        else:
+            self.dominant_species_found_in_dict = False
+            #print(f"Dominant species {self.dominant_species} not found in wind microphysics dictionary. Using H2 values for wind microphysics parameters.")
+            self.nu_0 = self.wind_microphysics['H2']['nu_0']
+            self.mu_wind = self.wind_microphysics['H2']['mu_wind']
+            self.mu_plus_wind = self.wind_microphysics['H2']['mu_plus_wind']
+
+
