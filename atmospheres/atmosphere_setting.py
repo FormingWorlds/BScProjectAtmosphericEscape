@@ -13,14 +13,20 @@ class Atmosphere:
         #'N2' : {'nu_0' : 3.7721 * 10**15, 'mu_wind': x, 'mu_plus_wind': x}
     }
 
-    def __init__(self, M_p, F_ins, R_p, pressures, temperatures, heights, dominant_species='H2', T_wind=10**(4), vmrs=None, P_base=10**(-4), **kwargs):
+    def __init__(self, M_p, R_p, pressures, temperatures, heights, F_xuv=None, F_ins=None, dominant_species='H2', T_wind=10**(4), vmrs=None, P_base=10**(-4), **kwargs):
         #input chosen by user
         self.P_base = P_base #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
         
         #from planet bulk proerties
         self.M_p = M_p
         self.R_p = R_p
-        self.F_xuv = self.calc_xuv_from_insolation(F_ins)
+        
+        if F_xuv is not None:
+            self.F_xuv = F_xuv #[W/m^2] XUV flux
+        elif F_ins is not None:
+            self.F_xuv = self.calc_xuv_from_insolation(F_ins) #[W/m^2] XUV flux calculated from total insolation
+        else:
+            raise ValueError("Either F_xuv or F_ins must be provided as an input to the Atmosphere class.")
 
         #standard wind properties
         self.T_wind = T_wind
