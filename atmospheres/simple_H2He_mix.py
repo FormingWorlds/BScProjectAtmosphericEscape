@@ -24,7 +24,7 @@ P_0          = 2000                         #[Pa]        pressure at the optical
 T_eq         = np.full(1000, 553)                         #[K]         equilibrium temperature of the planet
 mu_photo     = 2.5                            #[dimless]   mean molecular weight at the optical photosphere, assumed to be entirely molecular hydrogen
 
-radii = np.linspace(R_p, 5*R_p, 1000) #[m] array of radii from the planetary radius to 10 times the planetary radius
+radii = np.linspace(R_p, 40*R_p, 1000) #[m] array of radii from the planetary radius to 10 times the planetary radius
 
 pressures = P_0 * np.exp(G * M_p * mu_photo * m_p / (k_b * T_eq) * (1/radii - 1/R_p) ) #[Pa] pressure profile of the atmosphere based on the barometric formula, where P_0: pressure at the optical photosphere, G: gravitational constant, M_p: planetary mass, mu_photo: mean molecular weight at the optical photosphere, m_p: proton mass, k_b: Boltzmann constant, T_eq: equilibrium temperature of the planet, radii: array of radii from the planetary radius to 10 times the planetary radius
 
