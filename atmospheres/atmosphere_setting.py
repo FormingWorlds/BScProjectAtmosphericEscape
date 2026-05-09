@@ -5,12 +5,12 @@ import numpy as np
 class Atmosphere:
     ### Dictionary of the most relevant dominant species for the wind, which comes with their own values for hte microphysics ###
     wind_microphysics = {
-        #NB, these are the values for the ionised equivalents!!!!!
+        #NB, these are the values for the singly ionised and fully dissociated equivalents!!!!!
         'H2': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1},
         'H': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1}, 
         'H2O': {'nu_0': 4.835981008048 * 10**15 , 'mu_wind': 3, 'mu_plus_wind': 6},
-        #'CO2' : {'nu_0' : 3.3368 * 10**15, 'mu_wind': x, 'mu_plus_wind': x}, #not sure about these values for CO2, need to check
-        #'N2' : {'nu_0' : 3.7721 * 10**15, 'mu_wind': x, 'mu_plus_wind': x}
+        'CO2' : {'nu_0' : 3.3368 * 10**15, 'mu_wind': 7.2, 'mu_plus_wind': 14.4}, 
+        'N2' : {'nu_0' : 3.7721 * 10**15, 'mu_wind': 7, 'mu_plus_wind': 14}
     }
 
     def __init__(self, M_p, R_p, pressures, temperatures, heights, F_xuv=None, F_ins=None, dominant_species='H2', T_wind=10**(4), vmrs=None, P_base=10**(-4), **kwargs):
@@ -64,9 +64,10 @@ class Atmosphere:
         '''
         #finds the absolute difference between the pressure profile and the target pressure at the base of the escaping atmosphere
         difference_array = np.absolute(self.pressures - self.P_base) #[Pa] array of the absolute difference between the pressure profile and the pressure at the base of the escaping atmosphere, where pressures: pressure profile of the atmosphere based on the barometric formula, P_base: pressure at the base of the escaping atmosphere
-
+        
         #finds the index of minimum element from the array
         index = difference_array.argmin()
+        
         self.R_base = self.radii[index] #[m] radius of the base of the escaping atmosphere, where radii: array of radii from the planetary radius to 10 times the planetary radius, index: index of minimum element from the array of the absolute difference between the pressure profile and the pressure at the base of the escaping atmosphere
         self.T_base = self.T[index] #[K] temperature at the base of the escaping atmosphere, where self.T: array of temperatures as a function of radius, index: index of the radius of the base of the escaping atmosphere
         
