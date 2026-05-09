@@ -38,7 +38,7 @@ def calc_sonic_point_radius(M_p, c_s, R_base):
     R_s = G * M_p / (2 * c_s**2) #[m] radius to the sonic point, where G: gravitational constant, M_p: planetary mass, c_s: sound speed
     # checks if R_s is smaller than R_base, if so, sets R_s = R_base and prints a message, otherwise keeps R_s = G * M_p / (2 * c_s**2) and prints a message
     if R_s < R_base:
-        print("R_s is smaller than R_base, escape is not radiation-recombination-limited. Setting R_s = R_base.")
+        print(f"R_s {R_s:.2g} < {R_base:.2g} R_base, escape is not radiation-recombination-limited. Setting R_s = R_base.")
         R_s = R_base
     else: 
         print("R_s is larger than R_base, escape is radiation-recombination-limited. Keeping R_s = G * M_p / (2 * c_s**2).")
@@ -105,7 +105,8 @@ def get_rr_escape_diagnostics(atm):
         "rho_s [kg/m^3]": rho_s,
         "escape_rate [kg/s]": escape_rate,
         "dominant_species": atm.dominant_species,
-        "dominant_species_found_in_dict": atm.dominant_species_found_in_dict
+        "dominant_species_found_in_dict": atm.dominant_species_found_in_dict,
+        "P_base_at_R_base [Pa]": atm.P_base_at_R_base
     }
 
 def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
@@ -123,7 +124,6 @@ def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
     print(f"Bulk properties: M_p = {atm.M_p:.2g} kg, R_p = {atm.R_p:.2g} m, F_xuv = {atm.F_xuv:.2g} W/m^2")
     print(f"Wind properties: T_wind = {atm.T_wind:.2g} K, mu_wind = {atm.mu_wind:.2f}, nu_0 = {atm.nu_0:.2e} Hz, mu_plus_wind = {atm.mu_plus_wind:.2f}")
     print(f"Photosphere properties: P_0 = {atm.pressures[0]:.2g} Pa, T_eq = {atm.T[0]:.2g} K")
-    P_base = 10**(-4) #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
     print()
 
     ### compare with salz et al 2016 if can host hydrodynamic escape ###
@@ -140,12 +140,14 @@ def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
     else:
         print(f"Planet is in intermediate regime of gravitationally binding atmosphere, wind strength declines rapidly")
 
-    plot_R_over_P(atm)
-    plot_R_over_T(atm)
-    plot_P_over_T(atm)
+    #plot_R_over_P(atm)
+    #plot_R_over_T(atm)
+    #plot_P_over_T(atm)
     results = get_rr_escape_diagnostics(atm)
 
+    print()
     print("Escape diagnostics for the atmosphere:")
+    print(f"Using values from this P_base: {results['P_base_at_R_base [Pa]']:.2g} Pa")
     print(f"R_base: {results['R_base [m]']:.2g} m")
     print(f"c_s: {results['c_s [m/s]']:.2g} m/s")
     print(f"R_s: {results['R_s [m]']:.2g} m")
