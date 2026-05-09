@@ -103,3 +103,23 @@ def plot_R_planet_over_M_dot(radii, M_dots, regime_break_index=None):
     plt.legend()
     plt.savefig(f"{output_dir}/planetary_radius_over_mass_loss_rate.png", dpi=300)
     plt.close()
+
+def plot_xuv_flux_over_M_dot(fluxes, M_dots, regime_break_index=None):
+    '''
+    Plots the mass loss rate of the atmosphere as a function of XUV flux.
+
+    Takes input parameters: 
+
+    All calculations done in SI units.
+    '''
+    plt.figure(figsize=(8,6))
+    plt.plot(fluxes, M_dots, label="Mass loss rate per XUV flux")
+    if regime_break_index is not None:
+        plt.axvline(y=fluxes[regime_break_index], color='red', linestyle='--', label='Regime Break')
+    plt.ylabel("Mass loss rate (kg/s)")
+    plt.xlabel("XUV flux (W m**2)")
+    plt.title("Mass loss rate as a function of XUV flux received")
+    plt.grid()
+    plt.legend()
+    plt.savefig(f"{output_dir}/xuv_flux_over_mass_loss_rate.png", dpi=300)
+    plt.close()
