@@ -123,5 +123,5 @@ for i, atm in enumerate(atmospheres_H2_varied_F_xuv):
     if diagnostics["R_s [m]"] > atm.R_base and regime_break_radius_H2_varied_F_xuv is None:
         regime_break_radius_H2_varied_radius = i
 
-plot_xuv_flux_over_M_dot(F_xuv_array, mass_loss_rates_H2_varied_F_xuv, regime_break_index=regime_break_radius_H2_varied_F_xuv)
+plot_xuv_flux_over_M_dot(F_xuv_array, mass_loss_rates_H2_varied_F_xuv, regime_break_index=regime_break_radius_H2_varied_F_xuv, compare=True)
 

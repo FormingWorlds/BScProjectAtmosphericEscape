@@ -2,6 +2,7 @@
 import os
 import matplotlib.pyplot as plt
 import scienceplots
+import numpy as np
 plt.style.use('science') 
 
 output_dir = "plots/latest_plots"
@@ -104,7 +105,7 @@ def plot_R_planet_over_M_dot(radii, M_dots, regime_break_index=None):
     plt.savefig(f"{output_dir}/planetary_radius_over_mass_loss_rate.png", dpi=300)
     plt.close()
 
-def plot_xuv_flux_over_M_dot(fluxes, M_dots, regime_break_index=None):
+def plot_xuv_flux_over_M_dot(fluxes, M_dots, regime_break_index=None, compare=False):
     '''
     Plots the mass loss rate of the atmosphere as a function of XUV flux.
 
@@ -113,9 +114,16 @@ def plot_xuv_flux_over_M_dot(fluxes, M_dots, regime_break_index=None):
     All calculations done in SI units.
     '''
     plt.figure(figsize=(8,6))
-    plt.plot(fluxes, M_dots, label="Mass loss rate per XUV flux")
+    plt.plot(fluxes, M_dots, label="Modelled")
     if regime_break_index is not None:
         plt.axvline(y=fluxes[regime_break_index], color='red', linestyle='--', label='Regime Break')
+    
+    #comparison trend
+    if compare is True:
+        k = M_dots[0] / np.sqrt(fluxes[0])
+        trendline = k * np.sqrt(fluxes)
+        plt.plot(fluxes, trendline, label=r"Trend: $\dot{M} proportional to \sqrt{F_{XUV}}$", 
+                linestyle=':', color='yellow', alpha=0.7)
     plt.ylabel("Mass loss rate (kg/s)")
     plt.xlabel("XUV flux (W m**2)")
     plt.title("Mass loss rate as a function of XUV flux received")
