@@ -17,7 +17,7 @@ mu_plus_wind = 1.3                          #[dimless]   mean molecular weight o
 #testcase values for the other necessary input parameters for the rr_escape_rate function using jupiter mass and radius, and a typical XUV flux for a close-in exoplanet
 M_p          = 5.9722 * 10**24               #[kg]        planetary mass
 #R_base     = 7.1492 * 10**7                #[m]         radius of the base of the escaping atmosphere
-F_ins        = 10**2.93 * erg_to_joule * cm_to_m**(-2) * 10**6                #[kg s^-3]    XUV flux. 100 times the solar flux of earth
+F_xuv        = 10**2.93 * erg_to_joule * cm_to_m**(-2)                #[kg s^-3]    XUV flux. 100 times the solar flux of earth
 nu_0         = 4.835981008048 * 10**15      #[Hz]        20eV. Maybe this value because of helium in mix. For ionising the atoms.
 R_p          = 2 * 6.371 * 10**6            #[m]         planetary radius. 2 times earth radius
 P_0          = 2000                         #[Pa]        pressure at the optical photosphere
@@ -32,7 +32,7 @@ atm_H2He_mix = Atmosphere(
     T_wind=T_wind, 
     mu_wind=mu_wind, 
     M_p=M_p, 
-    F_ins=F_ins, 
+    F_xuv=F_xuv, 
     nu_0=nu_0, 
     mu_plus_wind=mu_plus_wind, 
     R_p=R_p, 
