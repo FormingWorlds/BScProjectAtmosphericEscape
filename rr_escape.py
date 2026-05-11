@@ -57,7 +57,7 @@ def calc_density_at_sonic_point(M_p, F_xuv, nu_0, T_wind, R_s, c_s, R_base, mu_p
 
     h = sp.constants.h #[J s] 
     #REFERENCE: Murray et. al. 2009 after eq. 7. Only valid for H2 technically.
-    alpha_rec_B = 2.7 * 10**(-13) * (T_wind / 10**4)**0.9 * cm_to_m**3 #[m^3 s^-1] recombination coefficient for case B recombination for H2!!!!, where T_wind: temperature of the escaping atmosphere
+    alpha_rec_B = 2.7 * 10**(-13) * (T_wind / 10**4)**(-0.9) * cm_to_m**3 #[m^3 s^-1] recombination coefficient for case B recombination for H2!!!!, where T_wind: temperature of the escaping atmosphere
 
     G = sp.constants.G #[m^3 kg^-1 s^-2] 
     # reference formula: ovesen math calc derivation. Needed to place n_0_base straight into n_plus_base to cancel sigma_nu0
