@@ -3,12 +3,11 @@ import numpy as np
 from scipy.integrate import cumulative_trapezoid
 from jeans import *
 
-# -------------------------
 # Constants
-# -------------------------
-R_EARTH = 6.371e6
-M_EARTH = 5.972e24
-RHO_EARTH = 5510
+
+R_EARTH = 6.371e6 #m
+M_EARTH = 5.972e24 #kg
+RHO_EARTH = 5510 #kg/m^3
 
 
 MASSES = {
