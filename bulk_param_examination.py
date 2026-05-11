@@ -38,7 +38,7 @@ def make_simple_atmosphere(M_p, R_p, nu_0, mu_wind, mu_plus_wind, T_eq, mu_photo
 
 ### Want to examine how planetary mass affects mass loss rate ###
 M_earth = 5.9722 * 10**24               #[kg]        mass of the earth
-Mass_array = np.linspace(1, 30, 30, endpoint=True) * M_earth #[kg] array of planetary masses from 1 to 30 times the mass of the earth
+Mass_array = np.linspace(0.5, 30, 100, endpoint=True) * M_earth #[kg] array of planetary masses from 1 to 30 times the mass of the earth
 
 atmospheres_H2_varied_mass = np.array([make_simple_atmosphere(
     M_p=M,
@@ -70,7 +70,7 @@ R_earth = 6.371 * 10**6            #[m]         radius of the earth
 Radius_array = np.linspace(1, 5, 30, endpoint=True) * R_earth #[m] array of planetary radii from 1 to 5 times the radius of the earth
 
 atmospheres_H2_varied_radius = np.array([make_simple_atmosphere(
-    M_p=5.9722 * 10**24,
+    M_p=8.41 * 5.9722 * 10**24,
     R_p=R,
     F_ins=10**2.93 * erg_to_joule * cm_to_m**(-2) * 10**6,
     nu_0=3.288467085473 * 10**15,
@@ -102,8 +102,8 @@ F_xuv_earth =   0.2196388835          #[W m^-2]  Standard Earth XUV radiation
 F_xuv_array = np.linspace(0.5, 1000, 300, endpoint=True) * F_xuv_earth #[m] array of planetary radii from 1 to 5 times the radius of the earth
 
 atmospheres_H2_varied_F_xuv = np.array([make_simple_atmosphere(
-    M_p=5.9722 * 10**24,
-    R_p=2 * 6.371 * 10**6,
+    M_p=8.41 * 5.9722 * 10**24,
+    R_p=2.73 * 6.371 * 10**6,
     F_xuv=F,
     nu_0=3.288467085473 * 10**15,
     mu_wind=0.5,
