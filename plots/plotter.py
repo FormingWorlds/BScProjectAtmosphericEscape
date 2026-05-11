@@ -73,11 +73,11 @@ def plot_M_planet_over_M_dot(masses, M_dots, regime_break_index=None):
     All calculations done in SI units.
     '''
     plt.figure(figsize=(8,6))
-    plt.plot(M_dots, masses, label="Mass loss rate per mass")
+    plt.plot(masses, M_dots, label="Mass loss rate per mass")
     if regime_break_index is not None:
-        plt.axhline(y=masses[regime_break_index], color='red', linestyle='--', label='Regime Break')
-    plt.xlabel("Mass loss rate (kg/s)")
-    plt.ylabel("Planetary mass (kg)")
+        plt.axvline(x=masses[regime_break_index], color='red', linestyle='--', label='Regime Break')
+    plt.ylabel("Mass loss rate (kg/s)")
+    plt.xlabel("Planetary mass (kg)")
     plt.title("Mass loss rate as a function of planetary mass")
     plt.grid()
     plt.legend()
