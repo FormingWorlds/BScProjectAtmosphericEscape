@@ -92,13 +92,14 @@ plt.plot(T_sweep, fluxes)
 plt.xlabel('Exobase temperature [K]')
 plt.ylabel('Escape flux [cm$^{-2}$ $\cdot$ s$^{-1}$]')
 plt.grid()
+plt.savefig('plots/classical_lim.png')
 plt.show()
 
-plt.plot(T_sweep, exobase_n)
-plt.xlabel('Exobase temperature [K]')
-plt.ylabel('Exobase number density [cm$^{-3}$]')
-plt.grid()
-plt.show()
+#plt.plot(T_sweep, exobase_n)
+#plt.xlabel('Exobase temperature [K]')
+#plt.ylabel('Exobase number density [cm$^{-3}$]')
+#plt.grid()
+#plt.show()
 
 
     
