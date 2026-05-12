@@ -43,5 +43,6 @@ atm_H2 = Atmosphere(
     R_p=R_p, 
     pressures=pressures, 
     temperatures=T_eq, #using the constant T_eq as a starting array
-    heights=radii - R_p
+    heights=radii - R_p,
+    dominant_species="H2"
 )

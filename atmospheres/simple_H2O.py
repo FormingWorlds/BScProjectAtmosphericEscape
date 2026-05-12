@@ -26,10 +26,10 @@ F_ins        = 10**2.93 * erg_to_joule * cm_to_m**(-2) * 10**6 #[kg s^-3]    bol
 nu_0         = 4.835981008048 * 10**15       #[Hz]       20ev in Hz as given in Murray-Clay et al 2009, they didnt specify the ionising freq for H2O specifically, it almost seemed like they used this value for everything
 R_p          = 2.73 * 6.371 * 10**6         #[m]         planetary radius
 P_0          = 2000                         #[Pa]        pressure at the optical photosphere
-T_eq         = np.full(1000, 553)           #[K]         equilibrium temperature of the planet
+T_eq         = np.full(5000, 553)           #[K]         equilibrium temperature of the planet
 mu_photo     = 18                            #[dimless]   mean molecular weight at the optical photosphere, assumed to be entirely molecular hydrogen
 
-radii = np.linspace(R_p, 5*R_p, 1000) #[m] array of radii from the planetary radius to 10 times the planetary radius
+radii = np.linspace(R_p, 5*R_p, 5000) #[m] array of radii from the planetary radius to 10 times the planetary radius
 
 pressures = P_0 * np.exp(G * M_p * mu_photo * m_p / (k_b * T_eq) * (1/radii - 1/R_p) ) #[Pa] pressure profile of the atmosphere based on the barometric formula, where P_0: pressure at the optical photosphere, G: gravitational constant, M_p: planetary mass, mu_photo: mean molecular weight at the optical photosphere, m_p: proton mass, k_b: Boltzmann constant, T_eq: equilibrium temperature of the planet, radii: array of radii from the planetary radius to 10 times the planetary radius
 
@@ -43,5 +43,6 @@ atm_H2O = Atmosphere(
     R_p=R_p, 
     pressures=pressures, 
     temperatures=T_eq, #using the constant T_eq as a starting array
-    heights=radii - R_p
+    heights=radii - R_p,
+    dominant_species='H2O'
 )

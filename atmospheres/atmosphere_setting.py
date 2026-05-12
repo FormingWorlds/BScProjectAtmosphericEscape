@@ -38,7 +38,7 @@ class Atmosphere:
         self.vmrs = vmrs if vmrs is not None else None
         
         self.read_off_wind_base_parameters()    
-        self.determine_wind_microphysics(nu_0, mu_wind, mu_plus_wind)
+        self.determine_wind_microphysics(nu_0, mu_wind, mu_plus_wind, dominant_species)
         
 
                
@@ -82,7 +82,7 @@ class Atmosphere:
             #print(f"Dominant species at the base of the escaping atmosphere: {self.dominant_species} with VMR of {self.vmrs_base[self.dominant_species]:.2e}")
         
 
-    def determine_wind_microphysics(self, nu_0, mu_wind, mu_plus_wind):
+    def determine_wind_microphysics(self, nu_0, mu_wind, mu_plus_wind, dominant_species):
         '''
         Determines the microphysics parameters for the escaping wind based on the dominant species at the base of the escaping atmosphere.
 
@@ -93,7 +93,10 @@ class Atmosphere:
         '''
         #Checks for manual input
         if nu_0 is not None and mu_wind is not None and mu_plus_wind is not None:
-            self.dominant_species =  "User_Defined"
+            if dominant_species is not None:
+                self.dominant_species = dominant_species
+            else: 
+                self.dominant_species = 'User_defined'
             self.nu_0 = nu_0
             self.mu_wind = mu_wind
             self.mu_plus_wind = mu_plus_wind
