@@ -30,7 +30,7 @@ SPECIES_MASSES = {
     "NH3": 17 * atomic_mass,
 }
 
-def read_proteus_profile(path, R_planet):
+def read_proteus_profile(path, R_planet, min_vmr=1e-20):
     df = pd.read_csv(path, sep="\t")
 
     r = R_planet + df["Height [m]"].to_numpy()
@@ -50,6 +50,8 @@ def read_proteus_profile(path, R_planet):
             continue
 
         vmr = df[col].to_numpy()
+        if np.nanmax(vmr) < min_vmr:
+            continue
 
         species[sp] = vmr * n_tot
 
@@ -67,7 +69,7 @@ def read_bulk_properties(path, case):
         "MMW_g_mol": row["MMW [g/mol]"],
     }
 
-def run_one_file(path, bulk):
+def run_one_file(path, bulk,sigma):
 
     M_planet = bulk["M_planet_kg"]
     R_planet = bulk["R_obs_m"]
