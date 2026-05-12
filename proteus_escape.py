@@ -67,7 +67,10 @@ def read_bulk_properties(path, case):
         "MMW_g_mol": row["MMW [g/mol]"],
     }
 
-def run_one_file(path, M_planet, R_planet, sigma=1e-19):
+def run_one_file(path, bulk, sigma=1e-19):
+    
+    M_planet = bulk["M_planet_kg"]
+    R_planet = bulk["R_obs_m"]
     r, T, species, df = read_proteus_profile(path, R_planet)
 
     result = jeans_escape(
