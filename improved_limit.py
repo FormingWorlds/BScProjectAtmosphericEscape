@@ -3,7 +3,6 @@ import numpy as np
 from scipy.constants import k, G, N_A
 
 
-
 #planetary bulk parameter control
 alpha     = -0.25                                      #from Yelle 
 M_p       = 6.417e23                                   #mass of planet, [kg]
@@ -19,7 +18,7 @@ T_0     = 100     #temperature at the bottom of the model (p_0), [K]
 
 
 def improved_limiting_flux(T_inf, minor_const, major_const, M_minor, M_major, mole_frac_homop, K):
-    '''calculates the improved limiting flux in [1/cm^2*s] and exobase temperature [K] for the above defined planet given the exobase temperature, major and 
+    '''calculates the improved limiting flux in [1/cm^2*s] and exobase temperature [K] for the above defined planet given the top layer temperature (approx exobase), major and 
     minor constituents (str) and their molar masses [kg/mol], the minor constituent mole fraction at homopause and a constant eddy diffusion parameter [cm^2/s]'''
     
     #0. retrieval of binary diffusion parameters
