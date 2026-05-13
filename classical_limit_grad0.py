@@ -17,9 +17,10 @@ T_0     = 100    #temperature at the bottom of the model (p_0), [K]
 
 
 
-def classical_limiting_flux(T_inf, minor_const, major_const, M_minor, M_major, mole_frac_homop, K):
+def classical_limiting_flux_grad0(T_inf, minor_const, major_const, M_minor, M_major, mole_frac_homop, K):
     '''calculates the classical limiting flux in [1/cm^2*s] for the above defined planet given the top layer temperature (approx exobase), major and 
-    minor constituents (str) and their molar masses [kg/mol], the minor constituent mole fraction at homopause and a constant eddy diffusion parameter [cm^2/s]'''
+    minor constituents (str) and their molar masses [kg/mol], the minor constituent mole fraction at homopause and a constant eddy diffusion parameter [cm^2/s], 
+    assuming the temperature gradient is 0 (negligible)'''
     
     #0. retrieval of binary diffusion parameters
     df = pd.read_csv("diffusion_coefficients.csv")
@@ -60,10 +61,7 @@ def classical_limiting_flux(T_inf, minor_const, major_const, M_minor, M_major, m
     #start with scale height 
     H = (k*T[hom_arg]*((z[hom_arg]+R_p)**2))/(G*M_p*m_a)
     
-    #then we need dT/d(xi) at the homopause, which via algebra is -dT/dp p
-    T_grad  = - ((T[hom_arg+1]-T[hom_arg-1])/((p[hom_arg+1]-p[hom_arg-1]))) * p[hom_arg]
-    #T_grad = 0
-    m_tilde = m_i + (alpha*T_grad*(m_a/T[hom_arg]))
+    m_tilde = m_i
     
     flux = mole_frac_homop * (b_hom/H) * (1-(m_tilde/m_a)) * 1e-4  #[1/cm^2*s]
     
