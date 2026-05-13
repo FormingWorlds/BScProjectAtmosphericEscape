@@ -3,7 +3,7 @@ import numpy as np
 
 class Atmosphere:
     
-    def __init__(self, temperature, pressure, height, Kzz, mmw, density, composition, diff_coeffs):
+    def __init__(self, temperature, pressure, height, Kzz, mmw, density, composition, diff_coeffs, planet_mass, planet_rad):
         
         self.temperature = temperature  #[K]
         self.pressure    = pressure     #[Pa]
@@ -13,17 +13,15 @@ class Atmosphere:
         self.density     = density      #[kg/m^3]
         self.composition = composition  #[Volume mixing ratio]
         self.diff_coeffs = diff_coeffs  #[cgs]
+        self.planet_mass = planet_mass  #[kg]
+        self.planet_rad  = planet_rad   #[m]
         
         
-def import_atmosphere(proteus_file, diff_file, system):
+def import_atmosphere(atmo_file, diff_file, system, planet_file, instellation):
     
-    df = pd.read_csv(proteus_file, delimiter='\t')
-    
+    df = pd.read_csv(atmo_file, delimiter='\t')
     df1 = pd.read_csv(diff_file)
-
-    row = df1[(df1["minor_const"] == "H") & (df1["major_const"] == "air")]
-    A = row["A"].values
-    s = row["s"]
+    df2 = pd.read_csv(planet_file, delimiter='\t')
     
     atmo = Atmosphere(
         
@@ -68,7 +66,10 @@ def import_atmosphere(proteus_file, diff_file, system):
                 "A": (df1[(df1["minor_const"] == "H2S") & (df1["major_const"] == system)])["A"].values,
                 "s": (df1[(df1["minor_const"] == "H2S") & (df1["major_const"] == system)])["s"].values
             }
-        }
+        },
+        
+        planet_mass = df2[df2["Case"] == instellation]["M_planet [kg]"].values,
+        planet_rad = df2[df2["Case"] == instellation]["R_int [m]"].values
     )
     
     return atmo
