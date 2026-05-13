@@ -26,11 +26,11 @@ p_steps = 10000   #atmosphere layers
 T_0     = 100    #temperature at the bottom of the model (p_0), [K]
 
 #retrieval of binary diffusion parameters
-df = pd.read_csv("diffusion_coefficients.csv", comment="#")
+df = pd.read_csv("diffusion_coefficients.csv")
 #select a system here;
-row = df[df["system"] == "H_in_CO2"].iloc[0]
-A = row["A"]
-s = row["s"]
+row = df[(df["minor_const"] == "H") & (df["major_const"] == "CO2")]
+A = row["A"].values
+s = row["s"].values
 
 
 
