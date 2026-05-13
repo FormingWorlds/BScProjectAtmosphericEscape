@@ -1,8 +1,0 @@
-import numpy as np
-
-R_min = 1	# minimum impact radius (km)
-R_max = 25	# cap radius (km)
-
-
-
-M_cap = 2*np.pi*rho_0
