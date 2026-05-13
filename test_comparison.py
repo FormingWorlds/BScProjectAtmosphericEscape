@@ -35,10 +35,10 @@ def radius_from_mass(M):
     return (3 * M / (4 * pi * RHO_EARTH)) ** (1 / 3)
 
 def test_exobase_temperature(FEUV, X_CO2):
-    T_lower = 258.0
+    T_lower = 1500.0
 
     # purely qualitative: EUV heats, CO2 cools
-    heating = 10 * FEUV
+    heating = 15 * FEUV**2
     cooling = 50 * X_CO2
 
     return max(T_lower + heating - cooling, T_lower)
@@ -143,6 +143,7 @@ df = pd.DataFrame(rows)
 #print(df.head(20))
 
 import matplotlib.pyplot as plt
+#plt.style.use('science') 
 
 composition_values = sorted(df["CO2_fraction"].unique())
 
@@ -152,22 +153,13 @@ colors = {
     for i, x in enumerate(composition_values)
 }
 
-low_limit = -325 #added this because some values are so small they count as -inf 
-
-df["log10_Mdot_plot"] = np.where(
-    np.isfinite(df["log10_Mdot_weighted"]),
-    df["log10_Mdot_weighted"],
-    low_limit
-)
-
-
 # Fig. 4-like: loss vs FEUV for 1 Earth mass
 subset = df[df["Mplanet_Mearth"] == 1.0]
 
 plt.figure()
 for X_CO2 in sorted(subset["CO2_fraction"].unique()):
     s = subset[subset["CO2_fraction"] == X_CO2]
-    plt.scatter(s["FEUV"], s["log10_Mdot_plot"], marker="o", linewidths=0.5, edgecolor ='black',
+    plt.scatter(s["FEUV"], s["log10_Mdot_weighted"], marker="o", linewidths=0.5, edgecolor ='black',
                 color = colors[X_CO2], label=f"N2:{(1-X_CO2)*10**2:.0f}%, CO2:{X_CO2*10**2:.0f}%")
 
 plt.xlabel(r"EUV flux [$F_{\mathrm{EUV},\oplus}$]")
@@ -203,7 +195,7 @@ markers = ["v", "o", "^"]
 plt.figure()
 for i, M_factor in enumerate(sorted(subset_mass["Mplanet_Mearth"].unique())):
     s = subset_mass[subset_mass["Mplanet_Mearth"] == M_factor]
-    plt.scatter(s["FEUV"], s["log10_Mdot_plot"], marker=markers[i],linewidths=0.5, edgecolor ='black',
+    plt.scatter(s["FEUV"], s["log10_Mdot_weighted"], marker=markers[i],linewidths=0.5, edgecolor ='black',
                 label=f"{M_factor:.1f} Mearth")
 
 plt.xlabel(r"EUV flux [$F_{\mathrm{EUV},\oplus}$]")
