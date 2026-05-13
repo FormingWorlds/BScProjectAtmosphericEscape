@@ -72,5 +72,5 @@ def import_atmosphere(atmo_file, diff_file, system, planet_file, instellation):
         planet_rad = df2[df2["Case"] == instellation]["R_int [m]"].values
     )
     
-    return atmo
+    return atmo 
 
