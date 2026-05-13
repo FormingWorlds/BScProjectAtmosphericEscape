@@ -66,6 +66,9 @@ def improved_limiting_flux(T_inf, minor_const, major_const, M_minor, M_major, mo
     #lets re-define the arrays with the new limits for easier use
     T = T[hom_arg:exo_arg+1]
     p = p[hom_arg:exo_arg+1]
+    D = D[hom_arg:exo_arg+1]
+    n = n[hom_arg:exo_arg+1]
+    
     xi = -np.log(p/p[0])        #the definition of xi from Yelle
     
     #and the coefficients in SI
