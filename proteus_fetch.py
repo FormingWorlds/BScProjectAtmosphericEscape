@@ -1,0 +1,75 @@
+import pandas as pd
+import numpy as np
+
+class Atmosphere:
+    
+    def __init__(self, temperature, pressure, height, Kzz, mmw, density, composition, diff_coeffs):
+        
+        self.temperature = temperature  #[K]
+        self.pressure    = pressure     #[Pa]
+        self.height      = height       #[m]
+        self.Kzz         = Kzz          #[cm^2/s]
+        self.mmw         = mmw          #[g/mol]
+        self.density     = density      #[kg/m^3]
+        self.composition = composition  #[Volume mixing ratio]
+        self.diff_coeffs = diff_coeffs  #[cgs]
+        
+        
+def import_atmosphere(proteus_file, diff_file, system):
+    
+    df = pd.read_csv(proteus_file, delimiter='\t')
+    
+    df1 = pd.read_csv(diff_file)
+
+    row = df1[(df1["minor_const"] == "H") & (df1["major_const"] == "air")]
+    A = row["A"].values
+    s = row["s"]
+    
+    atmo = Atmosphere(
+        
+        temperature = df['Temperature [K]'].values,
+        pressure    = df['Pressure [Pa]'].values,
+        height      = df['Height [m]'].values,
+        Kzz         = df['Kzz [cm2/s]'].values,
+        mmw         = df['MMW [g/mol]'].values,
+        density     = df['Density [kg/m3]'].values,
+        
+        composition = {
+            "H2" : df['H2 [VMR]'].values,
+            "H2O": df['H2O [VMR]'].values,
+            "H"  : df['H [VMR]'].values,
+            "CH4": df['CH4 [VMR]'].values,
+            "NH3": df['NH3 [VMR]'].values,
+            "H2S": df['H2S [VMR]'].values
+        },
+        
+        diff_coeffs = {
+            "H2": {
+                "A": (df1[(df1["minor_const"] == "H2") & (df1["major_const"] == system)])["A"].values,
+                "s": (df1[(df1["minor_const"] == "H2") & (df1["major_const"] == system)])["s"].values
+            },
+            "H2O": {
+                "A": (df1[(df1["minor_const"] == "H2O") & (df1["major_const"] == system)])["A"].values,
+                "s": (df1[(df1["minor_const"] == "H2O") & (df1["major_const"] == system)])["s"].values
+            },
+            "H": {
+                "A": (df1[(df1["minor_const"] == "H") & (df1["major_const"] == system)])["A"].values,
+                "s": (df1[(df1["minor_const"] == "H") & (df1["major_const"] == system)])["s"].values
+            },            
+            "CH4": {
+                "A": (df1[(df1["minor_const"] == "CH4") & (df1["major_const"] == system)])["A"].values,
+                "s": (df1[(df1["minor_const"] == "CH4") & (df1["major_const"] == system)])["s"].values
+            },
+            "NH3": {
+                "A": (df1[(df1["minor_const"] == "NH3") & (df1["major_const"] == system)])["A"].values,
+                "s": (df1[(df1["minor_const"] == "NH3") & (df1["major_const"] == system)])["s"].values
+            },
+            "H2S": {
+                "A": (df1[(df1["minor_const"] == "H2S") & (df1["major_const"] == system)])["A"].values,
+                "s": (df1[(df1["minor_const"] == "H2S") & (df1["major_const"] == system)])["s"].values
+            }
+        }
+    )
+    
+    return atmo
+
