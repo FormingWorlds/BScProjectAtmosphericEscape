@@ -153,6 +153,25 @@ colors = {
     for i, x in enumerate(composition_values)
 }
 
+#plotting T_exo
+
+subset = df[df["Mplanet_Mearth"] == 1.0]
+
+plt.figure()
+for X_CO2 in sorted(subset["CO2_fraction"].unique()):
+    s = subset[subset["CO2_fraction"] == X_CO2]
+    plt.scatter(s["FEUV"], s["T_exo_K"], marker="o", linewidths=0.5, edgecolor ='black',
+                color = colors[X_CO2], label=f"N2:{(1-X_CO2)*10**2:.0f}%, CO2:{X_CO2*10**2:.0f}%")
+
+plt.xlabel(r"EUV flux [$F_{\mathrm{EUV},\oplus}$]")
+plt.ylabel(r"Exobase temperature K")
+plt.legend()
+plt.grid(alpha=0.4)
+plt.title("Trend validation: temperature exobase and EUV")
+plt.tight_layout()
+plt.savefig('Plots/exobase_EUV.png')
+plt.show()
+
 # Fig. 4-like: loss vs FEUV for 1 Earth mass
 subset = df[df["Mplanet_Mearth"] == 1.0]
 
