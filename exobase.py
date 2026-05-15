@@ -7,6 +7,12 @@ def find_exobase(r, n_tot, T, m_mean, M, sigma):
     H = k * T / (m_mean * g)
     mfp = 1 / (sigma * n_tot)
     idx = np.where(mfp > H)[0]  
+    
+    ratio = mfp / H
+
+    print("max ratio:", np.max(ratio))
+    print("top ratio:", ratio[-1])
+    
     if len(idx) == 0:
         raise ValueError("No exobase found")
     

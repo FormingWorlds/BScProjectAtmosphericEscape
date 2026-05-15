@@ -69,10 +69,10 @@ def read_bulk_properties(path, case):
         "MMW_g_mol": row["MMW [g/mol]"],
     }
 
-def run_one_file(path, bulk,sigma):
+def run_one_file(path, bulk, sigma):
 
     M_planet = bulk["M_planet_kg"]
-    R_planet = bulk["R_obs_m"]
+    R_planet = bulk["R_int_m"]
     r, T, species, df = read_proteus_profile(path, R_planet)
 
     result = jeans_escape(
@@ -104,4 +104,63 @@ def run_one_file(path, bulk,sigma):
 
     return rows
 
+proteus_atmospheres = []
 
+for comp in ['H2', 'H2O', 'CO2', 'N2']:
+
+    for M in ['1_M_earth', '10_M_earth']:
+
+        bulk_path = (
+            f"PROTEUS data/"
+            f"{comp}_atmospheres/"
+            f"planet_bulk_properties_{comp}_atmospheres_{M}.csv"
+        )
+
+        try:
+
+            for case_name in ["1_F_earth", "1000_F_earth"]:
+
+                bulk = read_bulk_properties(
+                    bulk_path,
+                    case_name
+                )
+
+                profile_path = (
+                    f"PROTEUS data/"
+                    f"{comp}_atmospheres/"
+                    f"{case_name}/"
+                    f"{comp}_atmosphere_{M}_{case_name}.csv"
+                )
+
+                rows = run_one_file(
+                    profile_path,
+                    bulk,
+                    sigma=1e-19,
+                )
+
+                # add metadata labels
+                for row in rows:
+
+                    row["atmosphere_type"] = comp
+                    row["mass_case"] = M
+                    row["flux_case"] = case_name
+
+                proteus_atmospheres.extend(rows)
+
+                print(f"Finished: {comp} {M} {case_name}")
+
+        except FileNotFoundError:
+
+            print(f"Missing file for {comp} {M} {case_name}")
+
+        except ValueError as e:
+
+            print(f"Skipping {comp} {M}: {e}")
+results = pd.DataFrame(proteus_atmospheres)
+
+results.to_csv(
+    "proteus_jeans_escape_results.csv",
+    index=False
+)
+
+print(results.head())

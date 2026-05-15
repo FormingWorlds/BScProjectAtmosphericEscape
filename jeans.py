@@ -2,7 +2,7 @@ from physics import *
 from exobase import *
 
 # escape rate
-def jeans_escape(r, T, species, species_masses, M, sigma = 1e-19, dayside=True):
+def jeans_escape(r, T, species, species_masses, M, sigma = 1e-21, dayside=True):
     
     n_tot = sum(species.values())
     m_mean = mean_mass(species, species_masses)
