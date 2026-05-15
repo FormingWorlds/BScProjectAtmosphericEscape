@@ -30,7 +30,7 @@ SPECIES_MASSES = {
     "NH3": 17 * atomic_mass,
 }
 
-def read_proteus_profile(path, R_planet, min_vmr=1e-20):
+def read_proteus_profile(path, R_planet, min_vmr=1e-21):
     df = pd.read_csv(path, sep="\t")
 
     r = R_planet + df["Height [m]"].to_numpy()
@@ -167,7 +167,7 @@ for comp in ['H2', 'H2O', 'CO2', 'N2']:
                 rows = run_one_file(
                     profile_path,
                     bulk,
-                    sigma=1e-21,
+                    sigma=1e-20,
                 )
 
                 # add metadata labels

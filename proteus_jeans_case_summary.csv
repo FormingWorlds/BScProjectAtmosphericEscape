@@ -1,5 +1,4 @@
 file,atmosphere_type,mass_case,flux_case,weighted_mass_loss_kg_s,dominant_escaping_species,dominant_species_Mdot_kg_s,T_exo_K,exobase_altitude_km,exobase_radius_m,exobase_index
-H2_atmosphere_1_M_earth_1_F_earth.csv,H2,1_M_earth,1_F_earth,4.123940887554789e-14,H,7.500716079353511e-10,180.0,0.0,9196448.826200001,0
 CO2_atmosphere_1_M_earth_1_F_earth.csv,CO2,1_M_earth,1_F_earth,2.1279619559793211e-19,H,5.082217179801183e-15,180.0,0.0,6621351.0768,0
 CO2_atmosphere_1_M_earth_1000_F_earth.csv,CO2,1_M_earth,1000_F_earth,0.0016312949939610657,H,0.7514856529251887,682.843,0.0,7211296.6398,0
 N2_atmosphere_1_M_earth_1_F_earth.csv,N2,1_M_earth,1_F_earth,3.18638635547674e-19,H,1.0729968790122478e-14,180.0,0.0,6798982.5369,0
