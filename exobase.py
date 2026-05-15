@@ -10,8 +10,8 @@ def find_exobase(r, n_tot, T, m_mean, M, sigma):
 
     ratio = mfp / H
 
-    print("max ratio:", np.max(ratio))
-    print("top ratio:", ratio[-1])
+    #print("max ratio:", np.max(ratio))
+    #print("top ratio:", ratio[-1])
     
     if len(idx) == 0:
         raise ValueError("No exobase found")

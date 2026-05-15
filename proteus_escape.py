@@ -7,7 +7,11 @@ from jeans import jeans_escape
 from constants import *
 
 def read_proteus_profile(path, R_planet, min_vmr=1e-21):
+
     df = pd.read_csv(path, sep="\t")
+
+    # make sure profile goes bottom to top
+    df = df.sort_values("Height [m]").reset_index(drop=True)
 
     r = R_planet + df["Height [m]"].to_numpy()
     T = df["Temperature [K]"].to_numpy()
@@ -18,7 +22,7 @@ def read_proteus_profile(path, R_planet, min_vmr=1e-21):
     species = {}
 
     for col in df.columns:
-        if not col.endswith("[VMR]"):
+        if "[VMR]" not in col:
             continue
 
         sp = col.replace(" [VMR]", "")
@@ -26,23 +30,26 @@ def read_proteus_profile(path, R_planet, min_vmr=1e-21):
             continue
 
         vmr = df[col].to_numpy()
+        
         if np.nanmax(vmr) < min_vmr:
             continue
 
         species[sp] = vmr * n_tot
-    print("\nFILE:", path)
-    print("first row:")
-    print("height =", df["Height [m]"].iloc[0])
-    print("P      =", df["Pressure [Pa]"].iloc[0])
-    print("T      =", df["Temperature [K]"].iloc[0])
+        n_from_pressure = P / (k * T)
 
-    print("last row:")
-    print("height =", df["Height [m]"].iloc[-1])
-    print("P      =", df["Pressure [Pa]"].iloc[-1])
-    print("T      =", df["Temperature [K]"].iloc[-1])
+    n_from_species = np.sum(
+        np.array(list(species.values())),
+        axis=0
+    )
 
-    print("height increasing?", np.all(np.diff(df["Height [m]"].to_numpy()) > 0))
-    print("pressure decreasing?", np.all(np.diff(df["Pressure [Pa]"].to_numpy()) < 0))
+    print("n_pressure bottom/top:", n_from_pressure[0], n_from_pressure[-1])
+    print("n_species bottom/top: ", n_from_species[0], n_from_species[-1])
+    print(
+        "n_species / n_pressure bottom/top:",
+        n_from_species[0] / n_from_pressure[0],
+        n_from_species[-1] / n_from_pressure[-1],
+    )
+
     return r, T, species, df
 
 
