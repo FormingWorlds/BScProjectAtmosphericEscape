@@ -1,3 +1,4 @@
+from scipy.constants import atomic_mass
 
 R_EARTH = 6.371e6
 M_EARTH = 5.972e24
