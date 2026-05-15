@@ -2,7 +2,7 @@ from physics import *
 from exobase import *
 
 # escape rate
-def jeans_escape(r, T, species, species_masses, M, sigma = 1e-21, dayside=True):
+def jeans_escape(r, T, species, species_masses, M, sigma = 1e-19, dayside=True):
     
     n_tot = sum(species.values())
     m_mean = mean_mass(species, species_masses)
@@ -15,6 +15,8 @@ def jeans_escape(r, T, species, species_masses, M, sigma = 1e-21, dayside=True):
     exobase_altitude = r_exo - r[0]
     
     results = {}
+
+    M_weighted = 0
     
     for sp, n in species.items():
         m = species_masses[sp]
@@ -25,6 +27,8 @@ def jeans_escape(r, T, species, species_masses, M, sigma = 1e-21, dayside=True):
         f_j = effusion_velocity(v_th, lam)
         
         Mdot = n_exo * f_j * A * m
+        X_exo = n_exo / n_tot[idx]
+        M_weighted += X_exo * Mdot
         
         results[sp] = {
             "Mdot (kg/s)": float(Mdot),
@@ -35,6 +39,7 @@ def jeans_escape(r, T, species, species_masses, M, sigma = 1e-21, dayside=True):
         }
     
     return {
+        "weighted_mass_loss_kg_s": M_weighted,
         "results": results,
         "exobase_index": int(idx) , 
         "exobase_radius": float(r_exo),

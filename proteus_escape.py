@@ -90,6 +90,7 @@ def run_one_file(path, bulk, sigma):
     for sp, res in result["results"].items():
         rows.append({
             "file": os.path.basename(path),
+            "weighted_mass_loss_kg_s": result["weighted_mass_loss_kg_s"],
             "species": sp,
             "Mdot_kg_s": res["Mdot (kg/s)"],
             "lambda_j": res["lambda_j"],
@@ -104,7 +105,38 @@ def run_one_file(path, bulk, sigma):
 
     return rows
 
+def summarize_case(rows):
+    """
+    Summarise all species escape rates for one atmosphere file.
+    rows = list of dictionaries returned by run_one_file()
+    """
+
+    if len(rows) == 0:
+        return None
+
+    dominant = max(rows, key=lambda row: row["Mdot_kg_s"])
+
+    summary = {
+        "file": rows[0]["file"],
+        "atmosphere_type": rows[0]["atmosphere_type"],
+        "mass_case": rows[0]["mass_case"],
+        "flux_case": rows[0]["flux_case"],
+
+        "weighted_mass_loss_kg_s": rows[0]["weighted_mass_loss_kg_s"],
+        "dominant_escaping_species": dominant["species"],
+        "dominant_species_Mdot_kg_s": dominant["Mdot_kg_s"],
+
+        "T_exo_K": rows[0]["T_exo_K"],
+        "exobase_altitude_km": rows[0]["exobase_altitude_km"],
+        "exobase_radius_m": rows[0]["exobase_radius_m"],
+        "exobase_index": rows[0]["exobase_index"],
+    }
+
+    return summary
+
 proteus_atmospheres = []
+
+summary_rows = []
 
 for comp in ['H2', 'H2O', 'CO2', 'N2']:
 
@@ -135,7 +167,7 @@ for comp in ['H2', 'H2O', 'CO2', 'N2']:
                 rows = run_one_file(
                     profile_path,
                     bulk,
-                    sigma=1e-19,
+                    sigma=1e-21,
                 )
 
                 # add metadata labels
@@ -146,6 +178,7 @@ for comp in ['H2', 'H2O', 'CO2', 'N2']:
                     row["flux_case"] = case_name
 
                 proteus_atmospheres.extend(rows)
+                summary_rows.append(summarize_case(rows))
 
                 print(f"Finished: {comp} {M} {case_name}")
 
@@ -156,6 +189,7 @@ for comp in ['H2', 'H2O', 'CO2', 'N2']:
         except ValueError as e:
 
             print(f"Skipping {comp} {M}: {e}")
+
 results = pd.DataFrame(proteus_atmospheres)
 
 results.to_csv(
@@ -164,3 +198,10 @@ results.to_csv(
 )
 
 print(results.head())
+
+summary_results = pd.DataFrame(summary_rows)
+
+summary_results.to_csv(
+    "proteus_jeans_case_summary.csv",
+    index=False
+)
