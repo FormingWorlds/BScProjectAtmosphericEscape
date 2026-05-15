@@ -21,4 +21,8 @@ SPECIES_MASSES = {
     "N2O": 44 * atomic_mass,
     "CH4": 16 * atomic_mass,
     "NH3": 17 * atomic_mass,
+    "H2S": 34 * atomic_mass,
+    "S": 32 * atomic_mass,
+    "S2": 64 * atomic_mass,
+    "SO2": 64 * atomic_mass,   
 }
