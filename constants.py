@@ -26,3 +26,28 @@ SPECIES_MASSES = {
     "S2": 64 * atomic_mass,
     "SO2": 64 * atomic_mass,   
 }
+
+PARTICLE_RADII = {
+    "H": 120e-12, #approximate
+    "H2": 144.53e-12,
+    "He": 130e-12,
+    "C": 170e-12, #van der waals radius instead
+    "N": 155e-12, #van der waals radius instead
+    "O": 152e-12, #van der waals radius instead
+    "N2": 182e-12,
+    "O2": 173e-12,
+    "CO": 188e-12,
+    "CO2": 165e-12,
+    "H2O": 132.5e-12 ,
+    "OH": 150e-12, #approximate
+    "NO": 158.5e-12,
+    "NO2": 170e-12, #approximate
+    "N2O": 165e-12,
+    "CH4": 190e-12,
+    "NH3": 130e-12,
+    "H2S": 180e-12,
+    "S": 180e-12, #van der waals radius instead
+    "S2": 190e-12, #approximate
+    "SO2": 180e-12,   
+
+}
