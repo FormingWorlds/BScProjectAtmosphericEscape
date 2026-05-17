@@ -24,15 +24,15 @@ critical_pressures = {
 }
 
 #first val for interdiffusion of nonpolar gases and for self-diffusion, second val for interdiffusion of water and nonpolar gas
-k_c = np.array([2.74e-4, 3.63e-4])
+k_c = np.array([2.74e-6, 3.63e-6])
 
 #first val for interdiffusion of nonpolar gases and for selfdiffusion, second val for interdiffusion of water and nonpolar gas
 n_c = np.array([1.823, 2.334])
 
 
 def slattery_diff(T, P, minor, major):
-    """calculates binary diffusion coefficient (D) for untabulated nonpolar-nonpolar (self also possible) or nonpolar-water species
-    given temperature, pressure, all caps strings of major and minor constituents"""
+    """calculates binary diffusion coefficient (D) for untabulated nonpolar-nonpolar (self-self also possible) or nonpolar-water species
+    given temperature, pressure (in atm!!!), all caps strings of major and minor constituents"""
     
     if ((minor == 'H2O') or (major == 'H2O')):
         k = k_c[1]
@@ -41,12 +41,15 @@ def slattery_diff(T, P, minor, major):
         k = k_c[0]
         n = n_c[0]
         
-    Tc1 = critical_temps['minor']
-    Tc2 = critical_temps['major']
-    Pc1 = critical_pressures['minor']
-    Pc2 = critical_pressures['major']
-    M1 = molar_masses['minor']
-    M2 = molar_masses['major']
+    min = f'{minor}'
+    maj = f'{major}'
+        
+    Tc1 = critical_temps[min]
+    Tc2 = critical_temps[maj]
+    Pc1 = critical_pressures[min]
+    Pc2 = critical_pressures[maj]
+    M1 = molar_masses[min]
+    M2 = molar_masses[maj]
     
     T_red = T / ((Tc1 * Tc2)**0.5)
     D = (k * (T_red**n) * ((Pc1 * Pc2)**0.33) * ((Tc1 * Tc2)**(5/12)) * ((M1 + M2)**0.5)) / (P * ((M1 * M2)**0.5))

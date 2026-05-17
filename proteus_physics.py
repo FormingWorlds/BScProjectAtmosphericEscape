@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.constants import k, G, N_A
+from slattery_diff import slattery_diff
 
 
 alpha     = -0.25       #from Yelle 
@@ -18,9 +19,15 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
         A = atm.diff_coeffs['H']['A']
         s = atm.diff_coeffs['H']['s']
         T = atm.temperature
+        p = atm.pressure
+        p_atm = p/101325 #[atm]
         n = (atm.density / (atm.mmw/N_A)) * 1e-4
         
         b = A * (T**(s))
         D = b/n
         
-        return(atm.height, atm.Kzz, D)
+        
+        slattery = slattery_diff(T, p_atm, 'H', system)
+        
+        
+        return(D, slattery)
