@@ -6,8 +6,7 @@ from matplotlib import pyplot as plt
 plt.rc('text', usetex=True)
 
 
-atm_archetype = ["N2"]  
-#atm_archetype = ["CO2", "H2", "H2O", "N2"]  
+atm_archetype = ["CO2", "H2", "H2O", "N2"]  
 instellations = ["1_F_earth", "1000_F_earth"]
 mass = ["1_M_earth", "10_M_earth"]
 
@@ -44,15 +43,15 @@ for specie in atm_archetype:
                 
                 res = proteus_improved_limiting_flux(atm, system, disso_fracs)
                 
-                #plt.plot(res[0], res[1], label='K')
-                #plt.plot(res[0], res[2], label='D')
-                #plt.xlabel('height[m]')
-                #plt.ylabel('coeffs [cm^2/s]')
-                #plt.yscale('log')
-                #plt.title(f'{system}, {m}, {instellation}')
-                #plt.grid()
-                #plt.legend()
-                #plt.show()
-                
-                print(f"data {res[0]}")
-                print(f"slattery {res[1]}")
+                plt.plot(res[0], res[1], label='H')
+                plt.plot(res[0], res[2], label='mfp')
+                plt.plot(res[0], res[3], label='D')
+                plt.plot(res[0], res[4], label='K')
+                plt.xlabel('height[m]')
+                #plt.ylabel('coeffs $[cm^2/s]$')
+                plt.yscale('log')
+                plt.xscale('log')
+                plt.title(f'{system}, {m}, {instellation}')
+                plt.grid()
+                plt.legend()
+                plt.show()

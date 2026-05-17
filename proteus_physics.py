@@ -16,18 +16,32 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
         system = string of main consituent
         disso_fracs = library of disso fracs"""
         
-        A = atm.diff_coeffs['H']['A']
-        s = atm.diff_coeffs['H']['s']
+        
         T = atm.temperature
         p = atm.pressure
+        K = atm.Kzz
+        rho = atm.density
+        mmw = atm.mmw
+        z = atm.height
+        
+        
+        m_a = mmw/N_A
         p_atm = p/101325 #[atm]
-        n = (atm.density / (atm.mmw/N_A)) * 1e-4
-        
-        b = A * (T**(s))
-        D = b/n
+        n = (rho/m_a) * 1e-4
         
         
-        slattery = slattery_diff(T, p_atm, 'H', system)
+        A = atm.diff_coeffs['H']['A']
+        s = atm.diff_coeffs['H']['s']
         
-        
-        return(D, slattery)
+        if np.shape(atm.diff_coeffs['H']['A'])[0] == 0:
+            D = slattery_diff(T, p_atm, 'H', system)
+        else:
+            b = A*(T**s)
+            D = b/n
+            
+            
+        H = atm.scale_height()        
+        mfp = (D*1e-4) * ((m_a/(k*T))**0.5)    #mean free path, [m] 
+            
+            
+        return(z, H, mfp, D, K)
