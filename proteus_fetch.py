@@ -1,11 +1,13 @@
 import pandas as pd
 import numpy as np
+from scipy.constants import k, G, N_A
+
 
 #define a class for easier&cleaner work
 class Atmosphere:
     
     def __init__(self, temperature, pressure, height, Kzz, mmw, density, VMR, molar_masses, diff_coeffs, planet_mass, planet_rad):
-        
+        """init function"""
         self.temperature = temperature  #[K]
         self.pressure    = pressure     #[Pa]
         self.height      = height       #[m]
@@ -17,6 +19,12 @@ class Atmosphere:
         self.diff_coeffs = diff_coeffs  #[cgs]
         self.planet_mass = planet_mass  #[kg]
         self.planet_rad  = planet_rad   #[m]
+        
+    def scale_height(self):
+        """finds density scale height"""
+        
+        H = (k * self.temperature * ((self.planet_rad + self.height)**2))/(G * self.planet_mass * (self.mmw/N_A))
+        return(H)
         
         
 def import_atmosphere(atmo_file, diff_file, system, planet_file, instellation):
