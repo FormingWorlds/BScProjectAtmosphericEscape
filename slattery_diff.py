@@ -31,15 +31,15 @@ n_c = np.array([1.823, 2.334])
 
 
 def slattery_diff(T, P, minor, major):
-    """calculates binary diffusion coefficient (D) for untabulated nonpolar-nonpolar (self-self also possible) or nonpolar-water species
+    """calculates binary diffusion coefficient (D) in [cm^2/s] for untabulated nonpolar-nonpolar (self-self also possible) or nonpolar-water species
     given temperature, pressure (in atm!!!), all caps strings of major and minor constituents"""
     
     if ((minor == 'H2O') or (major == 'H2O')):
-        k = k_c[1]
-        n = n_c[1]
+        ks = k_c[1]
+        ns = n_c[1]
     else:
-        k = k_c[0]
-        n = n_c[0]
+        ks = k_c[0]
+        ns = n_c[0]
         
     min = f'{minor}'
     maj = f'{major}'
@@ -52,8 +52,7 @@ def slattery_diff(T, P, minor, major):
     M2 = molar_masses[maj]
     
     T_red = T / ((Tc1 * Tc2)**0.5)
-    D = (k * (T_red**n) * ((Pc1 * Pc2)**0.33) * ((Tc1 * Tc2)**(5/12)) * ((M1 + M2)**0.5)) / (P * ((M1 * M2)**0.5))
-    #D is in [cm^2/s]
+    D = (ks * (T_red**ns) * ((Pc1 * Pc2)**0.33) * ((Tc1 * Tc2)**(5/12)) * ((M1 + M2)**0.5)) / (P * ((M1 * M2)**0.5))
     
     return (D)
     
