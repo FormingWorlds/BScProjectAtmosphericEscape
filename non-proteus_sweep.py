@@ -9,27 +9,27 @@ from classical_limit import classical_limiting_flux
 
 #set variables for the function:
 
-temperatures = np.linspace(100, 400, 50)  #exobase temperatures [K]
-T_0          = 100                        #temperature at the bottom of the model (p_0), [K]
+temperatures = np.linspace(1500, 2500, 50)  #exobase temperatures [K]
+T_0          = 1500                        #temperature at the bottom of the model (p_0), [K]
 
 minor_const     = 'H'                                 #diffusing minor constituent, all caps string
-major_const     = 'N2'                                #major background constituent, all caps string
+major_const     = 'CO2'                                #major background constituent, all caps string
 M_minor         = 1*1e-3                              #molar mass of minor constituent, [kg]
-M_major         = 28*1e-3                             #molar mass of major constituent, [kg]
-#mole_frac_homop = 1e-5                                #constant mole fraction at the homopause [unitless]
-mole_frac_homop = np.array([1e-5, 1e-4, 1e-3, 1e-2])  #constant mole fraction at the homopause [unitless]
+M_major         = 44*1e-3                             #molar mass of major constituent, [kg]
+mole_frac_homop = 1e-5                                #constant mole fraction at the homopause [unitless]
+#mole_frac_homop = np.array([1e-5, 1e-4, 1e-3, 1e-2])  #constant mole fraction at the homopause [unitless]
 
-M_p = 6.417e23  #mass of planet, [kg]
-R_p = 3389.5e3  #radius of planet, [m]
+M_p = 7.99*5.97e24  #mass of planet, [kg]
+R_p = 1.875*6371000  #radius of planet, [m]
 
 z_0 = 80e3  #height above surface at bottom of the model, [m]
 
-p_0     = 0.1    #pressure defining bottom of the model, [Pa]
+p_0     = 10000    #pressure defining bottom of the model, [Pa]
 p_inf   = 1e-6   #pressure defining roughly the exobase, [Pa]
 p_steps = 10000  #atmosphere layers
 
-K = 1e6                   #eddy diffusion coefficient [cm^2/s]
-#K = np.logspace(6, 7, 4)  #eddy diffusion coefficient [cm^2/s]
+#K = 5e6                   #eddy diffusion coefficient [cm^2/s]
+K = np.logspace(6, 7, 4)  #eddy diffusion coefficient [cm^2/s]
 alpha = -0.25         #from Yelle 
 
 
@@ -39,7 +39,7 @@ alpha = -0.25         #from Yelle
 flux_list = []
 for i in range(0, 4):    
     for temp in temperatures:
-        results = improved_limiting_flux(temp, minor_const, major_const, M_minor, M_major, mole_frac_homop[i], K, M_p, R_p, z_0, p_0, p_inf, p_steps, T_0, alpha)
+        results = improved_limiting_flux(temp, minor_const, major_const, M_minor, M_major, mole_frac_homop, K[i], M_p, R_p, z_0, p_0, p_inf, p_steps, T_0, alpha)
         
         if isinstance(results, str):
             print(results)
@@ -49,7 +49,7 @@ for i in range(0, 4):
             fluxes = np.asarray(flux_list, dtype='float64')
     
     fluxes = np.reshape(fluxes, (i+1, 50))      
-    plt.plot(temperatures, fluxes[i,:], label=f'Xi={mole_frac_homop[i]:g}')
+    plt.plot(temperatures, fluxes[i,:], label=f'K={K[i]:g}')
 
 plt.xlabel('Exobase temperature [K]')
 plt.ylabel('Escape flux [cm$^{-2}$ $\cdot$ s$^{-1}$]')
@@ -57,8 +57,8 @@ plt.yscale('log')
 plt.grid()
 plt.legend()
 plt.tight_layout()
-plt.title('H escape flux limit from N2 atmosphere (Mars-like planet) as function of exobase temp and mole frac')
-#plt.savefig('plots/H_in_N2_temp_molefrac.png', dpi=300, bbox_inches='tight')
+plt.title('H escape flux limit from CO2 atmosphere (8 earth mass planet) as function of exobase temp and eddy coefficient')
+plt.savefig('plots/supearth_H_in_CO2_temp_eddy.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 
