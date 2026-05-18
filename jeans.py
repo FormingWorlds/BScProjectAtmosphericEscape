@@ -12,6 +12,8 @@ def jeans_escape(r, T, species, species_masses, M, sigma = 1e-19, dayside=True):
         sigma_used = effective_cross_section(species)
     else:
         sigma_used = sigma
+        
+    #print(sigma_used)
     
     idx = find_exobase(r, n_tot, T, m_mean, M, sigma_used)
 

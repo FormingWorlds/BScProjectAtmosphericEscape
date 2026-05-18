@@ -35,20 +35,6 @@ def read_proteus_profile(path, R_planet, min_vmr=1e-21):
             continue
 
         species[sp] = vmr * n_tot
-        n_from_pressure = P / (k * T)
-
-    n_from_species = np.sum(
-        np.array(list(species.values())),
-        axis=0
-    )
-
-    print("n_pressure bottom/top:", n_from_pressure[0], n_from_pressure[-1])
-    print("n_species bottom/top: ", n_from_species[0], n_from_species[-1])
-    print(
-        "n_species / n_pressure bottom/top:",
-        n_from_species[0] / n_from_pressure[0],
-        n_from_species[-1] / n_from_pressure[-1],
-    )
 
     return r, T, species, df
 
@@ -65,7 +51,7 @@ def read_bulk_properties(path, case):
         "MMW_g_mol": row["MMW [g/mol]"],
     }
 
-def run_one_file(path, bulk, sigma):
+def run_one_file(path, bulk):
 
     M_planet = bulk["M_planet_kg"]
     R_planet = bulk["R_int_m"]
@@ -163,9 +149,7 @@ for comp in ['H2', 'H2O', 'CO2', 'N2']:
                 rows = run_one_file(
                     profile_path,
                     bulk,
-                    sigma=1e-20,
                 )
-
                 # add metadata labels
                 for row in rows:
 
@@ -184,7 +168,7 @@ for comp in ['H2', 'H2O', 'CO2', 'N2']:
 
         except ValueError as e:
 
-            print(f"Skipping {comp} {M}: {e}")
+            print(f"Skipping {comp} {M}: {e} {case_name}")
 
 results = pd.DataFrame(proteus_atmospheres)
 
