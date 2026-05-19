@@ -5,6 +5,7 @@ from scipy.constants import k, atomic_mass
 
 from jeans import jeans_escape
 from constants import *
+from extend_profile import *
 
 def read_proteus_profile(path, R_planet, min_vmr=1e-21):
 
@@ -58,16 +59,45 @@ def run_one_file(path, bulk):
     M_planet = bulk["M_planet_kg"]
     R_planet = bulk["R_int_m"]
     r, T, species, df = read_proteus_profile(path, R_planet)
+    
+    try:
+        result = jeans_escape(
+            r=r,
+            T=T,
+            species=species,
+            species_masses=SPECIES_MASSES,
+            M=M_planet,
+            sigma="weighted",
+            dayside=True,
+        )
+        
+        profile_extended = False
 
-    result = jeans_escape(
+    except ValueError:
+        print("No exobase found, extending profile")
+
+    r, T, species = extend_profile_exobase(
         r=r,
         T=T,
         species=species,
-        species_masses=SPECIES_MASSES,
-        M=M_planet,
-        sigma="weighted",
-        dayside=True,
+        species_masses = SPECIES_MASSES,
+        M_planet = M_planet,
+        z_extra=10e7,
+        n_extra=10000,
     )
+    
+    result = jeans_escape(
+            r=r,
+            T=T,
+            species=species,
+            species_masses=SPECIES_MASSES,
+            M=M_planet,
+            sigma= "weighted",
+            dayside=True,
+        )
+
+    profile_extended = True
+
 
     rows = []
 
