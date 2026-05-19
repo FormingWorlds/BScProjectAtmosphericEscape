@@ -13,8 +13,8 @@ def extend_profile_exobase(
     species,
     species_masses,
     M_planet,
-    z_extra=1e6,
-    n_extra=10000,
+    z_extra=1e3,
+    n_extra=10,
     max_extra=1e9,
 ):
     """extend profile upwards to exobase assuming hydrostatic equilibrium and isothermal extension, 
@@ -79,7 +79,7 @@ def extend_profile_exobase(
         sigma_new = effective_cross_section(species_new)
 
         try:
-            find_exobase(
+            idx = find_exobase(
                 r_new,
                 n_tot_new,
                 T_new,
@@ -88,7 +88,15 @@ def extend_profile_exobase(
                 sigma_new,
             )
 
-            return r_new, T_new, species_new
+            r_final = r_new[:idx + 1]
+            T_final = T_new[:idx + 1]
+
+            species_final = {
+                sp: species_new[sp][:idx + 1]
+                for sp in species_new
+            }
+
+            return r_final, T_final, species_final
 
         except ValueError:
             r_current = r_new
