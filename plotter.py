@@ -92,6 +92,10 @@ for idx, mas in enumerate(mass):
     ax.set_ylabel(r"$\log_{10}(\dot{M}_{weighted})$ [kg/s]")
     ax.set_title(mass_labels[mas], fontsize=14)
     ax.tick_params(axis="both", which="major", labelsize=12)
+    first_legend = axes[1].legend(handles=atm_handles, title="Atmosphere", loc="upper left")
+    axes[1].add_artist(first_legend)
+    first_legend = axes[0].legend(handles=atm_handles, title="Atmosphere", loc="upper left")
+    axes[0].add_artist(first_legend)
 
     axes[1].legend(handles=flux_legend, title="Instellation", fontsize=11)
     axes[0].legend(handles=flux_legend, title="Instellation", fontsize=11)
@@ -191,6 +195,10 @@ for idx, mas in enumerate(mass):
 
     axes[0].set_ylabel("Exobase altitude [km]", fontsize=13)
     axes[1].set_ylabel("Exobase altitude [km]", fontsize=13)
+    first_legend = axes[1].legend(handles=atm_handles, title="Atmosphere", loc="upper left")
+    axes[1].add_artist(first_legend)
+    first_legend = axes[0].legend(handles=atm_handles, title="Atmosphere", loc="upper left")
+    axes[0].add_artist(first_legend)
 
     axes[1].legend(handles=flux_legend, title="Instellation", fontsize=11)
     axes[0].legend(handles=flux_legend, title="Instellation", fontsize=11)
