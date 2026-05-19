@@ -3,7 +3,8 @@ from constants import *
 
 
 def effective_cross_section(species):
-    n_tot = np.sum(list(species.values()), axis=0)
+    known = {sp: n for sp, n in species.items() if sp in PARTICLE_RADII} #only use species i have the radii for 
+    n_tot = np.sum(list(known.values()), axis=0)
     sigma_eff = np.zeros_like(n_tot)
 
     for sp_i, n_i in species.items():

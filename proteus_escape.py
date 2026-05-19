@@ -18,6 +18,7 @@ def read_proteus_profile(path, R_planet, min_vmr=1e-21):
     P = df["Pressure [Pa]"].to_numpy()
 
     n_tot = P / (k * T)
+    #print(n_tot)
 
     species = {}
 
@@ -35,6 +36,7 @@ def read_proteus_profile(path, R_planet, min_vmr=1e-21):
             continue
 
         species[sp] = vmr * n_tot
+        #print(species[sp])
 
     return r, T, species, df
 
