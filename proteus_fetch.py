@@ -20,8 +20,6 @@ class Atmosphere:
         self.planet_mass = planet_mass  #[kg]
         self.planet_rad  = planet_rad   #[m]
         
-    def flipper(self):
-        """i noticed that the proteus data is flipped for 1M planets"""
         
     def scale_height(self):
         """finds density scale height"""
@@ -29,16 +27,16 @@ class Atmosphere:
         H = (k * self.temperature * ((self.planet_rad + self.height)**2))/(G * self.planet_mass * (self.mmw/N_A))
         return(H)
     
+    
     def Kzz_extension(self):
         """extends Kzz up to 10^-13 bar assuming its a power law"""
         
         K = self.Kzz
         p = self.pressure
         
-        slope = np.log10((K[-1] - K[-10])/(p[-1] - p[-10]))
-        p_ext = np.logspace(np.log10(p[-1]), -7, 10)
-        #K_ext = np.zeros(10)
-        K_ext = ((p_ext-p[-1])*slope)+K[-1]
+        slope = (np.log10(K[-1]) - np.log10(K[-10]))/(np.log10(p[-1]) - np.log10(p[-10]))
+        p_ext = np.logspace(np.log10(p[-1]), -8, 20)
+        K_ext = ((p_ext/p[-1])**slope) * K[-1]
         
         K = np.concatenate((K, K_ext), axis=0)
         p = np.concatenate((p, p_ext), axis=0)

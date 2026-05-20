@@ -64,16 +64,14 @@ for specie in atm_archetype:
                 # plt.savefig('plots/proteus_issue.png', dpi=300, bbox_inches='tight')
                 # plt.show()
                 
-                plt.plot(res[1][-40:-1]/100000, res[0][-40:-1], label=f"{system}, {instellation}, {m}")
+                plt.plot(res[1][-50:-1]/100000, res[0][-50:-1], label=f"{system}, {instellation}, {m}")
                 plt.ylabel('K $[cm^2/s]$')
                 plt.xlabel('Pressure $[bar]$')
                 plt.yscale('log')
                 plt.xscale('log')
-                print(res[1]/100000)
-                print(res[0])
                 
     plt.grid()
     plt.legend()
-    #plt.savefig('working_plots/proteus_part/K_vs_P_15points.png', dpi=300, bbox_inches='tight')
+    plt.savefig('working_plots/proteus_part/K_vs_P_extended.png', dpi=300, bbox_inches='tight')
     plt.show()
                 
