@@ -6,21 +6,27 @@ molar_masses = { #[g/mol]
     "H2" : 2.016,  
     "H2O": 18.015,
     "H"  : 1.008,
-    "N2": 28.014
+    "N2": 28.014,
+    "He": 4.002,
+    "CO2": 44.009
 }
 
 critical_temps = {
     "H2O" : 647.1, #critial temp of water, [K]     NIST
     "H2" : 33.18, #critical temp of H2, [K]    NIST
     "H" : 33.18, #critical temp of H, [K]    NIST
-    "N2" : 126.21 #[K], wiki
+    "N2" : 126.21, #[K], wiki
+    "He" : 5.195, #[K], wiki
+    "CO2" : 304.128 #[K], wiki
 }
 
 critical_pressures = {
     "H2O" : 217.75, #critical pressure, [atm]
     "H2" : 12.68986, #critical pressure,[atm] (1.2858 MPa, wiki)
     "H" : 12.68986, #critical pressure,[atm] (1.2858 MPa, wiki)
-    "N2" : 33.4567 #[atm]
+    "N2" : 33.4567, #[atm]
+    "He" : 2.244856, #[atm]
+    "CO2": 72.808 #[atm]
 }
 
 #first val for interdiffusion of nonpolar gases and for self-diffusion, second val for interdiffusion of water and nonpolar gas
