@@ -1,5 +1,7 @@
 ### Importing the escape functions ###
-from rr_escape import *
+from rr_escape import examine_atmosphere_for_rr_escape, get_rr_escape_diagnostics
+import scipy as sp
+import numpy as np
 
 ### importing atmosphere class ###
 from atmospheres.atmosphere_setting import Atmosphere

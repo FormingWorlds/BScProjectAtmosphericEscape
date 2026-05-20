@@ -6,8 +6,8 @@ Radiation-recombination-limited escape mechanism.
 
 import numpy as np
 import scipy as sp
-from conversions import *
-from plots.plotter import *
+from conversions import cm_to_m
+
 
 
 def calc_sound_speed(T_wind, mu_wind):
@@ -140,9 +140,7 @@ def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
     else:
         print(f"Planet is in intermediate regime of gravitationally binding atmosphere, wind strength declines rapidly")
 
-    #plot_R_over_P(atm)
-    #plot_R_over_T(atm)
-    #plot_P_over_T(atm)
+
     results = get_rr_escape_diagnostics(atm)
 
     print()

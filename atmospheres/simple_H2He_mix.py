@@ -1,7 +1,7 @@
 import scipy as sp
 import numpy as np
 from atmospheres.atmosphere_setting import Atmosphere
-from conversions import *
+from conversions import erg_to_joule, cm_to_m
 
 G = sp.constants.G #[m^3 kg^-1 s^-2]
 m_p = sp.constants.m_p #[kg]

@@ -5,7 +5,7 @@ import os
 
 # This adds the parent directory to the search path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from conversions import *
+from conversions import cm_to_m, erg_to_joule
 from atmospheres.atmosphere_setting import Atmosphere
 
 G = sp.constants.G #[m^3 kg^-1 s^-2]

@@ -1,5 +1,5 @@
 ### Importing the escape functions ###
-from rr_escape import *
+from rr_escape import examine_atmosphere_for_rr_escape, get_rr_escape_diagnostics
 
 ### Importing the single atmospheres we want to examine ###
 from proteus_fetch import proteus_atmosphere_cases
@@ -7,6 +7,7 @@ from proteus_fetch import proteus_atmosphere_cases
 from atmospheres.simple_H2 import atm_H2
 from atmospheres.simple_H2He_mix import atm_H2He_mix
 from atmospheres.simple_H2O import atm_H2O
+import os
 width = os.get_terminal_size().columns 
 
 
