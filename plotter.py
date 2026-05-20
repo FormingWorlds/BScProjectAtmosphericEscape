@@ -187,8 +187,7 @@ for idx, mas in enumerate(mass):
                 marker="o" if inst == "1_F_earth" else "^",
                 s=80,
             )
-
-    ax.set_yscale("log")
+    ax.set_yscale('log')
     ax.set_xlabel("Atmosphere type", fontsize=13)
     ax.set_title(mass_labels[mas], fontsize=14)
     ax.tick_params(axis="both", which="major", labelsize=12)
@@ -273,14 +272,13 @@ for idx, mas in enumerate(mass):
 
             ax.scatter(
                 s["exobase_altitude_km"],
-                s["weighted_mass_loss_kg_s"],
+                np.log10(s["weighted_mass_loss_kg_s"]),
                 color=species_colors.get(atm),
                 marker="o" if inst == "1_F_earth" else "^",
                 s=80,
             )
 
     ax.set_xscale("log")
-    ax.set_yscale("log")
     ax.set_xlabel("Exobase altitude [km]", fontsize=13)
     ax.set_title(mass_labels[mas], fontsize=14)
     ax.tick_params(axis="both", which="major", labelsize=12)

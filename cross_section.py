@@ -22,7 +22,7 @@ def effective_cross_section(species):
 
             r_j = PARTICLE_RADII[sp_j]
 
-            sigma_ij = np.pi * (r_i + r_j)**2
+            sigma_ij = np.pi * (r_i + r_j)**2  #from Aeronomy
 
             sigma_eff += X_i * X_j * sigma_ij
 
