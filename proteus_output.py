@@ -6,6 +6,13 @@ from matplotlib import pyplot as plt
 plt.rc('text', usetex=True)
 
 
+from cycler import cycler  # used to define color cycles
+colorstyle = ["#D55E00", "#0072B2", "#CC79A7", "#009E73", "#332288", "#DDCC77", "#661100", "#AA4499", 
+              "#44AA99", "#56B4E9", "#E69F00", "#F0E442", "#882255", "#999933", "#117733", "#88CCEE"]
+plt.rcParams['axes.prop_cycle'] = cycler('color', colorstyle)
+
+
+
 atm_archetype = ["CO2", "H2", "H2O", "N2"]  
 instellations = ["1_F_earth", "1000_F_earth"]
 mass = ["1_M_earth", "10_M_earth"]
@@ -43,15 +50,30 @@ for specie in atm_archetype:
                 
                 res = proteus_improved_limiting_flux(atm, system, disso_fracs)
                 
-                plt.plot(res[0], res[1], label='H')
-                plt.plot(res[0], res[2], label='mfp')
-                plt.plot(res[0], res[3], label='D')
-                plt.plot(res[0], res[4], label='K')
-                plt.xlabel('height[m]')
-                #plt.ylabel('coeffs $[cm^2/s]$')
+                # plt.plot(res[0], res[1], label='H')
+                # plt.plot(res[0], res[2], label='mfp')
+                # plt.plot(res[0], res[3], label='D')
+                # plt.plot(res[0], res[4], label='K')
+                # plt.xlabel('height[m]')
+                # #plt.ylabel('coeffs $[cm^2/s]$')
+                # plt.yscale('log')
+                # plt.xscale('log')
+                # plt.title(f'{system}, {m}, {instellation}')
+                # plt.grid()
+                # plt.legend()
+                # plt.savefig('plots/proteus_issue.png', dpi=300, bbox_inches='tight')
+                # plt.show()
+                
+                plt.plot(res[1][-40:-1]/100000, res[0][-40:-1], label=f"{system}, {instellation}, {m}")
+                plt.ylabel('K $[cm^2/s]$')
+                plt.xlabel('Pressure $[bar]$')
                 plt.yscale('log')
                 plt.xscale('log')
-                plt.title(f'{system}, {m}, {instellation}')
-                plt.grid()
-                plt.legend()
-                plt.show()
+                print(res[1]/100000)
+                print(res[0])
+                
+    plt.grid()
+    plt.legend()
+    #plt.savefig('working_plots/proteus_part/K_vs_P_15points.png', dpi=300, bbox_inches='tight')
+    plt.show()
+                
