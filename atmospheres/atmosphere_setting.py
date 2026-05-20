@@ -31,7 +31,7 @@ class Atmosphere:
         if F_xuv is not None:
             self.F_xuv = F_xuv #[W/m^2] XUV flux
         elif F_ins is not None:
-            self.F_xuv = self.calc_xuv_from_insolation(F_ins) #[W/m^2] XUV flux calculated from total insolation
+            self.F_xuv = self.calc_xuv_from_instellation(F_ins) #[W/m^2] XUV flux calculated from total insolation
         else:
             raise ValueError("Either F_xuv or F_ins must be provided as an input to the Atmosphere class.")
 
@@ -50,7 +50,7 @@ class Atmosphere:
 
                
 
-    def calc_xuv_from_insolation(self, F_ins):
+    def calc_xuv_from_instellation(self, F_ins):
         '''
         Calculates the XUV flux from the total insolation.
 
