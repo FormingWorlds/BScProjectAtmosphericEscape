@@ -43,7 +43,7 @@ def extend_profile_exobase(
             for sp in species_current
         )
 
-        r_ext = np.linspace(r_top, r_top + z_extra, n_extra)[1:]
+        r_ext = np.linspace(r_top, r_top + z_extra, n_extra)
         T_ext = np.full_like(r_ext, T_top)
 
         g_ext = G * M_planet / r_ext**2
@@ -57,13 +57,17 @@ def extend_profile_exobase(
 
         n_ext_tot = n_top * np.exp(ln_n)
 
+        r_ext     = r_ext[1:]    # remove duplicate r_top
+        n_ext_tot = n_ext_tot[1:]     # remove corresponding density
+        T_ext     = np.full_like(r_ext, T_top)
+
+        r_new = np.concatenate([r_current, r_ext])
+        T_new = np.concatenate([T_current, T_ext])
+
         species_ext = {
             sp: X_top[sp] * n_ext_tot
             for sp in species_current
         }
-
-        r_new = np.concatenate([r_current, r_ext])
-        T_new = np.concatenate([T_current, T_ext])
 
         species_new = {
             sp: np.concatenate([species_current[sp], species_ext[sp]])
