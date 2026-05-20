@@ -5,7 +5,7 @@ from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 
-atm_archetype = ["CO2", "H2", "H2O", "N2"]
+atm_archetype = ["CO2", "N2", "H2O", "H2"]
 instellation = ["1_F_earth", "1000_F_earth"]
 mass = ["1_M_earth", "10_M_earth"]
 
