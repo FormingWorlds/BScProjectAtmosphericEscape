@@ -13,7 +13,7 @@ class Atmosphere:
         'N2' : {'nu_0' : 3.7721 * 10**15, 'mu_wind': 7, 'mu_plus_wind': 14}
     }
 
-    def __init__(self, M_p, pressures, temperatures, heights, F_xuv=None, F_ins=None, dominant_species=None, T_wind=10**(4), vmrs=None, P_base=10**(-4), nu_0=None, mu_wind=None, mu_plus_wind=None, R_p=None, determine_radius=False):
+    def __init__(self, M_p, pressures, temperatures, heights, F_xuv=None, F_ins=None, dominant_species=None, T_wind=10**(4), vmrs=None, P_base=10**(-4), nu_0=None, mu_wind=None, mu_plus_wind=None, R_p=None, determine_radius=False, rr_coeff=None):
         #input chosen by user
         self.P_base = P_base #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
         
@@ -43,6 +43,7 @@ class Atmosphere:
         self.radii = R_p + heights
         self.pressures = pressures
         self.vmrs = vmrs if vmrs is not None else None
+        self.alpha_case_B = rr_coeff
         
         self.read_off_wind_base_parameters()    
         self.determine_wind_microphysics(nu_0, mu_wind, mu_plus_wind, dominant_species)
