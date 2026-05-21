@@ -39,6 +39,8 @@ for inst in instellations:
         for m in mass:
             if((m=="1_M_earth") & (inst=="1_F_earth") & (specie=="H2O")):
                 pass
+            elif((m=="1_M_earth") & (inst=="1000_F_earth") & (specie=="H2")):
+                pass
             else:
                 atmo_file = f'PROTEUS/atmos/{specie}_atmosphere_{m}_{inst}.csv'
                 planet_file = f'PROTEUS/planet/planet_bulk_properties_{specie}_atmosphere_{m}.csv'
@@ -63,15 +65,17 @@ for inst in instellations:
                 # plt.savefig('plots/proteus_issue.png', dpi=300, bbox_inches='tight')
                 # plt.show()
                 
-                #plt.plot(res[0], res[2]/100000, label=f"{system}, {instellation}, {m}")
-                plt.plot(res[4]/100000, res[2]['H'], label=f"{system}, {instellation}, {m}")
-                plt.xlabel('p $[bar]$')
-                plt.ylabel('H VMR [fraction]')
+                plt.plot(res[0], res[2]/100000, label=f"{system}, {instellation}, {m}")
+                #plt.plot(res[3], res[6]/100000, label=f"{system}, {instellation}, {m}")
+                plt.xlabel('density $[kg/m^3]$')
+                plt.ylabel('pressure $[bar]$')
                 plt.yscale('log')
                 plt.xscale('log')
+                #print(res)
+                #print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     plt.gca().invert_yaxis()
     plt.grid()
     plt.legend()
-    plt.savefig('working_plots/proteus_part/Hvmr_vs_P_iso_extended.png', dpi=300, bbox_inches='tight')
+    #plt.savefig('working_plots/proteus_part/Hvmr_vs_P_iso_extended.png', dpi=300, bbox_inches='tight')
     plt.show()
                 
