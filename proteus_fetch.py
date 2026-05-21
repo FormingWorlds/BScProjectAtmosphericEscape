@@ -31,17 +31,49 @@ class Atmosphere:
     def Kzz_extension(self):
         """extends Kzz up to 10^-13 bar assuming its a power law"""
         
+        steps = 20
+        
         K = self.Kzz
         p = self.pressure
         
         slope = (np.log10(K[-1]) - np.log10(K[-10]))/(np.log10(p[-1]) - np.log10(p[-10]))
-        p_ext = np.logspace(np.log10(p[-1]), -8, 20)
+        p_ext = np.logspace(np.log10(p[-1]), -8, steps)
         K_ext = ((p_ext/p[-1])**slope) * K[-1]
         
         K = np.concatenate((K, K_ext), axis=0)
         p = np.concatenate((p, p_ext), axis=0)
         
         return(K, p)
+    
+    def isothermal_extension(self):
+        """extends T, VMR(const), MMW(const), rho and z isothermally up to 10^-13 bar"""
+        
+        steps = 20
+        p = self.pressure
+        p_ext = np.logspace(np.log10(p[-1]), -8, steps)
+        
+        T = self.temperature
+        VMR = self.VMR
+        mmw = self.mmw
+        rho = self.density
+        z = self.height
+        
+        #extending the constant values: T, mmw, vmr
+        T_ext = np.full(steps, T[-1])
+        mmw_ext = np.full(steps, mmw[-1])
+        T = np.concatenate((T, T_ext), axis=0)
+        mmw = np.concatenate((mmw, mmw_ext), axis=0)
+        
+        for element in VMR:
+            last_VMR = VMR[element][-1]
+            VMR_ext = np.full(steps, last_VMR)
+            VMR[element] = np.concatenate((VMR[element], VMR_ext), axis=0)
+        
+        #extending rho and z via HSE
+        
+        
+        return(T, mmw, VMR)
+        
         
         
 def import_atmosphere(atmo_file, diff_file, system, planet_file, instellation):

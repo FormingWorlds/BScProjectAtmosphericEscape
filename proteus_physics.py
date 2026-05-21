@@ -17,14 +17,14 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
         disso_fracs = library of disso fracs"""
         
         
-        T = np.flip(atm.temperature)
+        T = atm.temperature
         
         p = atm.pressure
         K = atm.Kzz
         
-        rho = np.flip(atm.density)
-        mmw = np.flip(atm.mmw)
-        z = np.flip(atm.height)
+        rho = atm.density
+        mmw = atm.mmw
+        z = atm.height
         
         
         m_a = mmw/N_A
@@ -48,6 +48,8 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
         
         
         Kres = atm.Kzz_extension()
+        
+        Tres = atm.isothermal_extension()
             
             
-        return(Kres)
+        return(Tres[0], Tres[1], Tres[2], Kres[0], Kres[1])
