@@ -128,19 +128,19 @@ class Atmosphere:
         M_earth = 5.9722 * 10**24  # [kg]
         R_earth = 6.371 * 10**6    # [m] (Mean Earth radius in SI meters)
     
-        # 1. Convert input mass from kg to Earth masses
+        #Convert input mass from kg to Earth masses
         M_p_earth = M_p / M_earth
     
-        ### Mass-radius relation from Parc et. al. 2024 ###
+        ### Mass-radius relation adapted from Parc et. al. 2024 ###
         if M_p_earth < 10:
             R_p_earth = 1.02 * M_p_earth**0.28
         
         elif 10 <= M_p_earth < 138:
             R_p_earth = 0.61 * M_p_earth**0.67
         
-        else:  # M_p_earth >= 138
+        else:  # aka M_p_earth >= 138
             R_p_earth = 11.9 * M_p_earth**0.01
         
-        # 2. Convert the final radius from Earth radii back to SI meters
+        #Convert the final radius from Earth radii back to SI meters and return
         return R_p_earth * R_earth
 
