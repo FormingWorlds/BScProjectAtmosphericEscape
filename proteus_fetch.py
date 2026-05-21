@@ -37,7 +37,7 @@ class Atmosphere:
         p = self.pressure
         
         slope = (np.log10(K[-1]) - np.log10(K[-10]))/(np.log10(p[-1]) - np.log10(p[-10]))
-        p_ext = np.logspace(np.log10(p[-1]), -7, steps)
+        p_ext = np.logspace(np.log10(p[-1]), -8, steps)
         K_ext = ((p_ext/p[-1])**slope) * K[-1]
         
         K = np.concatenate((K, K_ext), axis=0)
@@ -50,7 +50,7 @@ class Atmosphere:
         
         steps = 20
         p = self.pressure
-        p_ext = np.logspace(np.log10(p[-1]), -7, steps)
+        p_ext = np.logspace(np.log10(p[-1]), -8, steps)
         
         T = self.temperature
         VMR = self.VMR
