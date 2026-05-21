@@ -7,7 +7,7 @@ import numpy as np
 from atmospheres.atmosphere_setting import Atmosphere
 
 ### Defining function to create atmosphere for loops ###
-def make_simple_atmosphere(M_p, R_p, nu_0, mu_wind, mu_plus_wind, T_eq, mu_photo, F_xuv=None, F_ins=None,  P_0=2000, T_wind=10**4, dominant_species=None, resolution=5000):
+def make_simple_atmosphere(M_p, nu_0, mu_wind, mu_plus_wind, T_eq, mu_photo, F_xuv=None, F_ins=None,  P_0=2000, T_wind=10**4, dominant_species=None, resolution=5000, determine_radius=False, R_p=None):
     '''
     Makes a simple isothermal atmosphere with the given input parameters.
 
@@ -19,6 +19,12 @@ def make_simple_atmosphere(M_p, R_p, nu_0, mu_wind, mu_plus_wind, T_eq, mu_photo
     m_p = sp.constants.m_p #[kg]
     k_b = sp.constants.k #[J K^-1]
 
+    if determine_radius:
+        R_p = Atmosphere.determine_radius_from_MR_relation(M_p)
+    elif determine_radius is False and R_p is not None:
+        R_p = R_p
+    else: 
+        raise ValueError('You must either provide a planetary radius or set "determine_radius=True".') 
     radii = np.linspace(R_p, 10*R_p, resolution) #[m] array of radii from the planetary radius to 10 times the planetary radius
 
     pressures = P_0 * np.exp(G * M_p * mu_photo * m_p / (k_b * T_eq) * (1/radii - 1/R_p) ) #[Pa] pressure profile of the atmosphere based on the barometric formula, where P_0: pressure at the optical photosphere, G: gravitational constant, M_p: planetary mass, mu_photo: mean molecular weight at the optical photosphere, m_p: proton mass, k_b: Boltzmann constant, T_eq: equilibrium temperature of the planet, radii: array of radii from the planetary radius to 10 times the planetary radius
@@ -48,7 +54,14 @@ def sweep_masses(atmospheres_varied_mass):
         mass_loss_rates_varied_mass.append(diagnostics["escape_rate [kg/s]"])
         if diagnostics["R_s [m]"] > atm.R_base and regime_break_mass_varied_mass is None:
             regime_break_mass_varied_mass = i
-    
     return mass_loss_rates_varied_mass, regime_break_mass_varied_mass
 
-
+def sweep_fluxes(atmospheres_varied_flux):
+    mass_loss_rates_varied_flux = []
+    regime_break_mass_varied_flux = None
+    for i, atm in enumerate(atmospheres_varied_flux):
+        diagnostics = get_rr_escape_diagnostics(atm)
+        mass_loss_rates_varied_flux.append(diagnostics["escape_rate [kg/s]"])
+        if diagnostics["R_s [m]"] > atm.R_base and regime_break_mass_varied_flux is None:
+            regime_break_mass_varied_flux = i
+    return mass_loss_rates_varied_flux, regime_break_mass_varied_flux
