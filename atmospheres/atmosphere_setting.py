@@ -13,13 +13,13 @@ class Atmosphere:
         'N2' : {'nu_0' : 3.7721 * 10**15, 'mu_wind': 7, 'mu_plus_wind': 14}
     }
 
-    def __init__(self, M_p, pressures, temperatures, heights, densities, F_xuv=None, F_ins=None, dominant_species=None, T_wind=10**(4), vmrs=None, P_base=10**(-4), nu_0=None, mu_wind=None, mu_plus_wind=None, R_p=None, determine_radius=False):
+    def __init__(self, M_p, pressures, temperatures, heights, F_xuv=None, F_ins=None, dominant_species=None, T_wind=10**(4), vmrs=None, P_base=10**(-4), nu_0=None, mu_wind=None, mu_plus_wind=None, R_p=None, determine_radius=False):
         #input chosen by user
         self.P_base = P_base #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
         
         #from planet bulk proerties
         self.M_p = M_p
-        self.rho = densities
+        
         if determine_radius is False and R_p is None:
             raise ValueError('Planetary radius not provided and option to calculate it based on mass and composition is False. Either set "determine_radius=True" or provide a planetary radius "R_p=value"')
         elif determine_radius is False and R_p is not None:
@@ -123,21 +123,24 @@ class Atmosphere:
         else:
             raise ValueError("Microphysics parameters (nu_0, mu_wind, mu_plus_wind) could not be determined. Please input vmrs or the values manually.)")
 
-    def determine_radius_from_MR_relation(self):
-        M_earth = 5.9722 * 10**24  #[kg]
-        rho_20_percent_H2O = None #yet
-
+    @staticmethod
+    def determine_radius_from_MR_relation(M_p):
+        M_earth = 5.9722 * 10**24  # [kg]
+        R_earth = 6.371 * 10**6    # [m] (Mean Earth radius in SI meters)
+    
+        # 1. Convert input mass from kg to Earth masses
+        M_p_earth = M_p / M_earth
+    
         ### Mass-radius relation from Parc et. al. 2024 ###
-        if self.rho > rho_20_percent_H2O and self.M_p < 10 * M_earth:
-            self.R_p = 1.02 * self.M_p**0.28
+        if M_p_earth < 10:
+            R_p_earth = 1.02 * M_p_earth**0.28
         
-        elif self.rho < rho_20_percent_H2O and self.M_p < 138 * M_earth:
-            self.R_p = 0.61 * self.M_p**0.67
+        elif 10 <= M_p_earth < 138:
+            R_p_earth = 0.61 * M_p_earth**0.67
         
-        elif self.M_p > 138 * M_earth:
-            self.R_p = 11.9 * self.M_p**0.01
+        else:  # M_p_earth >= 138
+            R_p_earth = 11.9 * M_p_earth**0.01
         
-        else: #shouldnt happen I think but in case it does I want to know
-            raise ValueError('Could not determine the radius of the planet from the mass-radius relation.')
-        
+        # 2. Convert the final radius from Earth radii back to SI meters
+        return R_p_earth * R_earth
 
