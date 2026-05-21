@@ -27,23 +27,23 @@ def calc_sound_speed(T_wind, mu_wind):
 
 def calc_sonic_point_radius(M_p, c_s, R_base):
     '''
-    Calculates the radius to the sonic point.
+    Calculates the radius to the sonic point of the atmosphere.
 
-    Takes input parameters: x [unit], y [unit], z [unit], ...
+    Takes input parameters: planetary mass [kg], speed of sound for medium [m s^-1], and the radius to the XUV photosphere [m]
 
     All calculations done in SI units.
     '''
     ### calculates R_s based on input ###
     G = sp.constants.G #[m^3 kg^-1 s^-2] 
-    R_s = G * M_p / (2 * c_s**2) #[m] radius to the sonic point, where G: gravitational constant, M_p: planetary mass, c_s: sound speed
+    R_s_calc = G * M_p / (2 * c_s**2) #[m] radius to the sonic point, where G: gravitational constant, M_p: planetary mass, c_s: sound speed
     # checks if R_s is smaller than R_base, if so, sets R_s = R_base and prints a message, otherwise keeps R_s = G * M_p / (2 * c_s**2) and prints a message
-    if R_s < R_base:
-        print(f"R_s {R_s:.2g} < {R_base:.2g} R_base, escape is not radiation-recombination-limited. Setting R_s = R_base.")
+    if R_s_calc < R_base:
+        #In this case it is not RR-limited. We set R_s equal to R_base
         R_s = R_base
-    else: 
-        print("R_s is larger than R_base, escape is radiation-recombination-limited. Keeping R_s = G * M_p / (2 * c_s**2).")
-        
-    return R_s
+        return R_s, False, R_s_calc #we return the sonic point, whether atmosphere is RR-limited and what the calculated R_s was.
+    else: #So if sonic point further out than R_base
+        R_s = R_s_calc #we set R_s equal to the one we calculated
+        return R_s, True, R_s_calc #returns the sonic point, that the atmosphere is RR-limited, and what the calculated R_s was-
 
 
 def calc_density_at_sonic_point(M_p, F_xuv, nu_0, T_wind, R_s, c_s, R_base, mu_plus_wind):
@@ -94,7 +94,7 @@ def get_rr_escape_diagnostics(atm):
     All calculations done in SI units.
     '''
     c_s = calc_sound_speed(atm.T_wind, atm.mu_wind)
-    R_s = calc_sonic_point_radius(atm.M_p, c_s, atm.R_base)
+    R_s, is_rr_limited, R_s_calc = calc_sonic_point_radius(atm.M_p, c_s, atm.R_base)
     rho_s = calc_density_at_sonic_point(atm.M_p, atm.F_xuv, atm.nu_0, atm.T_wind, R_s, c_s, atm.R_base, atm.mu_plus_wind)
     escape_rate = rr_escape_rate(rho_s, c_s, R_s)
 
@@ -106,7 +106,9 @@ def get_rr_escape_diagnostics(atm):
         "escape_rate [kg/s]": escape_rate,
         "dominant_species": atm.dominant_species,
         "dominant_species_found_in_dict": atm.dominant_species_found_in_dict,
-        "P_base_at_R_base [Pa]": atm.P_base_at_R_base
+        "P_base_at_R_base [Pa]": atm.P_base_at_R_base,
+        "is_rr_limited" : is_rr_limited,
+        "R_s_calc [m]" : R_s_calc
     }
 
 def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
@@ -149,8 +151,10 @@ def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
     print(f"R_base: {results['R_base [m]']:.2g} m")
     print(f"c_s: {results['c_s [m/s]']:.2g} m/s")
     print(f"R_s: {results['R_s [m]']:.2g} m")
+    print(f"Is it RR-limited? {results['is_rr_limited']}")
+    if results['is_rr_limited'] is False:
+        print(f"The calculated sonic point radius was {results['R_s_calc [m]']:.2g} m")
     print(f"rho_s: {results['rho_s [kg/m^3]']:.2g} kg/m^3")
     print(f"Escape rate: {results['escape_rate [kg/s]']:.2g} kg/s")
-    if results['R_s [m]'] == results['R_base [m]']:
-        print("NB: Escape is not radiation-recombination-limited.")
+    
 
