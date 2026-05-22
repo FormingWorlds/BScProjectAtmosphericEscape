@@ -7,7 +7,7 @@ import numpy as np
 from atmospheres.atmosphere_setting import Atmosphere
 
 ### Defining function to create atmosphere for loops ###
-def make_simple_atmosphere(M_p, nu_0, mu_wind, mu_plus_wind, T_eq, mu_photo, F_xuv=None, F_ins=None,  P_0=2000, T_wind=10**4, dominant_species=None, resolution=5000, determine_radius=False, R_p=None):
+def make_simple_atmosphere(M_p, nu_0, mu_wind, mu_plus_wind, T_eq, mu_photo, F_xuv=None, F_ins=None,  P_0=2000, T_wind=10**4, dominant_species=None, resolution=5000, determine_radius=False, R_p=None, rr_coeff=None):
     '''
     Makes a simple isothermal atmosphere with the given input parameters.
 
@@ -41,7 +41,8 @@ def make_simple_atmosphere(M_p, nu_0, mu_wind, mu_plus_wind, T_eq, mu_photo, F_x
         pressures=pressures,
         temperatures=np.full(resolution, T_eq),
         heights=radii - R_p,
-        dominant_species=dominant_species
+        dominant_species=dominant_species,
+        rr_coeff=rr_coeff
     )
 
 
