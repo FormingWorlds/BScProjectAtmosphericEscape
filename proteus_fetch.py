@@ -81,7 +81,7 @@ class Atmosphere:
             z_ext.append((z_ext[i]+dz)[0])
         
         z_ext_arr = np.asarray(z_ext, dtype='float64')
-        rho_ext = rho[-1] * np.exp(((G*M*(mmw_ext/N_A))/(k*T_ext))*(-(1/z[-1])+(1/z_ext_arr)))
+        rho_ext = ((mmw_ext/N_A)*p_ext)/(k*T_ext)
         z = np.concatenate((z, z_ext_arr), axis=0)
         rho = np.concatenate((rho, rho_ext), axis=0)
         

@@ -52,5 +52,4 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
         Tres = atm.isothermal_extension()
             
             
-        #return(Tres[0], Tres[1], Tres[2], Tres[3], Tres[4], Kres[0], Kres[1])
-        return(Tres[3], Tres[4], Kres[1])
+        return(Tres[0], Tres[1], Tres[2], Tres[3], Tres[4], Kres[0], Kres[1])
