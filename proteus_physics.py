@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.constants import k, G, N_A
 from slattery_diff import slattery_diff
+from proteus_extra_functions import scale_height
 
 
 alpha     = -0.25       #from Yelle 
@@ -16,15 +17,20 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
         system = string of main consituent
         disso_fracs = library of disso fracs"""
         
+        Kres = atm.Kzz_extension()
+        Tres = atm.isothermal_extension()
         
-        T = atm.temperature
+        T = Tres[0]
+        VMR = Tres[1]
+        mmw = Tres[2]
+        rho = Tres[3]
+        z = Tres[4]
         
-        p = atm.pressure
-        K = atm.Kzz
+        K = Kres[0]
+        p = Kres[1]
         
-        rho = atm.density
-        mmw = atm.mmw
-        z = atm.height
+        M = atm.planet_mass
+        R = atm.planet_rad
         
         
         m_a = mmw/N_A
@@ -43,13 +49,10 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
             
         
             
-        H = atm.scale_height()        
+             
         mfp = (D*1e-4) * ((m_a/(k*T))**0.5)    #mean free path, [m] 
         
-        
-        Kres = atm.Kzz_extension()
-        
-        Tres = atm.isothermal_extension()
+        H = scale_height(T, R, z, M, mmw) 
             
             
-        return(Tres[0], Tres[1], Tres[2], Tres[3], Tres[4], Kres[0], Kres[1])
+        return(T, VMR, mmw, rho, z, K, p, H, mfp, D)

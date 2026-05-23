@@ -20,18 +20,11 @@ class Atmosphere:
         self.planet_mass = planet_mass  #[kg]
         self.planet_rad  = planet_rad   #[m]
         
-        
-    def scale_height(self):
-        """finds density scale height"""
-        
-        H = (k * self.temperature * ((self.planet_rad + self.height)**2))/(G * self.planet_mass * (self.mmw/N_A))
-        return(H)
-    
     
     def Kzz_extension(self):
         """extends Kzz up to 10^-13 bar assuming its a power law"""
         
-        steps = 20
+        steps = 30
         
         K = self.Kzz
         p = self.pressure
@@ -48,7 +41,7 @@ class Atmosphere:
     def isothermal_extension(self):
         """extends T, VMR(const), MMW(const), rho and z isothermally up to 10^-13 bar"""
         
-        steps = 20
+        steps = 30
         p = self.pressure
         p_ext = np.logspace(np.log10(p[-1]), -8, steps)
         
@@ -216,4 +209,3 @@ def import_atmosphere(atmo_file, diff_file, system, planet_file, instellation):
         )
     
     return atmo 
-
