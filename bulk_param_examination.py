@@ -7,7 +7,7 @@ import numpy as np
 from atmospheres.atmosphere_setting import Atmosphere
 
 ### Defining function to create atmosphere for loops ###
-def make_simple_atmosphere(M_p, nu_0, mu_wind, mu_plus_wind, T_eq, mu_photo, F_xuv=None, F_ins=None,  P_0=2000, T_wind=10**4, dominant_species=None, resolution=5000, determine_radius=False, R_p=None, rr_coeff=None):
+def make_simple_atmosphere(M_p, nu_0, mu_wind, mu_plus_wind, T_eq, mu_photo, F_xuv=None, F_ins=None,  P_0=2000, T_wind=10**4, dominant_species=None, resolution=5000, determine_radius=False, R_p=None, rr_coeff=None, P_base=0.0001):
     '''
     Makes a simple isothermal atmosphere with the given input parameters.
 
@@ -35,6 +35,7 @@ def make_simple_atmosphere(M_p, nu_0, mu_wind, mu_plus_wind, T_eq, mu_photo, F_x
         M_p=M_p,
         F_xuv=F_xuv,
         F_ins=F_ins,
+        P_base=P_base,
         nu_0=nu_0,
         mu_plus_wind=mu_plus_wind,
         R_p=R_p,
@@ -47,40 +48,22 @@ def make_simple_atmosphere(M_p, nu_0, mu_wind, mu_plus_wind, T_eq, mu_photo, F_x
 
 
 #want to loop over all the atmospheres with different planetary masses and get the escape diagnostics for each of them, and also find the break between rr regime not valid to valid
-def sweep_masses(atmospheres_varied_mass):
-    mass_loss_rates_varied_mass = []
-    regime_break_mass_varied_mass = None
+def sweep_parameter(atmospheres_varied_parameter, check_P_base=False, sensitivity=0.05, target_P_base=None):
+    mass_loss_rates_varied_parameter = []
+    regime_break_mass_varied_parameter = None
     rr_mask = []
-    for i, atm in enumerate(atmospheres_varied_mass):
+    for i, atm in enumerate(atmospheres_varied_parameter):
         diagnostics = get_rr_escape_diagnostics(atm)
-        mass_loss_rates_varied_mass.append(diagnostics["escape_rate [kg/s]"])
+        mass_loss_rates_varied_parameter.append(diagnostics["escape_rate [kg/s]"])
         rr_mask.append(diagnostics["is_rr_limited"])
-        if diagnostics["R_s [m]"] > atm.R_base and regime_break_mass_varied_mass is None:
-            regime_break_mass_varied_mass = i
-    return mass_loss_rates_varied_mass, regime_break_mass_varied_mass, rr_mask
-
-#want to loop over atmosphere for different fluxes to see where the regime break is.
-def sweep_fluxes(atmospheres_varied_flux):
-    mass_loss_rates_varied_flux = []
-    regime_break_mass_varied_flux = None
-    rr_mask = []
-    for i, atm in enumerate(atmospheres_varied_flux):
-        diagnostics = get_rr_escape_diagnostics(atm)
-        mass_loss_rates_varied_flux.append(diagnostics["escape_rate [kg/s]"])
-        rr_mask.append(diagnostics["is_rr_limited"])
-        if diagnostics["R_s [m]"] > atm.R_base and regime_break_mass_varied_flux is None:
-            regime_break_mass_varied_flux = i
-    return mass_loss_rates_varied_flux, regime_break_mass_varied_flux, rr_mask
-
-def sweep_coeffs(atmospheres_varied_coeffs):
-    mass_loss_rates_varied_coeffs = []
-    rr_mask = []
-    regime_break_mass_varied_coeffs = None
-    for i, atm in enumerate(atmospheres_varied_coeffs):
-        diagnostics = get_rr_escape_diagnostics(atm)
-        mass_loss_rates_varied_coeffs.append(diagnostics["escape_rate [kg/s]"])
-        rr_mask.append(diagnostics["is_rr_limited"])
-        if diagnostics["R_s [m]"] > atm.R_base and regime_break_mass_varied_coeffs is None:
-            regime_break_mass_varied_coeffs = i
-    return mass_loss_rates_varied_coeffs, regime_break_mass_varied_coeffs, rr_mask
-
+        if check_P_base:
+            relative_diff = np.abs((atm.P_base_at_R_base - target_P_base[i])/target_P_base[i])
+            if relative_diff > sensitivity:
+                # Using a non-breaking warning print statement
+                print(f"Boundary Mismatch at index {i} ({atm.dominant_species}): "
+                      f"Used P_base ({atm.P_base_at_R_base:.4f} Pa) deviates from "
+                      f"target P_base ({target_P_base} Pa) by {relative_diff:.4%} "
+                      f"(Threshold: {sensitivity})")
+        if diagnostics["R_s [m]"] > atm.R_base and regime_break_mass_varied_parameter is None:
+            regime_break_mass_varied_parameter = i
+    return mass_loss_rates_varied_parameter, regime_break_mass_varied_parameter, rr_mask
