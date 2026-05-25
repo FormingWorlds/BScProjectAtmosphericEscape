@@ -50,30 +50,37 @@ def make_simple_atmosphere(M_p, nu_0, mu_wind, mu_plus_wind, T_eq, mu_photo, F_x
 def sweep_masses(atmospheres_varied_mass):
     mass_loss_rates_varied_mass = []
     regime_break_mass_varied_mass = None
+    rr_mask = []
     for i, atm in enumerate(atmospheres_varied_mass):
         diagnostics = get_rr_escape_diagnostics(atm)
         mass_loss_rates_varied_mass.append(diagnostics["escape_rate [kg/s]"])
+        rr_mask.append(diagnostics["is_rr_limited"])
         if diagnostics["R_s [m]"] > atm.R_base and regime_break_mass_varied_mass is None:
             regime_break_mass_varied_mass = i
-    return mass_loss_rates_varied_mass, regime_break_mass_varied_mass
+    return mass_loss_rates_varied_mass, regime_break_mass_varied_mass, rr_mask
 
 #want to loop over atmosphere for different fluxes to see where the regime break is.
 def sweep_fluxes(atmospheres_varied_flux):
     mass_loss_rates_varied_flux = []
     regime_break_mass_varied_flux = None
+    rr_mask = []
     for i, atm in enumerate(atmospheres_varied_flux):
         diagnostics = get_rr_escape_diagnostics(atm)
         mass_loss_rates_varied_flux.append(diagnostics["escape_rate [kg/s]"])
+        rr_mask.append(diagnostics["is_rr_limited"])
         if diagnostics["R_s [m]"] > atm.R_base and regime_break_mass_varied_flux is None:
             regime_break_mass_varied_flux = i
-    return mass_loss_rates_varied_flux, regime_break_mass_varied_flux
+    return mass_loss_rates_varied_flux, regime_break_mass_varied_flux, rr_mask
 
 def sweep_coeffs(atmospheres_varied_coeffs):
     mass_loss_rates_varied_coeffs = []
+    rr_mask = []
     regime_break_mass_varied_coeffs = None
     for i, atm in enumerate(atmospheres_varied_coeffs):
         diagnostics = get_rr_escape_diagnostics(atm)
         mass_loss_rates_varied_coeffs.append(diagnostics["escape_rate [kg/s]"])
+        rr_mask.append(diagnostics["is_rr_limited"])
         if diagnostics["R_s [m]"] > atm.R_base and regime_break_mass_varied_coeffs is None:
             regime_break_mass_varied_coeffs = i
-    return mass_loss_rates_varied_coeffs, regime_break_mass_varied_coeffs
+    return mass_loss_rates_varied_coeffs, regime_break_mass_varied_coeffs, rr_mask
+
