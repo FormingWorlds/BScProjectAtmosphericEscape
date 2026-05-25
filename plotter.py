@@ -97,8 +97,8 @@ for idx, mas in enumerate(mass):
     first_legend = axes[0].legend(handles=atm_handles, title="Atmosphere", loc="upper left")
     axes[0].add_artist(first_legend)
 
-    axes[1].legend(handles=flux_legend, title="Instellation", fontsize=11)
-    axes[0].legend(handles=flux_legend, title="Instellation", fontsize=11)
+    axes[1].legend(handles=flux_legend, title="Instellation", fontsize=11, loc="lower right")
+    axes[0].legend(handles=flux_legend, title="Instellation", fontsize=11, loc ="lower right")
 
 plt.suptitle("Weighted Jeans escape by atmosphere type", fontsize=15)
 plt.tight_layout()

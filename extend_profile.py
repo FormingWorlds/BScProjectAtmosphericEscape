@@ -7,6 +7,11 @@ from cross_section import effective_cross_section
 from physics import mean_mass
 
 
+def bates_extension(zeta, T_0, T_inf, beta = 0.75):
+    """extends using bates profile
+    T(zeta) = T0 + (T_inf - T0) * (1 - exp(-beta*zeta))"""
+    return T0 + (T_inf - T0) * (1.0 - np.exp(-beta * zeta))
+
 def extend_profile_exobase(
     r,
     T,
@@ -17,14 +22,13 @@ def extend_profile_exobase(
     n_extra=10,
     max_extra=1e9,
 ):
-    """extend profile upwards to exobase assuming hydrostatic equilibrium and isothermal extension, 
-    constant VMR from top of grid"""
+    """extend profile upwards to exobase using the Bates T profile"""
 
     r_current = r.copy()
     T_current = T.copy()
     species_current = {sp: n.copy() for sp, n in species.items()}
 
-    total_added = 0.0
+    
 
     while total_added < max_extra:
 
