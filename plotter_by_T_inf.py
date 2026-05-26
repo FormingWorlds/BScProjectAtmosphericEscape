@@ -34,22 +34,20 @@ flux_handles = [
     for f in instellation
 ]
 
-
-
 # Define consistent colorblind-friendly colors for each species
 # Using Paul Tol's colorblind-safe palette
 species_colors = {
     # Atmosphere archetypes (distinctive colors)
-    "CO2": "#D55E00",   # Vermillion (orange-red)
+    "CO2": "#E69F00",     # Orange"
     "H2":  "#332288",   # Indigo
     "H2O": "#56B4E9",   # Sky blue
-    "N2":  "#117733",   # Green
+    "N2":  "#882255",   # Purple 
     
     # Other major species
-    "H": "#E69F00",     # Orange
+    "H": "#D55E00",   # Vermillion (orange-red)
     "O": "#009E73",     # Bluish green
     "C": "#F0E442",     # Yellow
-    "CH4": "#882255",   # Purple
+    "CH4":"#117733",   # Green
     "CO": "#AA4499",    # Mauve
     "O2": "#44AA99",    # Teal
     "N": "#999933",     # Olive
@@ -67,6 +65,7 @@ atm_handles = [
 
 
 df = pd.read_csv("proteus_jeans_case_summary.csv")
+
 df["log10_weighted_mass_loss"] = np.log10(df["weighted_mass_loss_kg_s"])
 
 def plot_vs_Tinf(ycol, ylabel, filename, ylog=False):
@@ -105,7 +104,7 @@ def plot_vs_Tinf(ycol, ylabel, filename, ylog=False):
 
     axes[0].set_ylabel(ylabel, fontsize=13)
 
-    fig.legend(handles=atm_handles, title="Atmosphere", bbox_to_anchor=(1.10, 1), loc="outside upper right")
+    fig.legend(handles=atm_handles, title="Atmosphere", bbox_to_anchor=(1.07, 1), loc="outside upper right")
 
     axes[1].legend(handles=flux_handles, title="Instellation", loc="lower right")
 
@@ -151,3 +150,187 @@ plot_vs_Tinf(
     filename="dominant_mass_loss_vs_Tinf.png",
     ylog=False,
 )
+
+
+#5. Weighted mass loss 
+
+df["log10_weighted_mass_loss"] = np.log10(
+    df["weighted_mass_loss_kg_s"].replace(0, np.nan)
+)
+
+plot_vs_Tinf(
+    ycol="log10_dominant_mass_loss",
+    ylabel=r"$\log_{10}(\dot{M}_{\rm weighted})$ [kg/s]",
+    filename="weighted_mass_loss_vs_Tinf.png",
+    ylog=False,
+)
+
+
+# 6. Dominant-species lambda_J vs T_inf
+
+full = pd.read_csv("proteus_jeans_escape_results.csv")
+
+# pick the species with largest Mdot for each atmosphere/T_inf case
+dominant = (
+    full.sort_values("Mdot_kg_s", ascending=False)
+    .groupby(["atmosphere_type", "mass_case", "flux_case", "T_inf"], as_index=False)
+    .first()
+)
+
+flux_legend = [
+    Line2D([0], [0], marker="o", color="black", linestyle="None", label=r"1 $F_{\oplus}$"),
+    Line2D([0], [0], marker="^", color="black", linestyle="None", label=r"1000 $F_{\oplus}$"),
+]
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
+
+for idx, mas in enumerate(mass):
+    ax = axes[idx]
+
+    for atm in atm_archetype:
+        for inst in instellation:
+            s = dominant[
+                (dominant["atmosphere_type"] == atm) &
+                (dominant["mass_case"] == mas) &
+                (dominant["flux_case"] == inst) 
+            ].sort_values("T_inf")
+
+
+            if s.empty:
+                continue
+
+            ax.scatter(
+                s["T_inf"],
+                s["lambda_j"],
+                color=species_colors.get(atm),
+                marker="o" if inst == "1_F_earth" else "^",
+                s=80,
+            )
+
+            for _, row in s.iterrows():
+                ax.annotate(
+                    row["species"],
+                    (row["T_inf"], row["lambda_j"]),
+                    fontsize=8,
+                    xytext=(0, 3.5),
+                    textcoords="offset points",
+                    ha="center",
+                    va="bottom",
+                )
+
+    ax.axhline(2, color="grey", linestyle="--", linewidth=1)
+    ax.axhline(10, color="grey", linestyle=":", linewidth=1)
+
+    ax.set_yscale("log")
+    ax.set_xlabel(r"$T_{\infty}$ [K]", fontsize=13)
+    ax.set_title(mass_labels[mas], fontsize=14)
+    ax.tick_params(axis="both", which="major", labelsize=12)
+
+axes[0].set_ylabel(r"Dominant species Jeans parameter $\lambda_J$", fontsize=13)
+
+first_legend = axes[1].legend(handles=atm_handles, title="Atmosphere", loc="upper right")
+axes[1].add_artist(first_legend)
+axes[1].legend(handles=flux_legend, title="Instellation", loc="lower left")
+
+plt.suptitle(r"Dominant-species Jeans parameter vs $T_{\infty}$", fontsize=15)
+plt.tight_layout()
+plt.savefig("Plots/PROTEUS_Bates_sensitivity/dominant_lambda_vs_Tinf.png", dpi=300, bbox_inches="tight")
+plt.close()
+
+
+# 7. Mass loss vs dominant-species lambda_J
+
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
+
+for idx, mas in enumerate(mass):
+    ax = axes[idx]
+
+    for atm in atm_archetype:
+        for inst in instellation:
+            s = dominant[
+                (dominant["atmosphere_type"] == atm) &
+                (dominant["mass_case"] == mas) &
+                (dominant["flux_case"] == inst)
+            ]
+
+            if s.empty:
+                continue
+
+            ax.scatter(
+                s["lambda_j"],
+                np.log10(s["Mdot_kg_s"].replace(0, np.nan)),
+                color=species_colors.get(atm),
+                marker="o" if inst == "1_F_earth" else "^",
+                s=80,
+            )
+
+    ax.axvline(2, color="grey", linestyle="--", linewidth=1)
+    ax.axvline(10, color="grey", linestyle=":", linewidth=1)
+
+    ax.set_xscale("log")
+    ax.invert_xaxis()
+    ax.set_xlabel(r"Dominant species $\lambda_J$", fontsize=13)
+    ax.set_title(mass_labels[mas], fontsize=14)
+    ax.tick_params(axis="both", which="major", labelsize=12)
+
+axes[0].set_ylabel(r"$\log_{10}(\dot{M}_{\rm dominant})$ [kg/s]", fontsize=13)
+
+first_legend = axes[1].legend(handles=atm_handles, title="Atmosphere", loc="upper right")
+axes[1].add_artist(first_legend)
+axes[1].legend(handles=flux_legend, title="Instellation", loc="lower left")
+
+plt.suptitle(r"Dominant species mass loss versus Jeans parameter", fontsize=15)
+plt.tight_layout()
+plt.savefig("Plots/PROTEUS_Bates_sensitivity/dominant_mass_loss_vs_lambda.png", dpi=300, bbox_inches="tight")
+plt.close()
+
+
+# 8. Hydrogen lambda_J vs T_inf
+
+
+hydrogen = full[full["species"] == "H"].copy()
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
+
+for idx, mas in enumerate(mass):
+    ax = axes[idx]
+
+    for atm in atm_archetype:
+        for inst in instellation:
+            s = hydrogen[
+                (hydrogen["atmosphere_type"] == atm) &
+                (hydrogen["mass_case"] == mas) &
+                (hydrogen["flux_case"] == inst)
+            ].sort_values("T_inf")
+
+            if s.empty:
+                continue
+
+            ax.plot(
+                s["T_inf"],
+                s["lambda_j"],
+                color=species_colors.get(atm),
+                marker="o" if inst == "1_F_earth" else "^",
+                linewidth=1.8,
+                markersize=6,
+            )
+
+    ax.axhline(2, color="grey", linestyle="--", linewidth=1)
+    ax.axhline(10, color="grey", linestyle=":", linewidth=1)
+
+    ax.set_yscale("log")
+    ax.set_xlabel(r"$T_{\infty}$ [K]", fontsize=13)
+    ax.set_title(mass_labels[mas], fontsize=14)
+    ax.tick_params(axis="both", which="major", labelsize=12)
+
+axes[0].set_ylabel(r"Hydrogen Jeans parameter $\lambda_{J,\mathrm{H}}$", fontsize=13)
+
+first_legend = axes[1].legend(handles=atm_handles, title="Atmosphere", loc="upper right")
+axes[1].add_artist(first_legend)
+axes[1].legend(handles=flux_legend, title="Instellation", loc="lower left")
+
+plt.suptitle(r"Hydrogen Jeans parameter vs $T_{\infty}$", fontsize=15)
+plt.tight_layout()
+plt.savefig("Plots/PROTEUS_Bates_sensitivity/hydrogen_lambda_vs_Tinf.png", dpi=300, bbox_inches="tight")
+plt.close()
