@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.constants import k, G, N_A
 from slattery_diff import slattery_diff
-from proteus_extra_functions import scale_height
+from proteus_extra_functions import H_mean_free_path, H_scale_height
 
 
 alpha     = -0.25       #from Yelle 
@@ -31,6 +31,7 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
         
         M = atm.planet_mass
         R = atm.planet_rad
+        molarmasses = atm.molar_masses
         
         
         m_a = mmw/N_A
@@ -50,9 +51,7 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
         
             
              
-        mfp = (D*1e-4) * ((m_a/(k*T))**0.5)    #mean free path, [m] 
-        
-        H = scale_height(T, R, z, M, mmw) 
-            
+        mfp = H_mean_free_path(VMR, rho, mmw)
+        H = H_scale_height(T, R, z, M, molarmasses)
             
         return(T, VMR, mmw, rho, z, K, p, H, mfp, D)

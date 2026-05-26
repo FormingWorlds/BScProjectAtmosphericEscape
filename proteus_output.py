@@ -48,6 +48,16 @@ for inst in instellations:
                 atm = import_atmosphere(atmo_file, diff_file, system, planet_file, instellation)
                 res = proteus_improved_limiting_flux(atm, system, disso_fracs)
                 
+                # a=0
+                # for element in atm.VMR:
+                #     if atm.VMR[element][-1] > 0.005:
+                #         a += atm.VMR[element][-1]
+                #         print(element)
+                # print(f"for {system} {instellation} {m}, a={a}")
+                
+                
+                print(np.shape(res[8]))
+                
                 plt.plot(res[4], res[7], label='H')
                 plt.plot(res[4], res[8], label='mfp')
                 plt.plot(res[4], res[9], label='D')
@@ -55,12 +65,13 @@ for inst in instellations:
                 plt.xlabel('Height $[km]$')
                 plt.ylabel('$[cm^2/s]$')
                 plt.yscale('log')
-                #plt.xscale('log')
+                plt.xscale('log')
                 #plt.title(f'{system}, {m}, {instellation}')
                 plt.grid()
                 plt.legend()
                 #plt.savefig('working_plots/proteus_part/D_and_K_vs_z_extended.png', dpi=300, bbox_inches='tight')
                 plt.show()
+                
                 
                 # plt.plot(res[0], res[4]/1000, label=f"{system}, {instellation}, {m}")
                 # plt.xlabel('Temperature $[K]$')

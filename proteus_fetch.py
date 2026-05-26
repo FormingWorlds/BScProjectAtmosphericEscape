@@ -107,7 +107,15 @@ def import_atmosphere(atmo_file, diff_file, system, planet_file, instellation):
                 "H"  : np.flip(df['H [VMR]'].values),
                 "CH4": np.flip(df['CH4 [VMR]'].values),
                 "NH3": np.flip(df['NH3 [VMR]'].values),
-                "H2S": np.flip(df['H2S [VMR]'].values)
+                "H2S": np.flip(df['H2S [VMR]'].values),
+                "N2": np.flip(df['N2 [VMR]'].values),
+                "CO2": np.flip(df['CO2 [VMR]'].values),
+                "CO" : np.flip(df['CO [VMR]'].values),
+                "O" : np.flip(df['O [VMR]'].values),
+                "O2" : np.flip(df['O2 [VMR]'].values),
+                "S" : np.flip(df['S [VMR]'].values),
+                "SO2" : np.flip(df['SO2 [VMR]'].values),
+                "N": np.flip(df['N [VMR]'].values)
             },
             
             molar_masses = {
@@ -116,7 +124,15 @@ def import_atmosphere(atmo_file, diff_file, system, planet_file, instellation):
                 "H"  : 1.008*1e-3,
                 "CH4": 16.043*1e-3,
                 "NH3": 17.031*1e-3,
-                "H2S": 34.08*1e-3
+                "H2S": 34.08*1e-3,
+                "N2": 28.012*1e-3,
+                "CO2": 44.009*1e-3,
+                "CO" : 28.010*1e-3,
+                "O" : 15.999*1e-3,
+                "O2" : 31.998*1e-3,
+                "S" : 32.059*1e-3,
+                "SO2" : 64.066*1e-3,
+                "N" : 14.007*1e-3
             },
             
             diff_coeffs = {
@@ -165,7 +181,15 @@ def import_atmosphere(atmo_file, diff_file, system, planet_file, instellation):
                 "H"  : df['H [VMR]'].values,
                 "CH4": df['CH4 [VMR]'].values,
                 "NH3": df['NH3 [VMR]'].values,
-                "H2S": df['H2S [VMR]'].values
+                "H2S": df['H2S [VMR]'].values,
+                "N2": df['N2 [VMR]'].values,
+                "CO2": df['CO2 [VMR]'].values,
+                "CO" : df['CO [VMR]'].values,
+                "O" : df['O [VMR]'].values,
+                "O2" : df['O2 [VMR]'].values,
+                "S" : df['S [VMR]'].values,
+                "SO2" : df['SO2 [VMR]'].values,
+                "N": df['N [VMR]'].values
             },
             
             molar_masses = {
@@ -174,7 +198,15 @@ def import_atmosphere(atmo_file, diff_file, system, planet_file, instellation):
                 "H"  : 1.008*1e-3,
                 "CH4": 16.043*1e-3,
                 "NH3": 17.031*1e-3,
-                "H2S": 34.08*1e-3
+                "H2S": 34.08*1e-3,
+                "N2": 28.012*1e-3,
+                "CO2": 44.009*1e-3,
+                "CO" : 28.010*1e-3,
+                "O" : 15.999*1e-3,
+                "O2" : 31.998*1e-3,
+                "S" : 32.059*1e-3,
+                "SO2" : 64.066*1e-3,
+                "N" : 14.007*1e-3
             },
             
             diff_coeffs = {
