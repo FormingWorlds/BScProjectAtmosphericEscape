@@ -21,6 +21,7 @@ def calculate_rr_coefficient_case_A(T, T_0, T_1, A, B, C=None, T_2=None):
         B_eff = B
 
     # Calculates the radiation recombination coefficient for case A using the provided formula, which incorporates the temperature dependence and the effective B parameter.
+    # REFERENCE AMDPP Fits for Total Radiative Recombination Coefficients, link: https://amdpp.phys.strath.ac.uk/tamoc/DATA/RR/RR_web/adf48/
     alpha_rr_case_A = A * ( np.sqrt(T / T_0) * (1 + np.sqrt(T / T_0))**(1-B_eff) * (1 + np.sqrt(T / T_1))**(1+B_eff) )**(-1)
 
     return alpha_rr_case_A
