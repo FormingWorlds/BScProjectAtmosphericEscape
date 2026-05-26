@@ -28,7 +28,7 @@ SPECIES_MASSES = {
 }
 
 PARTICLE_RADII = {
-    "H": 120e-12, #approximate
+    "H": 109e-12, #approximate
     "H2": 144.53e-12,
     "He": 130e-12,
     "C": 170e-12, #van der waals radius instead

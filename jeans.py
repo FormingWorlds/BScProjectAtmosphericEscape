@@ -53,7 +53,7 @@ def jeans_escape(r, T, species, species_masses, M, sigma = 1e-19, dayside=True):
         "results": results,
         "exobase_index": int(idx) , 
         "exobase_radius": float(r_exo),
-        "temperature": float(T_exo), 
+        "exobase_temperature": float(T_exo), 
         "exobase_altitude": float(exobase_altitude),
         "sigma_exobase_m2": float(sigma_exo),
     }

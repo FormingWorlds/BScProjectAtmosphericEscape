@@ -59,7 +59,8 @@ def run_one_file(path, bulk):
     M_planet = bulk["M_planet_kg"]
     R_planet = bulk["R_int_m"]
     r, T, species, df = read_proteus_profile(path, R_planet)
-    
+    profile_extended = False
+
     try:
         result = jeans_escape(
             r=r,
@@ -71,51 +72,54 @@ def run_one_file(path, bulk):
             dayside=True,
         )
         
-        profile_extended = False
 
     except ValueError:
+        profile_extended = True
         print("No exobase found, extending profile")
 
-    r, T, species = extend_profile_exobase(
-        r=r,
-        T=T,
-        species=species,
-        species_masses = SPECIES_MASSES,
-        M_planet = M_planet,
-        z_extra=10e7,
-        n_extra=10000,
-    )
-    
-    result = jeans_escape(
-            r=r,
-            T=T,
-            species=species,
-            species_masses=SPECIES_MASSES,
-            M=M_planet,
-            sigma= "weighted",
-            dayside=True,
-        )
+    if profile_extended == True: 
+        T_inf_values = [200, 300, 500, 1000, 2000, 3000, 5000, 6000, 7000] #sensitivity testing
+        rows = []
+        for T_inf in T_inf_values:
+            try:
+                r_ext, T_ext, species_ext = extend_profile_exobase(
+                    r=r,
+                    T=T,
+                    species=species,
+                    species_masses = SPECIES_MASSES,
+                    M_planet=M_planet,
+                    T_inf=T_inf,
+                    )
+                
+                result = jeans_escape(
+                        r=r_ext,
+                        T=T_ext,
+                        species=species_ext,
+                        species_masses=SPECIES_MASSES,
+                        M=M_planet,
+                        sigma= "weighted",
+                        dayside=True,
+                        )
+            except ValueError as e:
+                print(f"Skipping {os.path.basename(path)} for T_inf={T_inf}: {e}")
+                continue
 
-    profile_extended = True
-
-
-    rows = []
-
-    for sp, res in result["results"].items():
-        rows.append({
-            "file": os.path.basename(path),
-            "weighted_mass_loss_kg_s": result["weighted_mass_loss_kg_s"],
-            "species": sp,
-            "Mdot_kg_s": res["Mdot (kg/s)"],
-            "lambda_j": res["lambda_j"],
-            "v_th_m_s": res["v_th (m/s)"],
-            "effusion_velocity_m_s": res["effusion_velocity (m/s)"],
-            "n_exo_m3": res["number_density (m^3)"],
-            "exobase_altitude_km": result["exobase_altitude"] / 1e3,
-            "exobase_radius_m": result["exobase_radius"],
-            "T_exo_K": result["temperature"],
-            "exobase_index": result["exobase_index"],
-        })
+            for sp, res in result["results"].items():
+                rows.append({
+                    "file": os.path.basename(path),
+                    "T_inf": T_inf,
+                    "weighted_mass_loss_kg_s": result["weighted_mass_loss_kg_s"],
+                    "species": sp,
+                    "Mdot_kg_s": res["Mdot (kg/s)"],
+                    "lambda_j": res["lambda_j"],
+                    "v_th_m_s": res["v_th (m/s)"],
+                    "effusion_velocity_m_s": res["effusion_velocity (m/s)"],
+                    "n_exo_m3": res["number_density (m^3)"],
+                    "exobase_altitude_km": result["exobase_altitude"] / 1e3,
+                    "exobase_radius_m": result["exobase_radius"],
+                    "T_exo_K": result["exobase_temperature"],
+                    "exobase_index": result["exobase_index"],
+                    })
 
     return rows
 
@@ -132,11 +136,12 @@ def summarize_case(rows):
 
     summary = {
         "file": rows[0]["file"],
+        "T_inf": rows[0]["T_inf"],
         "atmosphere_type": rows[0]["atmosphere_type"],
         "mass_case": rows[0]["mass_case"],
         "flux_case": rows[0]["flux_case"],
 
-        "weighted_mass_loss_kg_s": rows[0]["weighted_mass_loss_kg_s"],
+        "weighted_mass_loss_kg_s": rows[0]["weighted_mass_loss_kg_s"], #same for all species
         "dominant_escaping_species": dominant["species"],
         "dominant_species_Mdot_kg_s": dominant["Mdot_kg_s"],
 
@@ -190,7 +195,13 @@ for comp in ['H2', 'H2O', 'CO2', 'N2']:
                     row["flux_case"] = case_name
 
                 proteus_atmospheres.extend(rows)
-                summary_rows.append(summarize_case(rows))
+
+                if len(rows) == 0:
+                    print(f"No valid results for {comp} {M} {case_name}, skipping summary")
+                    continue
+                
+                for T_inf, group in pd.DataFrame(rows).groupby("T_inf"):
+                    summary_rows.append(summarize_case(group.to_dict("records")))
 
                 print(f"Finished: {comp} {M} {case_name}")
 

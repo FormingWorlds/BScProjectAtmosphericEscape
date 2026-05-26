@@ -7,7 +7,7 @@ from cross_section import effective_cross_section
 from physics import mean_mass
 
 
-def bates_extension(zeta, T_0, T_inf, beta = 0.75):
+def bates_extension(zeta, T0, T_inf, beta = 0.75):
     """extends using bates profile
     T(zeta) = T0 + (T_inf - T0) * (1 - exp(-beta*zeta))"""
     return T0 + (T_inf - T0) * (1.0 - np.exp(-beta * zeta))
@@ -18,24 +18,34 @@ def extend_profile_exobase(
     species,
     species_masses,
     M_planet,
-    z_extra=1e3,
+    T_inf,
+    zeta_extra=0.25,
     n_extra=10,
-    max_extra=1e9,
-):
-    """extend profile upwards to exobase using the Bates T profile"""
+    zeta_max=30,
+    ):
+    """extend profile upwards to exobase using the Bates T profile
+    Assumptions:
+    - Bates temperature profile above PROTEUS top
+    - pressure coordinate zeta = -ln(P/P_top)
+    - constant VMRs from the top of the PROTEUS grid
+    - hydrostatic relation dr/dzeta = H"""
 
+    T0 = T[-1]
     r_current = r.copy()
     T_current = T.copy()
     species_current = {sp: n.copy() for sp, n in species.items()}
 
-    
+    zeta_added = 0
 
-    while total_added < max_extra:
+    while zeta_added < zeta_max:
 
         r_top = r_current[-1]
         T_top = T_current[-1]
 
         n_top = np.sum([n[-1] for n in species_current.values()])
+
+        if n_top <= 0 or not np.isfinite(n_top):
+            raise ValueError("Invalid top density before Bates extension.")
 
         X_top = {
             sp: species_current[sp][-1] / n_top
@@ -47,31 +57,39 @@ def extend_profile_exobase(
             for sp in species_current
         )
 
-        r_ext = np.linspace(r_top, r_top + z_extra, n_extra)
-        T_ext = np.full_like(r_ext, T_top)
+        zeta_grid = np.linspace(0, zeta_extra, n_extra)
 
-        g_ext = G * M_planet / r_ext**2
+        zeta_total = zeta_grid + zeta_added
+
+        T_ext = bates_extension(zeta_total, T_top, T_inf, beta=0.75)
+        
+        g_ext = G * M_planet / r_top**2
         H_ext = k * T_ext / (m_mean_top * g_ext)
 
-        ln_n = cumulative_trapezoid(
-            -1 / H_ext,
-            r_ext,
+        dr_ext = cumulative_trapezoid(
+            H_ext,
+            zeta_grid,
             initial=0,
         )
 
-        n_ext_tot = n_top * np.exp(ln_n)
+        r_ext =  r_top + dr_ext
 
-        r_ext     = r_ext[1:]    # remove duplicate r_top
-        n_ext_tot = n_ext_tot[1:]     # remove corresponding density
-        T_ext     = np.full_like(r_ext, T_top)
+        if r_ext[-1] > 1e12:   # more than ~7000 R_earth, unphysical?
+            raise ValueError("Extension reached unphysical radius — exobase not found")
+        
+        n_extended = n_top * np.exp(-zeta_grid) * (T_top/T_ext)
 
-        r_new = np.concatenate([r_current, r_ext])
-        T_new = np.concatenate([T_current, T_ext])
+        r_ext = r_ext[1:]    # remove duplicate r_top
+        n_ext_tot = n_extended[1:]     # remove corresponding density
+        T_ext = T_ext[1:]
 
         species_ext = {
             sp: X_top[sp] * n_ext_tot
             for sp in species_current
         }
+
+        r_new = np.concatenate([r_current, r_ext])
+        T_new = np.concatenate([T_current, T_ext])
 
         species_new = {
             sp: np.concatenate([species_current[sp], species_ext[sp]])
@@ -110,6 +128,6 @@ def extend_profile_exobase(
             r_current = r_new
             T_current = T_new
             species_current = species_new
-            total_added += z_extra
+            zeta_added += zeta_extra
 
-    raise ValueError("No exobase found after extending profile")
+    raise ValueError("No exobase found after extending profile with Bates")
