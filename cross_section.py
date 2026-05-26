@@ -7,14 +7,14 @@ def effective_cross_section(species):
     n_tot = np.sum(list(known.values()), axis=0)
     sigma_eff = np.zeros_like(n_tot)
 
-    for sp_i, n_i in species.items():
+    for sp_i, n_i in known.items():
         if sp_i not in PARTICLE_RADII:
             continue
 
         r_i = PARTICLE_RADII[sp_i]
         X_i = n_i / n_tot
 
-        for sp_j, n_j in species.items():
+        for sp_j, n_j in known.items():
             if sp_j not in PARTICLE_RADII:
                 continue
 
