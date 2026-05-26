@@ -143,6 +143,7 @@ def summarize_case(rows):
 
         "weighted_mass_loss_kg_s": rows[0]["weighted_mass_loss_kg_s"], #same for all species
         "dominant_escaping_species": dominant["species"],
+        "dominant_lambda_j": dominant["lambda_j"],
         "dominant_species_Mdot_kg_s": dominant["Mdot_kg_s"],
 
         "T_exo_K": rows[0]["T_exo_K"],
