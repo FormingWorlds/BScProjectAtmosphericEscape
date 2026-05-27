@@ -6,7 +6,7 @@ from scipy.constants import k, G, N_A
 #define a class for easier&cleaner work
 class Atmosphere:
     
-    def __init__(self, temperature, pressure, height, Kzz, mmw, density, VMR, molar_masses, diff_coeffs, planet_mass, planet_rad):
+    def __init__(self, temperature, pressure, height, Kzz, mmw, density, VMR, molar_masses, Natoms, Hfrac, diff_coeffs, planet_mass, planet_rad):
         """init function"""
         self.temperature = temperature  #[K]
         self.pressure    = pressure     #[Pa]
@@ -16,6 +16,8 @@ class Atmosphere:
         self.density     = density      #[kg/m^3]
         self.VMR         = VMR          #[Volume mixing ratio]
         self.molar_masses = molar_masses #[kg/mol]
+        self.Natoms      = Natoms       #amount of atoms in molecule
+        self.Hfrac       = Hfrac        #frac of H atoms to total atoms in species
         self.diff_coeffs = diff_coeffs  #[cgs]
         self.planet_mass = planet_mass  #[kg]
         self.planet_rad  = planet_rad   #[m]
@@ -135,6 +137,24 @@ def import_atmosphere(atmo_file, diff_file, system, planet_file, instellation):
                 "N" : 14.007*1e-3
             },
             
+            Natoms = {
+                "H2" : 2,
+                "H2O": 3,
+                "H"  : 1,
+                "CH4": 5,
+                "NH3": 4,
+                "H2S": 3
+            },
+            
+            Hfrac = {
+                "H2" : 1,
+                "H2O": 2/3,
+                "H"  : 1,
+                "CH4": 4/5,
+                "NH3": 3/4,
+                "H2S": 2/3
+            },
+            
             diff_coeffs = {
                 "H2": {
                     "A": (df1[(df1["minor_const"] == "H2") & (df1["major_const"] == system)])["A"].values,
@@ -207,6 +227,24 @@ def import_atmosphere(atmo_file, diff_file, system, planet_file, instellation):
                 "S" : 32.059*1e-3,
                 "SO2" : 64.066*1e-3,
                 "N" : 14.007*1e-3
+            },
+                     
+            Natoms = {
+                "H2" : 2,
+                "H2O": 3,
+                "H"  : 1,
+                "CH4": 5,
+                "NH3": 4,
+                "H2S": 3
+            },
+            
+            Hfrac = {
+                "H2" : 1,
+                "H2O": 2/3,
+                "H"  : 1,
+                "CH4": 4/5,
+                "NH3": 3/4,
+                "H2S": 2/3
             },
             
             diff_coeffs = {

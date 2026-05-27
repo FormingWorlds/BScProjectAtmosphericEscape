@@ -21,7 +21,7 @@ mass = ["1_M_earth", "10_M_earth"]
 diff_file = 'diffusion_coefficients.csv'
 
 
-disso_fracs = {
+disso_fracs = {   #fraction of the initial molecules that are fully dissociated (the physics module takes into account the differing amount of atoms in different molecules)
     "H2" : 1,
     "H2O": 1,
     "H"  : 1,
@@ -56,17 +56,16 @@ for inst in instellations:
                 # print(f"for {system} {instellation} {m}, a={a}")
                 
                 
-                print(np.shape(res[8]))
-                
-                plt.plot(res[4], res[7], label='H')
-                plt.plot(res[4], res[8], label='mfp')
-                plt.plot(res[4], res[9], label='D')
-                plt.plot(res[4], res[5], label='K')
-                plt.xlabel('Height $[km]$')
-                plt.ylabel('$[cm^2/s]$')
+                plt.plot(res[2]/100000, res[1], label='H')
+                plt.plot(res[2]/100000, res[0], label='mfp')
+                plt.plot(res[2]/100000, res[3], label='D')
+                plt.plot(res[2]/100000, res[4], label='K')
+                plt.xlabel('pressure $[bar]$')
+                plt.ylabel('$[cm^2/s]$ or $[m]$')
                 plt.yscale('log')
                 plt.xscale('log')
-                #plt.title(f'{system}, {m}, {instellation}')
+                plt.title(f'{system}, {m}, {instellation}')
+                plt.gca().invert_xaxis()
                 plt.grid()
                 plt.legend()
                 #plt.savefig('working_plots/proteus_part/D_and_K_vs_z_extended.png', dpi=300, bbox_inches='tight')
@@ -85,4 +84,6 @@ for inst in instellations:
     #plt.legend()
     #plt.savefig('working_plots/proteus_part/T_vs_z_iso_extended.png', dpi=300, bbox_inches='tight')
     #plt.show()
+                
+                
                 
