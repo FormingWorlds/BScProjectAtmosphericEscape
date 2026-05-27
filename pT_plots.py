@@ -3,10 +3,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.constants import k
+import seaborn as sns
 
 from constants import SPECIES_MASSES
 from proteus_escape import read_proteus_profile, read_bulk_properties
 from extend_profile import extend_profile_exobase
+
+sns.set_palette("colorblind")
 
 
 OUTDIR = "Plots/PROTEUS_PT_extensions"

@@ -228,8 +228,7 @@ for idx, mas in enumerate(mass):
 
 axes[0].set_ylabel(r"Dominant species Jeans parameter $\lambda_J$", fontsize=13)
 
-first_legend = axes[1].legend(handles=atm_handles, title="Atmosphere", loc="upper right")
-axes[1].add_artist(first_legend)
+fig.legend(handles=atm_handles, title="Atmosphere", bbox_to_anchor=(1.07, 1), loc="outside upper right")
 axes[1].legend(handles=flux_legend, title="Instellation", loc="lower left")
 
 plt.suptitle(r"Dominant-species Jeans parameter vs $T_{\infty}$", fontsize=15)
@@ -265,7 +264,7 @@ for idx, mas in enumerate(mass):
                 s=80,
             )
 
-    ax.axvline(2, color="grey", linestyle="--", linewidth=1)
+    ax.axvline(1.5, color="grey", linestyle="--", linewidth=1)
     ax.axvline(10, color="grey", linestyle=":", linewidth=1)
 
     ax.set_xscale("log")
@@ -275,9 +274,8 @@ for idx, mas in enumerate(mass):
     ax.tick_params(axis="both", which="major", labelsize=12)
 
 axes[0].set_ylabel(r"$\log_{10}(\dot{M}_{\rm dominant})$ [kg/s]", fontsize=13)
+fig.legend(handles=atm_handles, title="Atmosphere",  bbox_to_anchor=(1.07, 1), loc="outside upper right")
 
-first_legend = axes[1].legend(handles=atm_handles, title="Atmosphere", loc="upper right")
-axes[1].add_artist(first_legend)
 axes[1].legend(handles=flux_legend, title="Instellation", loc="lower left")
 
 plt.suptitle(r"Dominant species mass loss versus Jeans parameter", fontsize=15)
@@ -316,7 +314,7 @@ for idx, mas in enumerate(mass):
                 markersize=6,
             )
 
-    ax.axhline(2, color="grey", linestyle="--", linewidth=1)
+    ax.axhline(1.5, color="grey", linestyle="--", linewidth=1)
     ax.axhline(10, color="grey", linestyle=":", linewidth=1)
 
     ax.set_yscale("log")
@@ -326,8 +324,7 @@ for idx, mas in enumerate(mass):
 
 axes[0].set_ylabel(r"Hydrogen Jeans parameter $\lambda_{J,\mathrm{H}}$", fontsize=13)
 
-first_legend = axes[1].legend(handles=atm_handles, title="Atmosphere", loc="upper right")
-axes[1].add_artist(first_legend)
+fig.legend(handles=atm_handles, title="Atmosphere",  bbox_to_anchor=(1.07, 1), loc="outside upper right")
 axes[1].legend(handles=flux_legend, title="Instellation", loc="lower left")
 
 plt.suptitle(r"Hydrogen Jeans parameter vs $T_{\infty}$", fontsize=15)
