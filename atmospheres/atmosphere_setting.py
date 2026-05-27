@@ -9,7 +9,7 @@ class Atmosphere:
         'H2': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1},
         'H': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1}, 
         'H2O': {'nu_0': 4.835981008048 * 10**15 , 'mu_wind': 3, 'mu_plus_wind': 6},
-        'CO2' : {'nu_0' : 3.3368 * 10**15, 'mu_wind': 7.2, 'mu_plus_wind': 14.4}, 
+        'CO2' : {'nu_0' : 3.3368 * 10**15, 'mu_wind': 7.333, 'mu_plus_wind': 14.667}, 
         'N2' : {'nu_0' : 3.7721 * 10**15, 'mu_wind': 7, 'mu_plus_wind': 14}
     }
 
