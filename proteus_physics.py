@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.constants import k, G, N_A
 from slattery_diff import slattery_diff
-from proteus_extra_functions import H_mean_free_path, H_scale_height
+from proteus_extra_functions import H_mean_free_path, H_scale_height, homopause_index_finder, Bates_extension
 
 
 alpha     = -0.25       #from Yelle 
@@ -54,7 +54,28 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
         mfp = H_mean_free_path(VMR, rho, mmw)
         H = H_scale_height(T, R, z, M, molarmasses)
         
-        return(mfp, H, p, D, K)
+        hom_id = homopause_index_finder(K, D, H, mfp)
+        
+        if isinstance(hom_id, np.int64):
+            T_inf = np.array([500, 1000, 2000]) #[K]
+            for temp in T_inf:                
+                Bates = Bates_extension(hom_id, temp, M, R, T, p, z, rho, mmw, VMR, K)
+                T = Bates[0]
+                p = Bates[1]
+                z = Bates[2]
+                rho = Bates[3]
+                mmw = Bates[4]
+                VMR = Bates[5]
+                K = Bates[6]
+                
+                #now we find the exobase index
+                mfp = H_mean_free_path(VMR, rho, mmw)
+                H = H_scale_height(T, R, z, M, molarmasses)
+
+            return(p, T)
+        
+        return(hom_id)
+        #return(mfp, H, p, D, K)
         
         
         # #to go on im just gonna pretend as if i have the homopause and exobase indices, hom_id and exo_id

@@ -37,9 +37,7 @@ for inst in instellations:
         system = f'{specie}'
         
         for m in mass:
-            if((m=="1_M_earth") & (inst=="1_F_earth") & (specie=="H2O")):
-                pass
-            elif((m=="1_M_earth") & (inst=="1000_F_earth") & (specie=="H2")):
+            if(((m=="1_M_earth") & (inst=="1000_F_earth") & (specie=="H2"))):
                 pass
             else:
                 atmo_file = f'PROTEUS/atmos/{specie}_atmosphere_{m}_{inst}.csv'
@@ -47,6 +45,21 @@ for inst in instellations:
                 
                 atm = import_atmosphere(atmo_file, diff_file, system, planet_file, instellation)
                 res = proteus_improved_limiting_flux(atm, system, disso_fracs)
+                
+                if(isinstance(res, str)):
+                    print('homopause not found - process terminated')
+                else:
+                    plt.plot(res[1], res[0]/100000, label=f"{system}, {instellation}, {m}")
+                    plt.xlabel('T $[K]$')
+                    plt.ylabel('Pressure $[bar]$')
+                    plt.yscale('log')
+                    plt.gca().invert_yaxis()
+                    plt.grid()
+                    plt.legend()
+                    plt.savefig('working_plots/proteus_part/T_vs_p_Bates_extended.png', dpi=300, bbox_inches='tight')
+                    plt.show()
+                
+                #print(f"{system}, {m}, {instellation}: hom_id = {res[0]}")
                 
                 # a=0
                 # for element in atm.VMR:
@@ -56,20 +69,20 @@ for inst in instellations:
                 # print(f"for {system} {instellation} {m}, a={a}")
                 
                 
-                plt.plot(res[2]/100000, res[1], label='H')
-                plt.plot(res[2]/100000, res[0], label='mfp')
-                plt.plot(res[2]/100000, res[3], label='D')
-                plt.plot(res[2]/100000, res[4], label='K')
-                plt.xlabel('pressure $[bar]$')
-                plt.ylabel('$[cm^2/s]$ or $[m]$')
-                plt.yscale('log')
-                plt.xscale('log')
-                plt.title(f'{system}, {m}, {instellation}')
-                plt.gca().invert_xaxis()
-                plt.grid()
-                plt.legend()
-                #plt.savefig('working_plots/proteus_part/D_and_K_vs_z_extended.png', dpi=300, bbox_inches='tight')
-                plt.show()
+                # plt.plot(res[2]/100000, res[1], label='H')
+                # plt.plot(res[2]/100000, res[0], label='mfp')
+                # plt.plot(res[2]/100000, res[3], label='D')
+                # plt.plot(res[2]/100000, res[4], label='K')
+                # plt.xlabel('pressure $[bar]$')
+                # plt.ylabel('$[cm^2/s]$ or $[m]$')
+                # plt.yscale('log')
+                # plt.xscale('log')
+                # plt.title(f'{system}, {m}, {instellation}')
+                # plt.gca().invert_xaxis()
+                # plt.grid()
+                # plt.legend()
+                # #plt.savefig('working_plots/proteus_part/D_K_mfp_H_vs_z_issue.png', dpi=300, bbox_inches='tight')
+                # plt.show()
                 
                 
                 # plt.plot(res[0], res[4]/1000, label=f"{system}, {instellation}, {m}")
