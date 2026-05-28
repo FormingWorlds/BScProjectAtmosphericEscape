@@ -57,6 +57,17 @@ def homopause_index_finder(K, D, H, mfp):
     return(hom_id)
 
 
+def exobase_index_finder(H, mfp):
+    """finds and returns the exobase index (where mfp becomes larger than H) if it exists"""
+
+    if(np.shape(np.where(mfp >= H)[0])[0] == 0):
+        exo_id = 'exobase not found'
+    else:
+        exo_id = np.where(mfp >= H)[0][0]
+    
+    return(exo_id)
+
+
 def Bates_extension(homopause_index, T_inf, M, R, T, p, z, rho, mmw, VMR, Kzz):
     """extends the atmosphere as a Bates profile up to 10^-15 bar given the value arrays, planet mass and radius, the homopause 
     index (from where the extenstion begins) and the heated up 'infinity' temperature at the very top of the atmosphere"""

@@ -39,6 +39,8 @@ for inst in instellations:
         for m in mass:
             if(((m=="1_M_earth") & (inst=="1000_F_earth") & (specie=="H2"))):
                 pass
+            elif(((m=="10_M_earth") & (inst=="1000_F_earth") & (specie=="H2O"))):
+                pass
             else:
                 atmo_file = f'PROTEUS/atmos/{specie}_atmosphere_{m}_{inst}.csv'
                 planet_file = f'PROTEUS/planet/planet_bulk_properties_{specie}_atmosphere_{m}.csv'
@@ -49,15 +51,20 @@ for inst in instellations:
                 if(isinstance(res, str)):
                     print('homopause not found - process terminated')
                 else:
-                    plt.plot(res[1], res[0]/100000, label=f"{system}, {instellation}, {m}")
-                    plt.xlabel('T $[K]$')
-                    plt.ylabel('Pressure $[bar]$')
-                    plt.yscale('log')
-                    plt.gca().invert_yaxis()
-                    plt.grid()
-                    plt.legend()
-                    plt.savefig('working_plots/proteus_part/T_vs_p_Bates_extended.png', dpi=300, bbox_inches='tight')
-                    plt.show()
+                    print(f"flux from {system}, {m}, {instellation}: {res:.g}")                    
+                    
+                    # plt.plot(res[1],res[0]/100000, label="mfp, $[m]$")
+                    # plt.plot(res[2],res[0]/100000, label="H, $[m]$")
+                    # plt.title(f'{system}, {m}, {instellation}')
+                    # plt.ylabel('p $[bar]$')
+                    # plt.xlabel('Distance $[m]$')
+                    # plt.xscale('log')
+                    # plt.yscale('log')
+                    # plt.gca().invert_yaxis()
+                    # plt.grid()
+                    # plt.legend()
+                    # #plt.savefig('working_plots/proteus_part/DKmfpz_vs_p_Bates_extended_working.png', dpi=300, bbox_inches='tight')
+                    # plt.show()
                 
                 #print(f"{system}, {m}, {instellation}: hom_id = {res[0]}")
                 
