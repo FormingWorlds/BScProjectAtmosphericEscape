@@ -1,6 +1,7 @@
 """This file makes a class that can hold atmosphere parameters such that they don't have to be input as separate arguments to the rr_escape_rate function. 
 This is useful for testing the function with different atmospheric compositions, and for making it easier to use the function in a more general context."""
 import numpy as np
+import scipy.constants as sp
 from radiation_recombination_coefficient_cauldron import species_rr_coefficients_case_B
 
 ### Dictionary of the most relevant dominant species for the wind, which comes with their own values for hte microphysics ###
@@ -15,7 +16,7 @@ wind_microphysics = {
     }
 class Atmosphere:
     
-    def __init__(self, M_p, pressures, temperatures, heights, F_xuv=None, F_ins=None, dominant_species=None, T_wind=10**(4), vmrs=None, P_base=10**(-4), nu_0=None, mu_wind=None, mu_plus_wind=None, R_p=None, determine_radius=False, rr_coeff=None):
+    def __init__(self, M_p, pressures, heights, temperatures, F_xuv=None, F_ins=None, dominant_species=None, T_wind=10**(4), vmrs=None, P_base=10**(-4), nu_0=None, mu_wind=None, mu_plus_wind=None, R_p=None, determine_radius=False, rr_coeff=None):
         #input chosen by user
         self.P_base = P_base #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
         
@@ -102,7 +103,7 @@ class Atmosphere:
         Determines the microphysics parameters for the escaping wind based on the dominant species at the base of the escaping atmosphere.
 
         Takes input parameters: 
-        Atmosphere object, must have a vmrs attribute to determine the dominant species at the base of the escaping atmosphere from.
+        Atmosphere object, must have a vmrs attribute to determine the dominant species at the base of the escaping atmosphere from. 
 
         All calculations done in SI units.
         '''
@@ -168,4 +169,16 @@ class Atmosphere:
         
         #Convert the final radius from Earth radii back to SI meters and return
         return R_p_earth * R_earth
+
+    def determine_effective_temperature(F_xuv, R_p):
+        '''
+        Determines the effective temperature of the planet based on the XUV flux and planetary radius from the Stefan-Boltzmann law and assuming the planet is a black body.
+
+        Takes input parameters: F_xuv [W/m^2] - XUV flux, R_p [m] - planetary radius
+
+        Output: T_eff [K] - effective temperature of the planet
+        '''
+        sigma_sb = sp.constants.sigma #[W m^-2 K^-4] Stefan-Boltzmann constant
+        T_eff = (F_xuv / (4 * np.pi * R_p**2 * sigma_sb))**(1/4) #[K] effective temperature of the planet, where F_xuv: XUV flux, R_p: planetary radius, sigma_sb: Stefan-Boltzmann constant
+        return T_eff
 
