@@ -54,7 +54,7 @@ class Atmosphere:
         if rr_coeff is not None:
             self.rr_coeff = rr_coeff
         elif self.dominant_species_found_in_dict:
-            self.rr_coeff = self.wind_microphysics[self.dominant_species]['rr_coeff']
+            self.rr_coeff = wind_microphysics[self.dominant_species]['rr_coeff']
         else:
             raise ValueError("No valid recombination coefficient found for the specified dominant species. Please provide a recombination coefficient manually or check that the dominant species is correctly specified and present in the microphysics dictionary.")
 
@@ -125,25 +125,25 @@ class Atmosphere:
         elif self.vmrs is not None:
             #Otherwise use proteus data
             spec = self.dominant_species
-            if spec in self.wind_microphysics:
+            if spec in wind_microphysics:
                 self.dominant_species_found_in_dict = True
-                self.nu_0 = self.wind_microphysics[spec]['nu_0']
-                self.mu_wind = self.wind_microphysics[spec]['mu_wind']
-                self.mu_plus_wind = self.wind_microphysics[spec]['mu_plus_wind']
-                self.rr_coeff = self.wind_microphysics[spec]['rr_coeff']
+                self.nu_0 = wind_microphysics[spec]['nu_0']
+                self.mu_wind = wind_microphysics[spec]['mu_wind']
+                self.mu_plus_wind = wind_microphysics[spec]['mu_plus_wind']
+                self.rr_coeff = wind_microphysics[spec]['rr_coeff']
                 return
             else:
                 raise ValueError(f'{self.dominant_species} found to be dominant, but not defined in microphysics dictionary. \n Add parameters (nu_0, mu_wind, mu_plus_wind, rr_coeff) there or provide them manually.')
 
         # And if there is no manual microphysics and this isn't a proteus atmosphere, we check is there is input on the dominant species to try to assign microphysics parameters that way
         elif dominant_species is not None:
-            if dominant_species in self.wind_microphysics:
+            if dominant_species in wind_microphysics:
                 self.dominant_species_found_in_dict = True
                 self.dominant_species = dominant_species
-                self.nu_0 = self.wind_microphysics[dominant_species]['nu_0']
-                self.mu_wind = self.wind_microphysics[dominant_species]['mu_wind']
-                self.mu_plus_wind = self.wind_microphysics[dominant_species]['mu_plus_wind']
-                self.rr_coeff = self.wind_microphysics[dominant_species]['rr_coeff']
+                self.nu_0 = wind_microphysics[dominant_species]['nu_0']
+                self.mu_wind = wind_microphysics[dominant_species]['mu_wind']
+                self.mu_plus_wind = wind_microphysics[dominant_species]['mu_plus_wind']
+                self.rr_coeff = wind_microphysics[dominant_species]['rr_coeff']
             else:
                 raise ValueError(f'{dominant_species} specified as dominant, but not defined in microphysics dictionary. \n Add parameters (nu_0, mu_wind, mu_plus_wind, rr_coeff) there or provide them manually.')
         else:
@@ -170,15 +170,15 @@ class Atmosphere:
         #Convert the final radius from Earth radii back to SI meters and return
         return R_p_earth * R_earth
 
-    def determine_effective_temperature(F_xuv, R_p):
+    def determine_temperature_from_bolometric_flux(F_ins):
         '''
-        Determines the effective temperature of the planet based on the XUV flux and planetary radius from the Stefan-Boltzmann law and assuming the planet is a black body.
+        Determines the effective temperature of the planet based on the bolometric flux and planetary radius from the Stefan-Boltzmann law and assuming the planet is a black body.
 
-        Takes input parameters: F_xuv [W/m^2] - XUV flux, R_p [m] - planetary radius
+        Takes input parameters: F_ins [W/m^2] - bolometric flux, R_p [m] - planetary radius
 
         Output: T_eff [K] - effective temperature of the planet
         '''
         sigma_sb = sp.constants.sigma #[W m^-2 K^-4] Stefan-Boltzmann constant
-        T_eff = (F_xuv / (4 * np.pi * R_p**2 * sigma_sb))**(1/4) #[K] effective temperature of the planet, where F_xuv: XUV flux, R_p: planetary radius, sigma_sb: Stefan-Boltzmann constant
+        T_eff = (F_ins / (4 * sigma_sb))**(1/4) #[K] effective temperature of the planet, where F_ins: bolometric flux, R_p: planetary radius, sigma_sb: Stefan-Boltzmann constant
         return T_eff
 
