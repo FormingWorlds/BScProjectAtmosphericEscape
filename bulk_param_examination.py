@@ -7,7 +7,7 @@ import numpy as np
 from atmospheres.atmosphere_setting import Atmosphere
 
 ### Defining function to create atmosphere for loops ###
-def make_simple_atmosphere(M_p, T_eq, mu_photo, F_xuv=None, F_ins=None,  P_0=2000, T_wind=10**4, dominant_species=None, resolution=5000, determine_radius=False, R_p=None, rr_coeff=None, P_base=0.0001,  nu_0=None, mu_wind=None, mu_plus_wind=None):
+def make_simple_atmosphere(M_p, mu_photo, F_xuv=None, P_0=2000, T_wind=10**4, dominant_species=None, resolution=5000, determine_radius=False, R_p=None, rr_coeff=None, P_base=0.0001,  nu_0=None, mu_wind=None, mu_plus_wind=None, determine_temperature_from_xuv=False, T_eq=None):
     '''
     Makes a simple isothermal atmosphere with the given input parameters.
 
@@ -27,14 +27,17 @@ def make_simple_atmosphere(M_p, T_eq, mu_photo, F_xuv=None, F_ins=None,  P_0=200
         raise ValueError('You must either provide a planetary radius or set "determine_radius=True".') 
     radii = np.linspace(R_p, 10*R_p, resolution) #[m] array of radii from the planetary radius to 10 times the planetary radius
 
+    if determine_temperature_from_xuv:
+        T_eq = Atmosphere.determine_temperature_from_xuv(F_xuv, R_p)
+
     pressures = P_0 * np.exp(G * M_p * mu_photo * m_p / (k_b * T_eq) * (1/radii - 1/R_p) ) #[Pa] pressure profile of the atmosphere based on the barometric formula, where P_0: pressure at the optical photosphere, G: gravitational constant, M_p: planetary mass, mu_photo: mean molecular weight at the optical photosphere, m_p: proton mass, k_b: Boltzmann constant, T_eq: equilibrium temperature of the planet, radii: array of radii from the planetary radius to 10 times the planetary radius
+
 
     return Atmosphere(
         T_wind=T_wind,
         mu_wind=mu_wind,
         M_p=M_p,
         F_xuv=F_xuv,
-        F_ins=F_ins,
         P_base=P_base,
         nu_0=nu_0,
         mu_plus_wind=mu_plus_wind,
