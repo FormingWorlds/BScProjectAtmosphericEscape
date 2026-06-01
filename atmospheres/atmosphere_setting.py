@@ -1,18 +1,20 @@
 """This file makes a class that can hold atmosphere parameters such that they don't have to be input as separate arguments to the rr_escape_rate function. 
 This is useful for testing the function with different atmospheric compositions, and for making it easier to use the function in a more general context."""
 import numpy as np
+from radiation_recombination_coefficient_cauldron import species_rr_coefficients_case_B
 
-class Atmosphere:
-    ### Dictionary of the most relevant dominant species for the wind, which comes with their own values for hte microphysics ###
-    wind_microphysics = {
+### Dictionary of the most relevant dominant species for the wind, which comes with their own values for hte microphysics ###
+wind_microphysics = {
         #NB, these are the values for the singly ionised and fully dissociated equivalents!!!!!
-        'H2': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1},
-        'H': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1}, 
-        'H2O': {'nu_0': 4.835981008048 * 10**15 , 'mu_wind': 3, 'mu_plus_wind': 6},
-        'CO2' : {'nu_0' : 3.3368 * 10**15, 'mu_wind': 7.333, 'mu_plus_wind': 14.667}, 
-        'N2' : {'nu_0' : 3.7721 * 10**15, 'mu_wind': 7, 'mu_plus_wind': 14}
+        'H2': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1, 'rr_coeff': species_rr_coefficients_case_B['H2']},
+        'H': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1, 'rr_coeff': species_rr_coefficients_case_B['H']}, 
+        'H2O': {'nu_0': 4.835981008048 * 10**15 , 'mu_wind': 3, 'mu_plus_wind': 6, 'rr_coeff': species_rr_coefficients_case_B['H2O']},
+        'CO2' : {'nu_0' : 3.3368 * 10**15, 'mu_wind': 7.333, 'mu_plus_wind': 14.667, 'rr_coeff': species_rr_coefficients_case_B['CO2']}, 
+        'N2' : {'nu_0' : 3.7721 * 10**15, 'mu_wind': 7, 'mu_plus_wind': 14, 'rr_coeff': species_rr_coefficients_case_B['N2']},
+        'H2He' : {'nu_0' : 4.835981008048 * 10**15, 'mu_wind': 0.62, 'mu_plus_wind': 1.3 , 'rr_coeff': species_rr_coefficients_case_B['H2He']},
     }
-
+class Atmosphere:
+    
     def __init__(self, M_p, pressures, temperatures, heights, F_xuv=None, F_ins=None, dominant_species=None, T_wind=10**(4), vmrs=None, P_base=10**(-4), nu_0=None, mu_wind=None, mu_plus_wind=None, R_p=None, determine_radius=False, rr_coeff=None):
         #input chosen by user
         self.P_base = P_base #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
@@ -25,7 +27,7 @@ class Atmosphere:
         elif determine_radius is False and R_p is not None:
             self.R_p = R_p
         else: 
-            self.determine_radius_from_MR_relation()
+            self.R_p= self.determine_radius_from_MR_relation(self.M_p)
 
 
         if F_xuv is not None:
@@ -43,13 +45,18 @@ class Atmosphere:
         self.radii = R_p + heights
         self.pressures = pressures
         self.vmrs = vmrs if vmrs is not None else None
-        self.alpha_case_B = rr_coeff
-        
+                
         self.read_off_wind_base_parameters()    
-        self.determine_wind_microphysics(nu_0, mu_wind, mu_plus_wind, dominant_species)
+        self.determine_wind_microphysics(nu_0, mu_wind, mu_plus_wind, dominant_species, rr_coeff)
         
+        # First check if user provided a recombination coefficient manually, if not check if the dominant species is in the microphysics dictionary, else raise an error
+        if rr_coeff is not None:
+            self.rr_coeff = rr_coeff
+        elif self.dominant_species_found_in_dict:
+            self.rr_coeff = self.wind_microphysics[self.dominant_species]['rr_coeff']
+        else:
+            raise ValueError("No valid recombination coefficient found for the specified dominant species. Please provide a recombination coefficient manually or check that the dominant species is correctly specified and present in the microphysics dictionary.")
 
-               
 
     def calc_xuv_from_instellation(self, F_ins):
         '''
@@ -90,7 +97,7 @@ class Atmosphere:
             #print(f"Dominant species at the base of the escaping atmosphere: {self.dominant_species} with VMR of {self.vmrs_base[self.dominant_species]:.2e}")
         
 
-    def determine_wind_microphysics(self, nu_0, mu_wind, mu_plus_wind, dominant_species):
+    def determine_wind_microphysics(self, nu_0, mu_wind, mu_plus_wind, dominant_species, rr_coeff):
         '''
         Determines the microphysics parameters for the escaping wind based on the dominant species at the base of the escaping atmosphere.
 
@@ -99,17 +106,21 @@ class Atmosphere:
 
         All calculations done in SI units.
         '''
-        #Checks for manual input
-        if nu_0 is not None and mu_wind is not None and mu_plus_wind is not None:
+        #Checks for manual input first
+        if nu_0 is not None and mu_wind is not None and mu_plus_wind is not None and rr_coeff is not None:
             if dominant_species is not None:
                 self.dominant_species = dominant_species
             else: 
                 self.dominant_species = 'User_defined'
+
             self.nu_0 = nu_0
             self.mu_wind = mu_wind
             self.mu_plus_wind = mu_plus_wind
+            self.rr_coeff = rr_coeff
             self.dominant_species_found_in_dict = False
             return
+        
+        # If there is no manual input, we check if this is proteus data with vmrs which can give us the dominant species and microphysics parameters
         elif self.vmrs is not None:
             #Otherwise use proteus data
             spec = self.dominant_species
@@ -118,11 +129,24 @@ class Atmosphere:
                 self.nu_0 = self.wind_microphysics[spec]['nu_0']
                 self.mu_wind = self.wind_microphysics[spec]['mu_wind']
                 self.mu_plus_wind = self.wind_microphysics[spec]['mu_plus_wind']
+                self.rr_coeff = self.wind_microphysics[spec]['rr_coeff']
                 return
             else:
-                print(f'{self.dominant_species} found to be dominant, but not defined in microphysics dictionary. \n Add parameters (nu_0, mu_wind, mu_plus_wind) there or provide them manually.')
+                raise ValueError(f'{self.dominant_species} found to be dominant, but not defined in microphysics dictionary. \n Add parameters (nu_0, mu_wind, mu_plus_wind, rr_coeff) there or provide them manually.')
+
+        # And if there is no manual microphysics and this isn't a proteus atmosphere, we check is there is input on the dominant species to try to assign microphysics parameters that way
+        elif dominant_species is not None:
+            if dominant_species in self.wind_microphysics:
+                self.dominant_species_found_in_dict = True
+                self.dominant_species = dominant_species
+                self.nu_0 = self.wind_microphysics[dominant_species]['nu_0']
+                self.mu_wind = self.wind_microphysics[dominant_species]['mu_wind']
+                self.mu_plus_wind = self.wind_microphysics[dominant_species]['mu_plus_wind']
+                self.rr_coeff = self.wind_microphysics[dominant_species]['rr_coeff']
+            else:
+                raise ValueError(f'{dominant_species} specified as dominant, but not defined in microphysics dictionary. \n Add parameters (nu_0, mu_wind, mu_plus_wind, rr_coeff) there or provide them manually.')
         else:
-            raise ValueError("Microphysics parameters (nu_0, mu_wind, mu_plus_wind) could not be determined. Please input vmrs or the values manually.)")
+            raise ValueError("Microphysics parameters (nu_0, mu_wind, mu_plus_wind, rr_coeff) could not be determined. Please input vmrs or the values manually.)")
 
     @staticmethod
     def determine_radius_from_MR_relation(M_p):
