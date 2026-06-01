@@ -8,10 +8,10 @@ wind_microphysics = {
         #NB, these are the values for the singly ionised and fully dissociated equivalents!!!!!
         'H2': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1, 'rr_coeff': species_rr_coefficients_case_B['H2']},
         'H': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1, 'rr_coeff': species_rr_coefficients_case_B['H']}, 
-        'H2O': {'nu_0': 4.835981008048 * 10**15 , 'mu_wind': 3, 'mu_plus_wind': 6, 'rr_coeff': species_rr_coefficients_case_B['H2O']},
-        'CO2' : {'nu_0' : 3.3368 * 10**15, 'mu_wind': 7.333, 'mu_plus_wind': 14.667, 'rr_coeff': species_rr_coefficients_case_B['CO2']}, 
-        'N2' : {'nu_0' : 3.7721 * 10**15, 'mu_wind': 7, 'mu_plus_wind': 14, 'rr_coeff': species_rr_coefficients_case_B['N2']},
-        'H2He' : {'nu_0' : 4.835981008048 * 10**15, 'mu_wind': 0.62, 'mu_plus_wind': 1.3 , 'rr_coeff': species_rr_coefficients_case_B['H2He']},
+        'H2O': {'nu_0': 3.293303066481 * 10**15 , 'mu_wind': 3, 'mu_plus_wind': 6, 'rr_coeff': species_rr_coefficients_case_B['H2O']},
+        'CO2' : {'nu_0' : 3.293303066481 * 10**15, 'mu_wind': 7.333, 'mu_plus_wind': 14.667, 'rr_coeff': species_rr_coefficients_case_B['CO2']}, 
+        'N2' : {'nu_0' : 3.513340202347 * 10**15, 'mu_wind': 7, 'mu_plus_wind': 14, 'rr_coeff': species_rr_coefficients_case_B['N2']},
+        'H2He' : {'nu_0' : 5.948256639899 * 10**15, 'mu_wind': 0.62, 'mu_plus_wind': 1.3 , 'rr_coeff': species_rr_coefficients_case_B['H2He']},
     }
 class Atmosphere:
     
