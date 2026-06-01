@@ -46,7 +46,7 @@ def calc_sonic_point_radius(M_p, c_s, R_base):
         return R_s, True, R_s_calc #returns the sonic point, that the atmosphere is RR-limited, and what the calculated R_s was-
 
 
-def calc_density_at_sonic_point(M_p, F_xuv, nu_0, T_wind, R_s, c_s, R_base, mu_plus_wind, rr_coeff=None):
+def calc_density_at_sonic_point(M_p, F_xuv, nu_0, R_s, c_s, R_base, mu_plus_wind, rr_coeff):
     '''
     Calculates the density at the sonic point.
 
@@ -57,11 +57,7 @@ def calc_density_at_sonic_point(M_p, F_xuv, nu_0, T_wind, R_s, c_s, R_base, mu_p
 
     h = sp.constants.h #[J s] 
     
-    if rr_coeff is None: #if no coefficient value is given then it will default to the hydrogen formula
-        #REFERENCE: Murray et. al. 2009 after eq. 7. Only valid for dissociated H2 technically.
-        alpha_rec_B = 2.7 * 10**(-13) * (T_wind / 10**4)**(-0.9) * cm_to_m**3 #[m^3 s^-1] recombination coefficient for case B recombination for singly ionised H!!!!, where T_wind: temperature of the escaping atmosphere
-    else: #we try a given coefficient
-        alpha_rec_B = rr_coeff * cm_to_m**3 #[m^3 s^-1] recombination coefficient for case B recombination for the dominant species in the escaping atmosphere, where rr_coeff: recombination coefficient for radiative case B recombination for the dominant species in the escaping atmosphere in cm^3 s^-1
+    alpha_rec_B = rr_coeff * cm_to_m**3 #[m^3 s^-1] recombination coefficient for case B recombination for the dominant species in the escaping atmosphere, where rr_coeff: recombination coefficient for radiative case B recombination for the dominant species in the escaping atmosphere in cm^3 s^-1
 
     G = sp.constants.G #[m^3 kg^-1 s^-2] 
     # reference formula: ovesen math calc derivation. Needed to place n_0_base straight into n_plus_base to cancel sigma_nu0
@@ -99,7 +95,8 @@ def get_rr_escape_diagnostics(atm):
     '''
     c_s = calc_sound_speed(atm.T_wind, atm.mu_wind)
     R_s, is_rr_limited, R_s_calc = calc_sonic_point_radius(atm.M_p, c_s, atm.R_base)
-    rho_s = calc_density_at_sonic_point(atm.M_p, atm.F_xuv, atm.nu_0, atm.T_wind, R_s, c_s, atm.R_base, atm.mu_plus_wind, atm.alpha_case_B)
+
+    rho_s = calc_density_at_sonic_point(atm.M_p, atm.F_xuv, atm.nu_0, R_s, c_s, atm.R_base, atm.mu_plus_wind, atm.rr_coeff)
     escape_rate = rr_escape_rate(rho_s, c_s, R_s)
 
     return {
