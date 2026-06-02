@@ -125,7 +125,7 @@ def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
     print(f"Dominant species at the base of the escaping atmosphere: {atm.dominant_species}")
     print(f"Dominant species used to set wind parameters: {atm.dominant_species_found_in_dict}")
     print(f"Bulk properties: M_p = {atm.M_p:.2g} kg, R_p = {atm.R_p:.2g} m, F_xuv = {atm.F_xuv:.2g} W/m^2")
-    print(f"Wind properties: T_wind = {atm.T_wind:.2g} K, mu_wind = {atm.mu_wind:.2f}, nu_0 = {atm.nu_0:.2e} Hz, mu_plus_wind = {atm.mu_plus_wind:.2f}")
+    print(f"Wind properties: T_wind = {atm.T_wind:.2g} K, mu_wind = {atm.mu_wind:.2f}, nu_0 = {atm.nu_0:.2e} Hz, mu_plus_wind = {atm.mu_plus_wind:.2f}, rr_coeff = {atm.rr_coeff:.2g} cm^3 s^-1")
     print(f"Photosphere properties: P_0 = {atm.pressures[0]:.2g} Pa, T_eq = {atm.T[0]:.2g} K")
     print()
 
