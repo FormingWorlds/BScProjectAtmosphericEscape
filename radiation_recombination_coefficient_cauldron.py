@@ -31,18 +31,18 @@ rr_coefficients_case_B = {
 for species in rr_coefficients_case_A.keys():
     rr_coefficients_case_B[species] = rr_coefficients_case_A[species] - rr_coefficients_ground_state[species] #[cm^3 s^-1] case B coefficient is case A coefficient minus the coefficient for recombinations to the ground state, where case A coefficient: radiation recombination coefficient for case A, coefficient for recombinations to the ground state: radiation recombination coefficient for recombinations to the ground state
 
-print(f'{rr_coefficients_case_B["C"]}, {rr_coefficients_case_B["He"]}, {rr_coefficients_case_B["O"]}, {rr_coefficients_case_B["N"]}')
+#print(f'{rr_coefficients_case_B["C"]}, {rr_coefficients_case_B["He"]}, {rr_coefficients_case_B["O"]}, {rr_coefficients_case_B["N"]}')
 ###########################################################################
 
 ### Must translate this to what the combined radiation recombination coefficient for the dominant species in the escaping atmosphere is, which is what we will use in the calculations. ###
 #I've taken the average of the coefficients for the dominant species in the escaping atmosphere, weighted by the number of atoms of each species in the molecule, where the denominator is the total number of atoms in the molecule.
 species_rr_coefficients_case_B = {
-    'H': 2.7 * 10**(-13), #[cm^3 s^-1] from Murray-Clay et. al. 2009 after eq. 7
-    'H2' : 2.7 * 10**(-13), #[cm^3 s^-1] from Murray-Clay et. al. 2009 after eq. 7, only valid for dissociated H2
+    'H': 2.59 * 10**(-13), #[cm^3 s^-1] 
+    'H2' : 2.59 * 10**(-13), #[cm^3 s^-1] 
     'H2O': (2 * rr_coefficients_case_B['H'] + rr_coefficients_case_B['O']) / 3, #[cm^3 s^-1] 
     'CO2': (rr_coefficients_case_B['C'] + 2 * rr_coefficients_case_B['O']) / 3, #[cm^3 s^-1]
     'N2': rr_coefficients_case_B['N'], #[cm^3 s^-1]
-    'H2He': (2 * rr_coefficients_case_B['H'] * 0.9 + rr_coefficients_case_B['He'] * 0.1) / 3 #[cm^3 s^-1] Since it's a gas mix it should take into account ratio between gases I think.
+    'H2He': (2 * rr_coefficients_case_B['H'] * 0.9 + rr_coefficients_case_B['He'] * 0.1) / 1.9 #[cm^3 s^-1] Since it's a gas mix it should take into account ratio between gases I think.
 }
 
 print(f'{species_rr_coefficients_case_B["H2O"]}, {species_rr_coefficients_case_B["CO2"]}, {species_rr_coefficients_case_B["N2"]}, {species_rr_coefficients_case_B["H2He"]}')
