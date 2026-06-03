@@ -9,11 +9,11 @@ def cap_mass(rho_atm, h):
 	return M_cap
 
 
-m_max = ((np.pi * R) / (2*h))**(1/2) * M_cap
+# m_max = ((np.pi * R) / (2*h))**(1/2) * M_cap
 
-m_min = 4*np.pi*rho_atm*(h**3)
+# m_min = 4*np.pi*rho_atm*(h**3)
 
-m_imp = np.linspace(m_min, m_max, 1000)
+# m_imp = np.linspace(m_min, m_max, 1000)
 
 
 r_min = r_min(rho_atm, rho_pl, h)
