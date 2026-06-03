@@ -48,10 +48,16 @@ for inst in instellations:
                 atm = import_atmosphere(atmo_file, diff_file, system, planet_file, instellation)
                 res = proteus_improved_limiting_flux(atm, system, disso_fracs)
                 
-                if(isinstance(res, str)):
-                    print('homopause not found - process terminated')
+                if res is None:
+                    print(f'{system}, {m}, {instellation}: homopause not found - process terminated')
                 else:
-                    print(f"flux from {system}, {m}, {instellation}: {res:.g}")                    
+                    #print(f"flux from {system}, {m}, {instellation}: {res}")   
+                    plt.plot(res[1], res[0], '*')
+                    plt.title(f'{system}, {m}, {instellation}; all dissofracs = 1')  
+                    plt.ylabel('Escape flux [cm$^{-2}$ $\cdot$ s$^{-1}$]')
+                    plt.xlabel('Exobase temperature [K]')   
+                    plt.grid()
+                    plt.show()       
                     
                     # plt.plot(res[1],res[0]/100000, label="mfp, $[m]$")
                     # plt.plot(res[2],res[0]/100000, label="H, $[m]$")

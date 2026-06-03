@@ -45,7 +45,7 @@ class Atmosphere:
         
         steps = 30
         p = self.pressure
-        p_ext = np.logspace(np.log10(p[-1]), -8, steps)
+        p_ext = np.logspace(np.log10(p[-1]), -8, steps+1)[1:]  
         
         T = self.temperature
         VMR = self.VMR
@@ -66,18 +66,14 @@ class Atmosphere:
             VMR_ext = np.full(steps, last_VMR)
             VMR[element] = np.concatenate((VMR[element], VMR_ext), axis=0)
         
-        #extending z and rho via HSE
-        z_ext = []
-        z_ext.append(z[-1])
+        #extending z (assuming constant g) and rho via HSE
+        g_const = (G*M)/((R+z[-1])**2)
+        H_arr = (k*T_ext)/((mmw_ext/N_A)*g_const)
         
-        for i in range(0, steps-1):
-            dp = p_ext[i+1] - p_ext[i]
-            dz = - ((k*T_ext[i]*((R+z_ext[i])**2))/((mmw_ext[i]/N_A)*p_ext[i]*G*M)) * dp
-            z_ext.append((z_ext[i]+dz)[0])
-        
-        z_ext_arr = np.asarray(z_ext, dtype='float64')
+        z_ext = z[-1] + (H_arr * np.log(p[-1]/p_ext))
         rho_ext = ((mmw_ext/N_A)*p_ext)/(k*T_ext)
-        z = np.concatenate((z, z_ext_arr), axis=0)
+        
+        z = np.concatenate((z, z_ext), axis=0)
         rho = np.concatenate((rho, rho_ext), axis=0)
         
         return(T, VMR, mmw, rho, z)

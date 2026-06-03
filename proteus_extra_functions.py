@@ -60,7 +60,7 @@ def homopause_index_finder(K, D, H, mfp):
 def exobase_index_finder(H, mfp):
     """finds and returns the exobase index (where mfp becomes larger than H) if it exists"""
 
-    if(np.shape(np.where(mfp >= H)[0])[0] == 0):
+    if((np.shape(np.where(mfp >= H)[0])[0] == 0) or (np.shape(np.where(mfp >= H)[0])[0] == 1)):
         exo_id = 'exobase not found'
     else:
         exo_id = np.where(mfp >= H)[0][0]
@@ -77,13 +77,14 @@ def Bates_extension(homopause_index, T_inf, M, R, T, p, z, rho, mmw, VMR, Kzz):
     z = z[:homopause_index+1]
     rho = rho[:homopause_index+1]
     mmw = mmw[:homopause_index+1]
+    VMR = {k: v.copy() for k, v in VMR.items()} #make a cope to not overwrite the dict
     for element in VMR:
         VMR[element] = VMR[element][:homopause_index+1]  
     Kzz = Kzz[:homopause_index+1]
         
     #extending p
     steps = 30
-    p_ext = np.logspace(np.log10(p[-1]), -10, steps)  
+    p_ext = np.logspace(np.log10(p[-1]), -10, steps+1)[1:]  
         
     #extending the constant values: mmw, vmr, Kzz
     mmw_ext = np.full(steps, mmw[-1])
@@ -103,18 +104,14 @@ def Bates_extension(homopause_index, T_inf, M, R, T, p, z, rho, mmw, VMR, Kzz):
     rho_ext = ((mmw_ext/N_A)*(p_ext))/(k*T_ext)
     rho = np.concatenate((rho, rho_ext), axis=0)
     
-    #extending height (HSE)
-    z_ext = []
-    z_ext.append(z[-1])
-        
-    for i in range(0, steps-1):
-        dp = p_ext[i+1] - p_ext[i]
-        dz = - ((k*T_ext[i]*((R+z_ext[i])**2))/((mmw_ext[i]/N_A)*p_ext[i]*G*M)) * dp
-        z_ext.append((z_ext[i]+dz)[0])
+    #extending height assuming constant g
+    g_const = (G*M)/((R+z[-1])**2)
+    H_arr = (k*T_ext)/((mmw_ext/N_A)*g_const)
     
-    z_ext_arr = np.asarray(z_ext, dtype='float64')
-    z = np.concatenate((z, z_ext_arr), axis=0)
-    p = np.concatenate((p, p_ext), axis=0)  
+    z_ext = z[-1] + (H_arr * np.log(p[-1]/p_ext))
+    z = np.concatenate((z, z_ext), axis=0)
+    
+    p = np.concatenate((p, p_ext), axis=0)
     
     return(T, p, z, rho, mmw, VMR, Kzz)
 
