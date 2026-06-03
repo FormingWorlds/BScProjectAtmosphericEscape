@@ -1,26 +1,16 @@
 import numpy as np
-import matplotlib.pyplot as plt
-
-R = 6378		# radius Earth [km]
-M_planet = 5.98e24	# mass Earth [kg]
-h = 8.85		# scaleheight Earth [km]
-M_atm = 5.15e18		# Earth atmosphere mass [kg]
-rho_0 = 1.293		# density at Earth surface [kg/m^3] (unused)
-rho = 5.51e12		# density of Earth [kg/km^'3]
-
-r_min = 1.0		# minimum impact size [km]
-r_cap = 25.0		# cap size [km]
-
-r_gi = (2 * h * (R**2))**(1/3) # where giant impacts dominate [km]
-print(r_gi)		# giant impact radius, should be ~900 km
+from radius_cutoffs import *
+from Earth_constants import *
 
 r = np.geomspace(1.000001, 3000, 1000) # set up x-axis scale (log)
 
+r_min = r_min(rho_atm, rho_pl, h)
+r_cap = r_cap(rho_atm, rho_pl, h, R)
+r_gi = r_gi(h,R)
 
-def M_T(r, r_min, r_cap, R, h, M_atm, M_planet, rho):
+def M_T(r, r_min, r_cap, r_gi, R, h, M_atm, M_planet, rho):
 	"""Calculate total impactor mass for different sized impactors"""
-	r_gi = (2 * h * (R**2))**(1/3)
-
+	
 	if r <= r_cap:
 		M_T = (2*r / r_min) * (1 - (r_min/r)**2)**(-1) * M_atm
 
@@ -35,6 +25,6 @@ def M_T(r, r_min, r_cap, R, h, M_atm, M_planet, rho):
 	return MT_Mplanet
 
 
-MT_Mp = [M_T(_, r_min, r_cap, R, h, M_atm, M_planet, rho) for _ in r]
+MT_Mp = [M_T(_, r_min, r_cap, r_gi, R, h, M_atm, M, rho_pl) for _ in r]
 MT_Mp = np.array(MT_Mp)
 
