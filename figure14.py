@@ -2,7 +2,7 @@ import numpy as np
 from radius_cutoffs import *
 from Earth_constants import *
 
-r = np.geomspace(1.000001, 3000, 1000) # set up x-axis scale (log)
+r = np.geomspace((r_min+0.0001), 3000000, 100000) # set up x-axis scale (log)
 
 r_min = r_min(rho_atm, rho_pl, h)
 r_cap = r_cap(rho_atm, rho_pl, h, R)
