@@ -20,7 +20,7 @@ r_min = r_min(rho_atm, rho_pl, h)
 
 def M_ejected(r_min, r):
 	"""Mass ejected per radius"""
-	M_ej_list
+	M_ej_list = []
 	for _ in r:
 		M_ej = (r_min/(2*_)) * (1 - (r_min/_)**2)
 		M_ej_list.append(M_ej)
