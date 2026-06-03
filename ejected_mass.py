@@ -24,7 +24,9 @@ def M_ejected(r_min, r):
 	for _ in r:
 		M_ej = (r_min/(2*_)) * (1 - (r_min/_)**2)
 		M_ej_list.append(M_ej)
+	
 	M_eject = np.array(M_ej_list)
+	M_eject = np.abs(M_eject)
 	return M_eject
 
 
