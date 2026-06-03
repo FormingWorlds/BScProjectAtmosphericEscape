@@ -7,7 +7,7 @@ r_min = r_min(rho_atm, rho_pl, h)
 r_cap = r_cap(rho_atm, rho_pl, h, R)
 r_gi = r_gi(h,R)
 
-r = np.geomspace((r_min + 0.0001), 3000000, 100000) # set up x-axis scale (log)
+r = np.geomspace((r_min + 0.0001), 3000000, 1000000) # set up x-axis scale (log)
 
 
 def M_T(r, r_min, r_cap, r_gi, R, h, M_atm, M_planet, rho):
@@ -29,4 +29,5 @@ def M_T(r, r_min, r_cap, r_gi, R, h, M_atm, M_planet, rho):
 
 MT_Mp = [M_T(_, r_min, r_cap, r_gi, R, h, M_atm, M, rho_pl) for _ in r]
 MT_Mp = np.array(MT_Mp)
+MT_Mp = np.abs(MT_Mp)
 
