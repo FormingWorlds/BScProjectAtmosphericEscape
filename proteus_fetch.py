@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy.constants import k, G, N_A
+from scipy.signal import argrelmin
 
 
 #define a class for easier&cleaner work
@@ -23,22 +24,49 @@ class Atmosphere:
         self.planet_rad  = planet_rad   #[m]
         
     
+    # def Kzz_extension(self):
+    #     """extends Kzz up to 10^-13 bar assuming its a power law"""
+        
+    #     steps = 30
+        
+    #     K = self.Kzz
+    #     p = self.pressure
+        
+    #     slope = (np.log10(K[-1]) - np.log10(K[-10]))/(np.log10(p[-1]) - np.log10(p[-10]))
+    #     p_ext = np.logspace(np.log10(p[-1]), -8, steps)
+    #     K_ext = ((p_ext/p[-1])**slope) * K[-1]
+        
+    #     K = np.concatenate((K, K_ext), axis=0)
+    #     p = np.concatenate((p, p_ext), axis=0)
+        
+    #     return(K, p)
+    
+    
     def Kzz_extension(self):
-        """extends Kzz up to 10^-13 bar assuming its a power law"""
+        """extends Kzz up to 10^-13 bar assuming it continues as the mesopause value (see 'K_minimapoints.png')"""
         
         steps = 30
-        
         K = self.Kzz
         p = self.pressure
         
-        slope = (np.log10(K[-1]) - np.log10(K[-10]))/(np.log10(p[-1]) - np.log10(p[-10]))
-        p_ext = np.logspace(np.log10(p[-1]), -8, steps)
-        K_ext = ((p_ext/p[-1])**slope) * K[-1]
+        K_meso = argrelmin(K)
+        if(np.shape(K_meso)[1] == 0):
+            K_meso = np.argmin(K)
+        else:
+            K_meso = argrelmin(K)[0][0]
         
+        K = K[:K_meso+1]
+            
+        extension = (np.shape(p)[0] + steps) - (K_meso+1)
+        
+        K_ext = np.full(extension, K[-1])
+        p_ext = np.logspace(np.log10(p[-1]), -8, steps)
+
         K = np.concatenate((K, K_ext), axis=0)
         p = np.concatenate((p, p_ext), axis=0)
         
         return(K, p)
+    
     
     def isothermal_extension(self):
         """extends T, VMR(const), MMW(const), rho and z isothermally up to 10^-13 bar"""

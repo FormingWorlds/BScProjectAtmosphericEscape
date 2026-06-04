@@ -54,6 +54,8 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
     mfp = H_mean_free_path(VMR, rho, mmw)
     H = H_scale_height(T, R, z, M, molarmasses)
     
+    return(p, D, K, mfp, H)
+    
     #homopause location
     hom_id = homopause_index_finder(K, D, H, mfp)
         
