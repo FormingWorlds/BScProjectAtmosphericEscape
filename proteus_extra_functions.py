@@ -69,7 +69,7 @@ def exobase_index_finder(H, mfp):
 
 
 def Bates_extension(homopause_index, T_inf, M, R, T, p, z, rho, mmw, VMR, Kzz):
-    """extends the atmosphere as a Bates profile up to 10^-15 bar given the value arrays, planet mass and radius, the homopause 
+    """extends the atmosphere as a Bates profile up to 10^-16 bar given the value arrays, planet mass and radius, the homopause 
     index (from where the extenstion begins) and the heated up 'infinity' temperature at the very top of the atmosphere"""
     
     T = T[:homopause_index+1]
@@ -84,7 +84,7 @@ def Bates_extension(homopause_index, T_inf, M, R, T, p, z, rho, mmw, VMR, Kzz):
         
     #extending p
     steps = 30
-    p_ext = np.logspace(np.log10(p[-1]), -10, steps+1)[1:]  
+    p_ext = np.logspace(np.log10(p[-1]), -11, steps+1)[1:]  
         
     #extending the constant values: mmw, vmr, Kzz
     mmw_ext = np.full(steps, mmw[-1])

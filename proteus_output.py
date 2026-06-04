@@ -5,6 +5,7 @@ from proteus_physics import proteus_improved_limiting_flux
 from matplotlib import pyplot as plt
 from matplotlib.lines import Line2D
 from scipy.signal import argrelmin
+from proteus_physics import disso_fracs
 plt.rc('text', usetex=True)
 
 
@@ -23,17 +24,9 @@ mass = ["1_M_earth", "10_M_earth"]
 diff_file = 'diffusion_coefficients.csv'
 
 
-disso_fracs = {   #fraction of the initial molecules that are fully dissociated (the physics module takes into account the differing amount of atoms in different molecules)
-    "H2" : 1,
-    "H2O": 1,
-    "H"  : 1,
-    "CH4": 1,
-    "NH3": 1,
-    "H2S": 1
-}
+#fig, ax1 = plt.subplots(figsize=(8,6))
+#ax2 = ax1.twinx()
 
-fig, ax1 = plt.subplots(figsize=(8,6))
-ax2 = ax1.twinx()
 colors = {
     'D': "#D55E00",
     'K': "#CC79A7",
@@ -47,6 +40,9 @@ linestyle = {
     'N2': '-.'
 }
 
+
+
+
 for inst in instellations:
     instellation = f'{inst}'
     
@@ -54,27 +50,30 @@ for inst in instellations:
         system = f'{specie}'
         
         for m in mass:
-            if(((m=="1_M_earth") & (inst=="1000_F_earth") & (specie=="H2"))):
-                pass
+            #if(((m=="1_M_earth") & (inst=="1000_F_earth") & (specie=="H2"))):
+            #    pass
             #elif(((m=="10_M_earth") & (inst=="1000_F_earth") & (specie=="H2O"))):
             #    pass
+            #else:
+            atmo_file = f'PROTEUS/atmos/{specie}_atmosphere_{m}_{inst}.csv'
+            planet_file = f'PROTEUS/planet/planet_bulk_properties_{specie}_atmosphere_{m}.csv'
+            
+            atm = import_atmosphere(atmo_file, diff_file, system, planet_file, instellation)
+            res = proteus_improved_limiting_flux(atm, system, disso_fracs)
+            
+            if res is None:
+                print(f'{system}, {m}, {instellation}: homopause not found - process terminated')
             else:
-                atmo_file = f'PROTEUS/atmos/{specie}_atmosphere_{m}_{inst}.csv'
-                planet_file = f'PROTEUS/planet/planet_bulk_properties_{specie}_atmosphere_{m}.csv'
-                
-                atm = import_atmosphere(atmo_file, diff_file, system, planet_file, instellation)
-                res = proteus_improved_limiting_flux(atm, system, disso_fracs)
-                
-                if res is None:
-                    print(f'{system}, {m}, {instellation}: homopause not found - process terminated')
-                else:
-                    #print(f"flux from {system}, {m}, {instellation}: {res}")   
-                    plt.plot(res[1], res[0], '*')
-                    plt.title(f'{system}, {m}, {instellation}; all dissofracs = 1')  
-                    plt.ylabel('Escape flux [cm$^{-2}$ $\cdot$ s$^{-1}$]')
-                    plt.xlabel('Exobase temperature [K]')   
-                    plt.grid()
-                    plt.show()       
+                #print(f"flux from {system}, {m}, {instellation}: {res}") 
+                    
+                plt.plot(res[1], res[0], '*', label=f'{system}, {m}, {instellation}')
+                #plt.title(f'{system}, {m}, {instellation}; all dissofracs = 1')  
+                plt.ylabel('Escape flux [cm$^{-2}$ $\cdot$ s$^{-1}$]')
+                plt.xlabel('Exobase temperature [K]')   
+plt.yscale('log')
+plt.legend()
+plt.grid()
+plt.show()       
                     
                     
                     
