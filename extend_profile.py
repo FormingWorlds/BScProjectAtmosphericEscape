@@ -19,8 +19,6 @@ def extend_profile_exobase(
     species_masses,
     M_planet,
     T_inf,
-    n_extra=1000,
-    zeta_max=30,
     ):
     """extend profile upwards to exobase using the Bates T profile
     Assumptions:
@@ -54,12 +52,14 @@ def extend_profile_exobase(
         for sp in species_current
     )
 
-    zeta = np.linspace(0, zeta_max, 1000)
+    P_target = 1e-12          # bar for space like pressure
+    P_top = n_top * k * T_top
 
+    zeta_max = np.log(P_top / P_target)
+    zeta = np.linspace(0, zeta_max, 1000)
 
     T_ext = bates_extension(zeta, T0, T_inf, beta=0.75)
 
-    P_top = n_top * k * T_top
     P_ext= P_top * np.exp(-zeta)
 
     n_ext_tot = P_ext / (k * T_ext)
