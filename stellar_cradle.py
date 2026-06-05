@@ -76,7 +76,7 @@ def calculate_T_eff(L, R):
 
 ########################################################################################################################
 ### Values from Table 6 for calibration of B-V colour for population 1 main sequence stars from Böhm-Vitense (1970) ###
-
+#These temperatures correspond to K, G, F and A type stars. So mass-wise this means the input mass should be between around 0.45 solar masses and 2.1 solar masses based on the mass and T_eff of the stellar types.
 # Radiative atmosphere
 T_eff_radiative_array = np.array([9380, 9210, 9080, 8930, 8790, 8630, 8470, 8310, 8150, 7990, 7830, 7680, 
                                   7530, 7380, 7250, 7120, 7010, 6890, 6790, 6680, 6580, 6470, 6390, 6270])[::-1] #[K] array to store the effective temperatures of the stars
@@ -122,5 +122,30 @@ def mass_to_B_V(mass):
 
     return B_V
 
-
+def fetch_Jackson_parameters(B_V):
+    '''
+    This function takes the B-V colour of a star and returns the parameters for the Jackson et. al. (2012).
+    '''
+    if 0.290 <= B_V < 0.450:
+        return -4.28, 7.87, 1.22
+    
+    elif 0.450 <= B_V < 0.565:
+        return -4.24, 8.35, 1.24
+    
+    elif 0.565 <= B_V < 0.675:
+        return -3.67, 7.84, 1.13
+    
+    elif 0.675 <= B_V < 0.790:
+        return -3.71, 8.03, 1.28
+    
+    elif 0.790 <= B_V < 0.935:
+        return -3.36, 7.90, 1.40
+    
+    elif 0.935 <= B_V < 1.275:
+        return -3.35, 8.28, 1.09
+    
+    elif 1.275 <= B_V < 1.410:
+        return -3.14, 8.21, 1.18
+    else:
+        raise ValueError(f"B-V value {B_V} is outside the bounds of Table 2  from Jackson et. al. (2012) (0.290 to 1.410).")
 
