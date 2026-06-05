@@ -1,9 +1,11 @@
 ### This file will give birth to different stellar types which will be used to investigate the effect of different stellar types on the escape regime and rate of an atmosphere. ###
 import numpy as np
 import scipy as sp
+from matplotlib import pyplot as plt
 
 solar_mass = 1.989 * 10**30 #kg
 solar_radius = 6.957 * 10**8 #m
+solar_luminosity = 3.828 * 10**26 #W
 
 def mass_to_luminosity(mass):
     '''
@@ -21,17 +23,17 @@ def mass_to_luminosity(mass):
     mass_sm = mass / solar_mass
 
     if 0.179 < mass_sm <= 0.45:
-        log_L = 2.028 * np.log10(mass) - 0.976
+        log_L = 2.028 * np.log10(mass_sm) - 0.976
     elif 0.45 < mass_sm <= 0.72:
-        log_L = 4.572 * np.log10(mass) - 0.102
+        log_L = 4.572 * np.log10(mass_sm) - 0.102
     elif 0.72 < mass_sm <= 1.05:
-        log_L = 5.743 * np.log10(mass) - 0.007
+        log_L = 5.743 * np.log10(mass_sm) - 0.007
     elif 1.05 < mass_sm <= 2.4:
-        log_L = 4.329 * np.log10(mass) + 0.010
+        log_L = 4.329 * np.log10(mass_sm) + 0.010
     elif 2.4 < mass_sm <= 7:
-        log_L = 3.967 * np.log10(mass) + 0.093
+        log_L = 3.967 * np.log10(mass_sm) + 0.093
     elif 7 < mass_sm <= 31:
-        log_L = 2.865 * np.log10(mass) + 1.105
+        log_L = 2.865 * np.log10(mass_sm) + 1.105
     else:
         raise ValueError('Mass must be between 0.179 and 31 solar masses. Other masses are not covered by the relation from Eker et. al. 2018.')
 
@@ -72,6 +74,7 @@ def calculate_T_eff(L, R):
 
     return T_eff
 
+########################################################################################################################
 ### Values from Table 6 for calibration of B-V colour for population 1 main sequence stars from Böhm-Vitense (1970) ###
 
 # Radiative atmosphere
@@ -104,4 +107,20 @@ def calculate_B_V(T_eff):
         B_V = np.interp(T_eff, T_eff_radiative_array, B_V_radiative_array) 
 
     return B_V
+
+def mass_to_B_V(mass):
+    '''
+    This function takes the mass of a star and returns the B-V colour of the star by first calculating the luminosity and radius of the star using the mass-luminosity and mass-radius relations, then calculating the effective temperature using the Stefan-Boltzmann law, and finally calculating the B-V colour using the calibration from Böhm-Vitense (1970).
+
+    Input: stellar mass [kg]
+    Output: corresponding B-V colour [mag]
+    '''
+    L = mass_to_luminosity(mass) #[W]
+    R = mass_to_radius(mass) #[m]
+    T_eff = calculate_T_eff(L, R) #[K]
+    B_V = calculate_B_V(T_eff) #[mag]
+
+    return B_V
+
+
 
