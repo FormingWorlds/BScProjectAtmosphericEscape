@@ -69,8 +69,18 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
         
     #if homopause found - continue, if not returns None
     if isinstance(hom_id, np.int64):
+        
         flux_list = []
-        T_inf = np.array([100, 300, 500, 1000, 2000, 3000]) #[K]
+        flux_SI_list = []
+        exo_height_list = []
+        exo_pressure_list = []
+        exo_temp_list = []
+        hom_height_list = []
+        hom_pressure_list = []
+        hom_temp_list = []
+        
+        T_inf = np.array([200, 300, 500, 1000, 2000, 3000, 5000, 6000, 7000]) #[K]
+        
         for temp in T_inf:               
             #extending as a Bates profile above homopause 
             Bates = Bates_extension(hom_id, temp, M, R, T, p, z, rho, mmw, VMR, K)
@@ -94,6 +104,7 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
                 
                 #re-defining the arrays with the new limits for easier use
                 z_hom = z_b[hom_id]
+                z_exo = z_b[exo_id+1]
                 T_b = T_b[hom_id:exo_id+1]
                 p_b = p_b[hom_id:exo_id+1]
                 D_b = D[hom_id:exo_id+1]
@@ -154,7 +165,28 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
                 flux_from_specie_arr = np.asarray(flux_from_specie, dtype='float64')
                 flux = np.sum(flux_from_specie_arr)
                 flux_list.append(flux)
-                flux_arr = np.asarray(flux_list, dtype='float64')
+                #flux_arr = np.asarray(flux_list, dtype='float64')
+                
+                flux_SI_list.append(flux * 10000 * (4*np.pi*((R+z_exo)**2)))
+                #flux_SI_arr = np.asarray(flux_SI_list, dtype='float64')
+                
+                exo_height_list.append(z_exo/1000)
+                exo_pressure_list.append(p_b[-1]/100000)
+                exo_temp_list.append(T_b[-1])
+                
+                hom_height_list.append(z_hom/1000)
+                hom_pressure_list.append(p_b[0]/100000)
+                hom_temp_list.append(T_b[0])
         
-        #return(np.shape(flux_arr))            
-        return(flux_arr, T_inf)
+        flux_arr = np.asarray(flux_list, dtype='float64')
+        flux_SI_arr = np.reshape((np.asarray(flux_SI_list, dtype='float64')), (1, np.shape(T_inf)[0]))
+              
+        exo_height_arr = np.asarray(exo_height_list, dtype='float64')
+        exo_pressure_arr = np.asarray(exo_pressure_list, dtype='float64')
+        exo_temp_arr = np.asarray(exo_temp_list, dtype='float64')
+        
+        hom_height_arr = np.asarray(hom_height_list, dtype='float64')
+        hom_pressure_arr = np.asarray(hom_pressure_list, dtype='float64')
+        hom_temp_arr = np.asarray(hom_temp_list, dtype='float64')
+            
+        return(T_inf, flux_arr, flux_SI_arr, hom_height_arr, exo_height_arr, hom_pressure_arr, exo_pressure_arr, hom_temp_arr, exo_temp_arr)

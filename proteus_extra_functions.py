@@ -84,7 +84,7 @@ def Bates_extension(homopause_index, T_inf, M, R, T, p, z, rho, mmw, VMR, Kzz):
         
     #extending p
     steps = 30
-    p_ext = np.logspace(np.log10(p[-1]), -11, steps+1)[1:]  
+    p_ext = np.logspace(np.log10(p[-1]), -12, steps+1)[1:]  
         
     #extending the constant values: mmw, vmr, Kzz
     mmw_ext = np.full(steps, mmw[-1])
