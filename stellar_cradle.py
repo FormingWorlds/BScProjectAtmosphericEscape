@@ -1,5 +1,6 @@
 ### This file will give birth to different stellar types which will be used to investigate the effect of different stellar types on the escape regime and rate of an atmosphere. ###
 import numpy as np
+import scipy as sp
 
 solar_mass = 1.989 * 10**30 #kg
 solar_radius = 6.957 * 10**8 #m
@@ -57,6 +58,21 @@ def mass_to_radius(mass):
     radius = radius_sm * solar_radius #[m]
 
     return radius
+
+def calculate_T_eff(L, R):
+    '''
+    This function takes the luminosity and radius of a star and calculates the effective temperature of the star using the Stefan-Boltzmann law.
+
+    Input: luminosity [W], radius [m]
+    Output: effective temperature [K]
+    '''
+    sigma = sp.constants.sigma #[W m^-2 K^-4] Stefan-Boltzmann constant
+
+    T_eff = (L / (4 * np.pi * R**2 * sigma))**(1/4) #[K]
+
+    return T_eff
+
+
 
 
         
