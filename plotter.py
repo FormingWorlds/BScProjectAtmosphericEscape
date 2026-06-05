@@ -199,8 +199,8 @@ for idx, mas in enumerate(mass):
     first_legend = axes[0].legend(handles=atm_handles, title="Atmosphere", loc="upper left")
     axes[0].add_artist(first_legend)
 
-    axes[1].legend(handles=flux_legend, title="Instellation", fontsize=11)
-    axes[0].legend(handles=flux_legend, title="Instellation", fontsize=11)
+    axes[1].legend(handles=flux_legend, title="Instellation", loc="lower right", fontsize=11)
+    axes[0].legend(handles=flux_legend, title="Instellation", loc="upper right", fontsize=11)
 
 plt.suptitle("Exobase altitude by atmosphere type", fontsize=15)
 plt.tight_layout()
@@ -240,10 +240,10 @@ for idx, mas in enumerate(mass):
     axes[0].set_ylabel(r"$\log_{10}(\dot{M}_{weighted})$ [kg/s]", fontsize=13)
     axes[1].set_ylabel(r"$\log_{10}(\dot{M}_{weighted})$ [kg/s]", fontsize=13)
 
-    first_legend = axes[1].legend(handles=atm_handles, title="Atmosphere", loc="upper left")
+    first_legend = axes[1].legend(handles=atm_handles, title="Atmosphere", bbox_to_anchor=(1.0, 0.55))
     axes[1].add_artist(first_legend)
     axes[1].legend(handles=flux_legend, title="Instellation", loc="lower right")
-    first_legend = axes[0].legend(handles=atm_handles, title="Atmosphere", loc="upper left")
+    first_legend = axes[0].legend(handles=atm_handles, title="Atmosphere",  bbox_to_anchor=(1.0, 0.55))
     axes[0].add_artist(first_legend)
     axes[0].legend(handles=flux_legend, title="Instellation", loc="lower right")
 
@@ -286,10 +286,10 @@ for idx, mas in enumerate(mass):
     axes[0].set_ylabel(r"$\log_{10}(\dot{M}_{weighted})$ [kg/s]", fontsize=13)
     axes[1].set_ylabel(r"$\log_{10}(\dot{M}_{weighted})$ [kg/s]", fontsize=13)
 
-    first_legend = axes[1].legend(handles=atm_handles, title="Atmosphere", loc="upper left")
+    first_legend = axes[1].legend(handles=atm_handles, title="Atmosphere", bbox_to_anchor=(1.0, 0.55))
     axes[1].add_artist(first_legend)
     axes[1].legend(handles=flux_legend, title="Instellation", loc="lower right")
-    first_legend = axes[0].legend(handles=atm_handles, title="Atmosphere", loc="upper left")
+    first_legend = axes[0].legend(handles=atm_handles, title="Atmosphere",bbox_to_anchor=(1.0, 0.55))
     axes[0].add_artist(first_legend)
     axes[0].legend(handles=flux_legend, title="Instellation", loc="lower right")
 
