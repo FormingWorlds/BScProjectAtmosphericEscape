@@ -72,7 +72,36 @@ def calculate_T_eff(L, R):
 
     return T_eff
 
+### Values from Table 6 for calibration of B-V colour for population 1 main sequence stars from Böhm-Vitense (1970) ###
+
+# Radiative atmosphere
+T_eff_radiative_array = np.array([9380, 9210, 9080, 8930, 8790, 8630, 8470, 8310, 8150, 7990, 7830, 7680, 
+                                  7530, 7380, 7250, 7120, 7010, 6890, 6790, 6680, 6580, 6470, 6390, 6270])[::-1] #[K] array to store the effective temperatures of the stars
+B_V_radiative_array = np.array([0.00, 0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.14, 0.16, 0.18, 0.20, 0.22, 
+                                0.24, 0.26, 0.28, 0.30, 0.32, 0.34, 0.36, 0.38, 0.40, 0.42, 0.44, 0.46])[::-1] #[mag] array to store the B-V colours of the stars
 
 
+# Convective atmosphere
+T_eff_convective_array = np.array([7870, 7730, 7600, 7480, 7350, 7230, 7120, 7010, 6910, 6800, 6700, 6590, 6480, 6380, 6280, 
+                                   6180, 6080, 5980, 5890, 5800, 5730, 5650, 5570, 5500, 5390, 5230, 5070, 4930, 4790, 4660])[::-1] #[K] array to store the effective temperatures of the stars
+B_V_convective_array = np.array([0.26, 0.28, 0.30, 0.32, 0.34, 0.36, 0.38, 0.40, 0.42, 0.44, 0.46, 0.48, 0.50, 0.52, 0.54,
+                                0.56, 0.58, 0.60, 0.62, 0.64, 0.66, 0.68, 0.70, 0.72, 0.75, 0.80, 0.85, 0.90, 0.95, 1.00])[::-1] #[mag] array to store the B-V colours of the stars
+#########################################################################################################################
 
-        
+# Now assume convection occurs for stars with T_eff < 8000 K (or 7870 K to be more precise based on the table)
+
+def calculate_B_V(T_eff):
+    '''
+    This function takes the effective temperature of a star and returns the B-V colour of the star using the calibration from Böhm-Vitense (1970).
+    The function assumes that the stars are of population type 1 and on the main sequence, and that convection occurs for stars with T_eff < 7870 K.
+
+    Input: effective temperature [K]
+    Output: corresponding B-V colour [mag]
+    '''
+    if T_eff < 7870:
+        B_V = np.interp(T_eff, T_eff_convective_array, B_V_convective_array) 
+    else:
+        B_V = np.interp(T_eff, T_eff_radiative_array, B_V_radiative_array) 
+
+    return B_V
+
