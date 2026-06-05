@@ -42,27 +42,36 @@ for specie in atm_archetype:
             
             if res is None:
                 print(f'{system}, {m}, {instellation}: homopause not found - process terminated')
-            else:
-                dom_specie.append(f'{system}')
-                current_inst.append(f'{inst}')
-                current_mass.append(f'{m}')
-                # T_inf.append()
-                # massloss_flux_cgs.append()
-                # massloss_si.append()
-                # hom_alt.append()
-                # exo_alt.append()
-                # hom_pressure.append()
-                # exo_pressure.append()
-                # hom_T.append()
-                # exo_T.append()
+            else:  
+                for i in range(0, np.shape(res[0])[0]):
+                    dom_specie.append(f'{system}')
+                    current_inst.append(f'{inst}')
+                    current_mass.append(f'{m}')
+                    T_inf.append(res[0][i])
+                    massloss_flux_cgs.append(res[1][i])
+                    massloss_si.append(res[2][0][i])
+                    hom_alt.append(res[3][i])
+                    exo_alt.append(res[4][i])
+                    hom_pressure.append(res[5][i])
+                    exo_pressure.append(res[6][i])
+                    hom_T.append(res[7][i])
+                    exo_T.append(res[8][i])
                 
                 
-#(T_inf, flux_arr, flux_SI_arr, hom_height_arr, exo_height_arr, hom_pressure_arr, exo_pressure_arr, hom_temp_arr, exo_temp_arr)
-                
+#export of results                    
 export_dict = {
-    'Dominant species' : dom_specie,
+    'Dominant_spec' : dom_specie,
     'Instellation' : current_inst,
-    'Planet mass' : current_mass
+    'Planet_mass' : current_mass,
+    'T_inf' : T_inf,
+    'Lim_flux[1/cm^2_s]' : massloss_flux_cgs,
+    'Lim_flux[kg/s]' : massloss_si,
+    'Homopause_alt[km]' : hom_alt,
+    'Exobase_alt[km]' : exo_alt,
+    'Homopause_pressure[bar]' : hom_pressure,
+    'Exobase_pressure[bar]' : exo_pressure,
+    'Homopause_temp[K]' : hom_T,
+    'Exobase_temp[K]' : exo_T
 }
                 
 df = pd.DataFrame(export_dict)

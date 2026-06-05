@@ -167,7 +167,7 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
                 flux_list.append(flux)
                 #flux_arr = np.asarray(flux_list, dtype='float64')
                 
-                flux_SI_list.append(flux * 10000 * (4*np.pi*((R+z_exo)**2)))
+                flux_SI_list.append(flux * 10000 * (4*np.pi*((R+z_exo)**2)) * m_i)
                 #flux_SI_arr = np.asarray(flux_SI_list, dtype='float64')
                 
                 exo_height_list.append(z_exo/1000)
