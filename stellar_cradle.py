@@ -1,6 +1,9 @@
 ### This file will give birth to different stellar types which will be used to investigate the effect of different stellar types on the escape regime and rate of an atmosphere. ###
 import numpy as np
 
+solar_mass = 1.989 * 10**30 #kg
+solar_radius = 6.957 * 10**8 #m
+
 def mass_to_luminosity(mass):
     '''
     This function takes in the mass of a star and returns the luminosity of the star in using the mass-luminosity relation from Eker et. al. 2018.
@@ -13,7 +16,7 @@ def mass_to_luminosity(mass):
     '''
 
     #Relation uses solar masses so must convert before using the relation
-    solar_mass = 1.989 * 10**30 #kg
+    
     mass_sm = mass / solar_mass
 
     if 0.179 < mass_sm <= 0.45:
@@ -34,4 +37,26 @@ def mass_to_luminosity(mass):
     L = 10**log_L #[W]
 
     return L
+
+def mass_to_radius(mass):
+    '''
+    This function takes the mass of a star and converts it to a radius using the mass-radius relation from Giménez and Zamorano (1985).
+    
+    Input: stellar mass [kg]
+    Output: stellar radius [m]
+    '''
+    mass_sm = mass / solar_mass #[solar masses]
+    
+    if mass_sm < 1.8:
+        radius_sm = 1.13 * mass_sm**0.98 #[solar radii]
+    elif mass_sm >= 1.8:
+        radius_sm = 1.42 * mass_sm**0.56 #[solar radii]
+    else:
+        raise ValueError('Mass must be a positive value.')
+    
+    radius = radius_sm * solar_radius #[m]
+
+    return radius
+
+
         
