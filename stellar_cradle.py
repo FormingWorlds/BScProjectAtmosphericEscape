@@ -37,7 +37,7 @@ def mass_to_luminosity(mass):
     else:
         raise ValueError('Mass must be between 0.179 and 31 solar masses. Other masses are not covered by the relation from Eker et. al. 2018.')
 
-    L = 10**log_L #[W]
+    L = 10**log_L * solar_luminosity #[W]
 
     return L
 
