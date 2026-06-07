@@ -38,7 +38,7 @@ result = jeans_escape(
 print("\n=== EXOBASE SUMMARY ===")
 print(f"Altitude:    {result['exobase_altitude']/10**3:.2f} km")
 print(f"Radius:      {result['exobase_radius']:.3e} m")
-print(f"Temperature: {result['temperature']:.1f} K")
+print(f"Temperature: {result['exobase_temperature']:.1f} K")
 
 for sp, res in result["results"].items():
     print(f"\n--- {sp} ---")
@@ -89,7 +89,7 @@ print(f"mfp/H:     {mfp_e/H_e:.4f}  should be just above 1.0")
 print("\n=== EXOBASE SUMMARY ===")
 print(f"Altitude:    {result['exobase_altitude']/10**3:.2f} km")
 print(f"Radius:      {result['exobase_radius']:.3e} m")
-print(f"Temperature: {result['temperature']:.1f} K")
+print(f"Temperature: {result['exobase_temperature']:.1f} K")
 
 for sp, res in result["results"].items():
     print(f"\n--- {sp} ---")

@@ -118,7 +118,7 @@ for M_factor in PLANET_MASSES:
                     "Mplanet_Mearth": M_factor,
                     "CO2_fraction": X_CO2,
                     "N2_fraction": X_N2,
-                    "T_exo_K": result["temperature"],
+                    "T_exo_K": result["exobase_temperature"],
                     "exobase_altitude_km": result["exobase_altitude"] / 1e3,
                     "Mdot_weighted_kg_s": mdot_weighted,
                     "log10_Mdot_weighted": np.log10(mdot_weighted) if mdot_weighted > 0 else -np.inf,
