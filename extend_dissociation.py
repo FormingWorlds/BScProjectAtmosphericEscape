@@ -5,6 +5,43 @@ from scipy.integrate import cumulative_trapezoid
 from exobase import find_exobase
 from cross_section import effective_cross_section
 from physics import mean_mass
+from constants import DISSOCIATION
+
+
+def apply_full_photodissociation(species_ext):
+    """
+    Fully dissociate selected molecules in the extended region.
+    """
+
+    # Make a copy first to not ruin initial data
+    species_out = {
+        sp: n.copy()
+        for sp, n in species_ext.items()
+    }
+
+    for parent, products in DISSOCIATION.items():
+
+        # If this molecule is not present, skip it
+        if parent not in species_out:
+            continue
+
+        # keep initial density stored
+        n_parent = species_out[parent].copy()
+
+        # Fully remove parent molecule from extension because it dissociated
+        species_out[parent] = np.zeros_like(n_parent)
+
+        # Add products
+        for product, value in products.items():
+
+            # If product does not exist yet, create empty array
+            if product not in species_out:
+                species_out[product] = np.zeros_like(n_parent)
+
+            # Add the amount of product
+            species_out[product] += value * n_parent
+
+    return species_out
 
 
 def bates_extension(zeta, T0, T_inf, beta = 0.75):
@@ -20,11 +57,12 @@ def extend_profile_exobase(
     M_planet,
     T_inf,
     ):
-    """extend profile upwards to exobase using the Bates T profile
+    """extend profile upwards to exobase using the Bates T profile,
+    upper limit full dissociation case
     Assumptions:
     - Bates temperature profile above PROTEUS top
     - pressure coordinate zeta = -ln(P/P_top)
-    - constant VMRs from the top of the PROTEUS grid
+    - full dissociation in extension
     - hydrostatic relation dr/dzeta = H"""
 
     T0 = T[-1]
@@ -50,7 +88,7 @@ def extend_profile_exobase(
         for sp in species_current
     )
 
-    P_target = 1e-7         # bar for space like pressure
+    P_target = 1e-12          # bar, for space like pressure
     P_top = n_top * k * T_top
 
     zeta_max = np.log(P_top / P_target)
@@ -87,13 +125,23 @@ def extend_profile_exobase(
         for sp in species_current
     }
 
+    species_ext = apply_full_photodissociation(species_ext) #change to dissociation instead of ct VMR
+
+
     r_new = np.concatenate([r_current, r_ext])
     T_new = np.concatenate([T_current, T_ext])
 
-    species_new = {
-        sp: np.concatenate([species_current[sp], species_ext[sp]])
-        for sp in species_current
-    }
+    #here we include species that might only appear after dissociation with 0 before extension
+
+    all_species = set(species.keys()) | set(species_ext.keys()) #unite all species 
+
+    species_new = {}
+
+    for sp in all_species:
+        original = species.get(sp, np.zeros_like(r))
+        extension = species_ext.get(sp, np.zeros_like(r_ext))
+
+        species_new[sp] = np.concatenate([original, extension])
 
     n_tot_new = np.sum(
         np.array(list(species_new.values())),
