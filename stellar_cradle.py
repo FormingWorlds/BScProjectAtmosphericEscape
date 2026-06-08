@@ -190,16 +190,15 @@ def get_L_x(mass, age):
 
     return L_X
 
-def get_F_x(mass, age, semi_major_axis):
+def get_F(luminosity, semi_major_axis):
     '''
-    This function takes the mass and age of a star and the distance from the star to a planet and returns the X-ray flux at the planet using the get_L_x function to calculate the X-ray luminosity of the star and then using the inverse square law to calculate the flux at the planet.
+    This function calculates flux from luminosity and distance using the inverse square law.
 
-    Input: stellar mass [kg], age [yr], distance from star to planet [m]
+    Input: luminosity of star [W], distance from star to planet [m]
     Output: X-ray flux at planet [W m^-2]
     '''
-    L_X = get_L_x(mass, age) #[W]
+ 
+    F = luminosity / (4 * np.pi * semi_major_axis**2) #[W m^-2]
 
-    F_X = L_X / (4 * np.pi * semi_major_axis**2) #[W m^-2]
-
-    return F_X
+    return F
 
