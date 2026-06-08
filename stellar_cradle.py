@@ -203,18 +203,36 @@ def get_F(luminosity, semi_major_axis):
 
     return F
 
-def get_F_EUV(F_x):
+def get_L_EUV(L_x, semi_major_axis):
     '''
-    This function takes the X-ray flux received and returns the EUV flux recevied using the relation from King et. al. (2018) and power law parameters alpha and gamma from boundary energy choice X_ray range 5-100 Å and EUV range 100-912 Å.
+    This function takes the X-ray luminosity received and returns the EUV luminosity recevied using the relation from King et. al. (2018) and power law parameters alpha and gamma from boundary energy choice X_ray range 5-100 Å and EUV range 100-912 Å.
 
-    Input: X-ray flux [W]
-    Output: EUV flux [W]
+    Input: X-ray luminosity [W], distance from star to planet [m]
+    Output: EUV luminosity [W]
     '''
     alpha_cgs = 650 #erg cm^-2 s^-1
     alpha_si = alpha_cgs * erg_to_joule * cm_to_m**(-2) #[W m^-2]
     gamma = -0.45
 
-    EUV_over_X_fraction = alpha_si * (F_x)**gamma #[Ø]
-    F_EUV = EUV_over_X_fraction * F_x #[W m^-2]
+    EUV_over_X_fraction = alpha_si * (L_x / (4 * np.pi * semi_major_axis**2))**gamma #[Ø]
+    L_EUV = EUV_over_X_fraction * L_x #[W]
 
-    return F_EUV
+    return L_EUV
+
+def get_fluxes(mass, age, semi_major_axis):
+    '''
+    This function takes the mass and age of a star and the distance from the star to the planet and returns the bolometric and XUV flux received by the planet.
+
+    Input: stellar mass [kg], stellar age [yr], distance from star to planet [m]
+    Output: bolometric flux at planet [W m^-2], XUV flux at planet [W m^-2]
+    '''
+    L_bol = mass_to_luminosity(mass) #[W]
+    F_bol = get_F(L_bol, semi_major_axis) #[W m^-2]
+
+    L_X = get_L_x(mass, age) #[W]
+    L_EUV = get_L_EUV(L_X, semi_major_axis)
+    L_XUV = L_X + L_EUV #[W]
+    
+    F_XUV = get_F(L_XUV, semi_major_axis) #[W m^-2]
+
+    return F_bol, F_XUV
