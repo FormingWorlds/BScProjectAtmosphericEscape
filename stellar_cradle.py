@@ -2,6 +2,7 @@
 import numpy as np
 import scipy as sp
 from matplotlib import pyplot as plt
+from conversions import cm_to_m, erg_to_joule
 
 solar_mass = 1.989 * 10**30 #kg
 solar_radius = 6.957 * 10**8 #m
@@ -202,3 +203,18 @@ def get_F(luminosity, semi_major_axis):
 
     return F
 
+def get_F_EUV(F_x):
+    '''
+    This function takes the X-ray flux received and returns the EUV flux recevied using the relation from King et. al. (2018) and power law parameters alpha and gamma from boundary energy choice X_ray range 5-100 Å and EUV range 100-912 Å.
+
+    Input: X-ray flux [W]
+    Output: EUV flux [W]
+    '''
+    alpha_cgs = 650 #erg cm^-2 s^-1
+    alpha_si = alpha_cgs * erg_to_joule * cm_to_m**(-2) #[W m^-2]
+    gamma = -0.45
+
+    EUV_over_X_fraction = alpha_si * (F_x)**gamma #[Ø]
+    F_EUV = EUV_over_X_fraction * F_x #[W m^-2]
+
+    return F_EUV
