@@ -16,7 +16,7 @@ wind_microphysics = {
     }
 class Atmosphere:
     
-    def __init__(self, M_p, pressures, heights, temperatures, F_xuv=None, F_ins=None, dominant_species=None, T_wind=10**(4), vmrs=None, P_base=10**(-4), nu_0=None, mu_wind=None, mu_plus_wind=None, R_p=None, determine_radius=False, rr_coeff=None):
+    def __init__(self, M_p, pressures, heights, temperatures, F_xuv=None, dominant_species=None, T_wind=10**(4), vmrs=None, P_base=10**(-4), nu_0=None, mu_wind=None, mu_plus_wind=None, R_p=None, determine_radius=False, rr_coeff=None):
         #input chosen by user
         self.P_base = P_base #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
         
@@ -33,10 +33,8 @@ class Atmosphere:
 
         if F_xuv is not None:
             self.F_xuv = F_xuv #[W/m^2] XUV flux
-        elif F_ins is not None:
-            self.F_xuv = self.calc_xuv_from_instellation(F_ins) #[W/m^2] XUV flux calculated from total insolation
         else:
-            raise ValueError("Either F_xuv or F_ins must be provided as an input to the Atmosphere class.")
+            raise ValueError("F_xuv  must be provided as an input to the Atmosphere class to calculate the escape rate.")
 
         #standard wind properties
         self.T_wind = T_wind
@@ -59,19 +57,7 @@ class Atmosphere:
             raise ValueError("No valid recombination coefficient found for the specified dominant species. Please provide a recombination coefficient manually or check that the dominant species is correctly specified and present in the microphysics dictionary.")
 
 
-    def calc_xuv_from_instellation(self, F_ins):
-        '''
-        Calculates the XUV flux from the total insolation.
-
-        Takes input parameters: x [unit], y [unit], z [unit], ...
-
-        All calculations done in SI units.
-        '''
-        xuv_fraction = 10**(-6) #REFERENCE Murray-Clay et. al. 2009, XUV flux is typically 10^-6 times the total insolation for a sunlike star
-        F_xuv = F_ins * xuv_fraction #take XUV fraction of the total insolation. Assumes sunlike star. From Murray-Clay et. al. 2009
-
-        return F_xuv
-
+    
     def read_off_wind_base_parameters(self):
         '''
         Reads off the necessary parameters for the radiation-recombination-limited escape rate calculation at the base of the escaping atmosphere.
@@ -170,15 +156,15 @@ class Atmosphere:
         #Convert the final radius from Earth radii back to SI meters and return
         return R_p_earth * R_earth
 
-    def determine_temperature_from_bolometric_flux(F_ins):
+    def determine_temperature_from_bolometric_flux(F_bol):
         '''
         Determines the effective temperature of the planet based on the bolometric flux and planetary radius from the Stefan-Boltzmann law and assuming the planet is a black body.
 
-        Takes input parameters: F_ins [W/m^2] - bolometric flux, R_p [m] - planetary radius
+        Takes input parameters: F_bol [W/m^2] - bolometric flux, R_p [m] - planetary radius
 
         Output: T_eff [K] - effective temperature of the planet
         '''
         sigma_sb = sp.constants.sigma #[W m^-2 K^-4] Stefan-Boltzmann constant
-        T_eff = (F_ins / (4 * sigma_sb))**(1/4) #[K] effective temperature of the planet, where F_ins: bolometric flux, R_p: planetary radius, sigma_sb: Stefan-Boltzmann constant
-        return T_eff
+        T_eq = (F_bol / (4 * sigma_sb))**(1/4) #[K] effective temperature of the planet, where F_bol: bolometric flux, R_p: planetary radius, sigma_sb: Stefan-Boltzmann constant
+        return T_eq
 
