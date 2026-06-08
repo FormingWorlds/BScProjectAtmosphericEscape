@@ -124,7 +124,10 @@ def mass_to_B_V(mass):
 
 def fetch_Jackson_parameters(B_V):
     '''
-    This function takes the B-V colour of a star and returns the parameters for the Jackson et. al. (2012).
+    This function takes the B-V colour of a star and returns the parameters for the Jackson et. al. (2012) formula to calculate the X-ray-to-bolometric luminosity ratio.
+
+    Input: B-V colour [mag]
+    Output: log(L_X / L_bol) [Ø], log(tau_saturated) [yr], alpha (slope of the unsaturated regime) [Ø]
     '''
     if 0.290 <= B_V < 0.450:
         return -4.28, 7.87, 1.22
@@ -148,4 +151,25 @@ def fetch_Jackson_parameters(B_V):
         return -3.14, 8.21, 1.18
     else:
         raise ValueError(f"B-V value {B_V} is outside the bounds of Table 2  from Jackson et. al. (2012) (0.290 to 1.410).")
+    
+
+def get_L_x_L_bol(B_V, age):
+    '''
+    This function takes the B-V colour of a star and the age of the star and returns the X-ray luminosity of the star using the formula from Jackson et. al. (2012).
+
+    Input: B-V colour [mag], age [yr]
+    Output: X-ray luminosity [W]
+    '''
+    log_L_X_L_bol_saturated, log_tau_saturated, alpha = fetch_Jackson_parameters(B_V)
+
+    tau_saturated = 10**log_tau_saturated #[yr]
+    L_X_L_bol_saturated = 10**log_L_X_L_bol_saturated
+
+    if age < tau_saturated:
+        L_X_L_bol = L_X_L_bol_saturated
+    else:
+        L_X_L_bol = L_X_L_bol_saturated * (age / tau_saturated)**(-alpha)
+
+    return L_X_L_bol
+
 
