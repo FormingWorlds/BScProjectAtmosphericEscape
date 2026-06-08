@@ -172,4 +172,31 @@ def get_L_x_L_bol(B_V, age):
 
     return L_X_L_bol
 
+def get_L_x(mass, age):
+    '''
+    This function takes the mass and age of a star and returns the X-ray luminosity of the star by first calculating the B-V colour using the mass-to-B-V function, then calculating the X-ray-to-bolometric luminosity ratio using the formula from Jackson et. al. (2012), and finally calculating the X-ray luminosity by multiplying the X-ray-to-bolometric luminosity ratio by the bolometric luminosity of the star.
+
+    Input: stellar mass [kg], age [yr]
+    Output: X-ray luminosity [W]
+    '''
+    B_V = mass_to_B_V(mass) #[mag]
+    L_X_L_bol = get_L_x_L_bol(B_V, age) 
+    L_bol = mass_to_luminosity(mass) #[W]
+
+    L_X = L_X_L_bol * L_bol #[W]
+
+    return L_X
+
+def get_F_x(mass, age, semi_major_axis):
+    '''
+    This function takes the mass and age of a star and the distance from the star to a planet and returns the X-ray flux at the planet using the get_L_x function to calculate the X-ray luminosity of the star and then using the inverse square law to calculate the flux at the planet.
+
+    Input: stellar mass [kg], age [yr], distance from star to planet [m]
+    Output: X-ray flux at planet [W m^-2]
+    '''
+    L_X = get_L_x(mass, age) #[W]
+
+    F_X = L_X / (4 * np.pi * semi_major_axis**2) #[W m^-2]
+
+    return F_X
 
