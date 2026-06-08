@@ -145,6 +145,7 @@ def summarize_case(rows):
         "dominant_escaping_species": dominant["species"],
         "dominant_lambda_j": dominant["lambda_j"],
         "dominant_species_Mdot_kg_s": dominant["Mdot_kg_s"],
+        "jeans_valid": dominant["lambda_j"] >= 1.5,
 
         "T_exo_K": rows[0]["T_exo_K"],
         "exobase_altitude_km": rows[0]["exobase_altitude_km"],
