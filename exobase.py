@@ -5,7 +5,7 @@ import numpy as np
 def find_exobase(r, n_tot, T, m_mean, M, sigma):
     g = G * M / r**2
     H = k * T / (m_mean * g)
-    mfp = 1 / (sigma * n_tot)
+    mfp = 1 / (np.sqrt(2) * sigma * n_tot)
     idx = np.where(mfp > H)[0]  
 
     ratio = mfp / H
