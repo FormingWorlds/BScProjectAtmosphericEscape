@@ -83,7 +83,8 @@ for idx, mas in enumerate(mass):
     # --- AXES ---
     ax.set_yscale('log')
     ax.invert_yaxis()
-    ax.set_ylim(3e4, 0.5e-10)
+    # ax.set_ylim(1e-9, 0.5e-10)
+    # ax.set_xlim(0, 1000)
     ax.tick_params(labelsize=14)
     ax.set_xlabel('Temperature [K]', fontsize=14)
     ax.set_ylabel('Pressure [bar]', fontsize=14)
@@ -151,7 +152,7 @@ for idx, mas in enumerate(mass):
     # --- AXES ---
     ax.set_yscale('symlog')
     #ax.invert_yaxis()
-    #ax.set_ylim(3e4, 0.5e-10)
+    # ax.set_ylim(1e-9, 0.5e-10)
     ax.tick_params(labelsize=14)
     ax.set_xlabel('Temperature [K]', fontsize=14)
     ax.set_ylabel('Height [m]', fontsize=14)
@@ -289,7 +290,7 @@ for idx, mas in enumerate(mass):
     ax.set_yscale('log')
     ax.set_xscale('log')
     ax.invert_yaxis()
-    ax.set_ylim(3e4, 0.5e-10)
+    #ax.set_ylim(3e4, 0.5e-10)
     ax.tick_params(labelsize=14)
     ax.set_xlabel(r'Density [kg/m$^3$]', fontsize=14)
     ax.set_ylabel('Pressure [bar]', fontsize=14)
@@ -302,6 +303,76 @@ for idx, mas in enumerate(mass):
 
 plt.tight_layout()
 plt.savefig('profiles/Density_vs_Pressure_1_vs_10_M_earth.png', dpi=300)
+plt.close()
+
+##########################################
+# Plot MMW vs pressure
+##########################################
+
+# Create figure with 2 panels side by side
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+# Loop over mass (one panel per mass)
+for idx, mas in enumerate(mass):
+    ax = axes[idx]
+    
+    for inst in instellation:
+        for sp in species:
+            input_dir = f"../{sp}_atmospheres/{inst}/"
+            csv_path = os.path.join(input_dir, f'{sp}_atmosphere_{mas}_{inst}.csv')
+            
+            if not os.path.exists(csv_path):
+                print(f"Missing: {csv_path}")
+                continue
+            
+            df = pd.read_csv(csv_path, sep='\t')
+            pressure = df['Pressure [Pa]'] * 1e-5  # Pa → bar
+            density = df['MMW [g/mol]']
+
+            # Line style based on INSTELLATION
+            linestyle = '-' if inst == "1_F_earth" else '--'
+            
+            ax.plot(
+                density,
+                pressure,
+                linestyle=linestyle,
+                linewidth=2,
+                color=species_colors[sp]
+            )
+    
+    # --- LEGENDS for each panel ---
+    species_legend = [
+        Line2D([0], [0], color=species_colors[sp], lw=2, label=sp)
+        for sp in species
+    ]
+    
+    instellation_legend = [
+        Line2D([0], [0], color='black', linestyle='-', lw=2, label=r'1 $F_{\oplus}$'),
+        Line2D([0], [0], color='black', linestyle='--', lw=2, label=r'1000 $F_{\oplus}$')
+    ]
+    
+    # Add both legends
+    first_legend = ax.legend(handles=species_legend, loc='lower left', title='Species')
+    ax.add_artist(first_legend)
+    ax.legend(handles=instellation_legend, loc='lower center', title='Instellation')
+    
+    # --- AXES ---
+    ax.set_yscale('log')
+    #ax.set_xscale('log')
+    ax.invert_yaxis()
+    #ax.set_ylim(3e4, 0.5e-10)
+    ax.tick_params(labelsize=14)
+    ax.set_xlabel('Mean molecular weight [g/mol]', fontsize=14)
+    ax.set_ylabel('Pressure [bar]', fontsize=14)
+    
+    # Set title based on mass
+    if mas == "1_M_earth":
+        ax.set_title(r'$M_{planet} = 1\,M_{\oplus}$', fontsize=14)
+    else:
+        ax.set_title(r'$M_{planet} = 10\,M_{\oplus}$', fontsize=14)
+
+plt.tight_layout()
+plt.savefig('profiles/MMW_vs_Pressure_1_vs_10_M_earth.png', dpi=300)
 plt.close()
 
 ##########################################

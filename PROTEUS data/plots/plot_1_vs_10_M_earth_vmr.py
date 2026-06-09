@@ -104,7 +104,7 @@ for sp in atm_archetype:
         ax.set_xscale("log")
         ax.tick_params(axis='both', which='major', labelsize=14)
         ax.set_xlim(1e-10, 2)
-        ax.set_ylim(3e4, 0.5e-10)
+        # ax.set_ylim(3e4, 0.5e-10)
         ax.set_xlabel("Volume Mixing Ratio", fontsize=14)
         ax.set_ylabel("Pressure [bar]", fontsize=14)
         ax.get_legend()
