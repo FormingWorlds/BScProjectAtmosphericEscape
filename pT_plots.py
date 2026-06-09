@@ -7,12 +7,12 @@ import seaborn as sns
 
 from constants import SPECIES_MASSES
 from proteus_escape import read_proteus_profile, read_bulk_properties
-from extend_profile import extend_profile_exobase
+from extend_dissociation import extend_profile_exobase
 
 sns.set_palette("colorblind")
 
 
-OUTDIR = "Plots/PROTEUS_PT_extensions"
+OUTDIR = "Plots/PROTEUS_PT_extensions/PT extension with dissociation"
 os.makedirs(OUTDIR, exist_ok=True)
 
 atm_archetype = ["H2", "H2O", "CO2", "N2"]
