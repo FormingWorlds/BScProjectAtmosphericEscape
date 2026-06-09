@@ -6,7 +6,7 @@ from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 
-outdir = "Plots/PROTEUS_Bates_sensitivity"
+outdir = "Plots/PROTEUS_Bates_sensitivity/Dissociation"
 os.makedirs(outdir, exist_ok=True)
 
 atm_archetype = ["CO2", "N2", "H2O", "H2"]
@@ -64,9 +64,10 @@ atm_handles = [
 ]
 
 
-df = pd.read_csv("proteus_jeans_case_summary.csv")
+df = pd.read_csv("proteus_jeans_case_summary_dissociation.csv")
 
 df["log10_weighted_mass_loss"] = np.log10(df["weighted_mass_loss_kg_s"])
+
 
 def plot_vs_Tinf(ycol, ylabel, filename, ylog=False):
 
@@ -83,16 +84,36 @@ def plot_vs_Tinf(ycol, ylabel, filename, ylog=False):
                     (df["flux_case"] == flux)
                 ].sort_values("T_inf")
 
+                valid = s[s["jeans_valid"]]
+                invalid = s[~s["jeans_valid"]]
+
                 if s.empty:
                     continue
 
+                ax.plot(
+                    valid["T_inf"],
+                    valid[ycol],
+                    color=species_colors[atm],
+                    linestyle="-",
+                    linewidth=1.5,
+                    alpha=0.7,
+                )
+
                 ax.scatter(
-                    s["T_inf"],
-                    s[ycol],
+                    valid["T_inf"],
+                    valid[ycol],
                     color=species_colors[atm],
                     marker=flux_markers[flux],
-                    linestyle="-",
-                    linewidth=1.8,
+                    s=65,
+                )
+
+                ax.scatter(
+                    invalid["T_inf"],
+                    invalid[ycol],
+                    color=species_colors[atm],
+                    marker="x",
+                    s=90,
+                    linewidths=2,
                 )
 
         if ylog:
@@ -159,7 +180,7 @@ df["log10_weighted_mass_loss"] = np.log10(
 )
 
 plot_vs_Tinf(
-    ycol="log10_dominant_mass_loss",
+    ycol="log10_weighted_mass_loss",
     ylabel=r"$\log_{10}(\dot{M}_{\rm weighted})$ [kg/s]",
     filename="weighted_mass_loss_vs_Tinf.png",
     ylog=False,
@@ -168,7 +189,10 @@ plot_vs_Tinf(
 
 # 6. Dominant-species lambda_J vs T_inf
 
-full = pd.read_csv("proteus_jeans_escape_results.csv")
+full = pd.read_csv("proteus_jeans_escape_results_dissociation.csv")
+
+valid = full["jeans_valid"]
+invalid = full[~full["jeans_valid"]]
 
 # pick the species with largest Mdot for each atmosphere/T_inf case
 dominant = (
@@ -195,16 +219,26 @@ for idx, mas in enumerate(mass):
                 (dominant["flux_case"] == inst) 
             ].sort_values("T_inf")
 
+            valid = s[s["jeans_valid"]]
+            invalid = s[~s["jeans_valid"]]
+
 
             if s.empty:
                 continue
 
             ax.scatter(
-                s["T_inf"],
-                s["lambda_j"],
+                valid["T_inf"],
+                valid["lambda_j"],
                 color=species_colors.get(atm),
                 marker="o" if inst == "1_F_earth" else "^",
                 s=80,
+            )
+
+            ax.scatter(
+                invalid["T_inf"],
+                invalid["lambda_j"],
+                color=species_colors.get(atm),
+                marker="x",
             )
 
             for _, row in s.iterrows():
@@ -253,15 +287,30 @@ for idx, mas in enumerate(mass):
                 (dominant["flux_case"] == inst)
             ]
 
+            valid = s[s["jeans_valid"]]
+            invalid = s[~s["jeans_valid"]]
+
             if s.empty:
                 continue
 
+            valid = s[s["jeans_valid"]]
+            invalid = s[~s["jeans_valid"]]
+
             ax.scatter(
-                s["lambda_j"],
-                np.log10(s["Mdot_kg_s"].replace(0, np.nan)),
+                valid["lambda_j"],
+                np.log10(valid["Mdot_kg_s"].replace(0, np.nan)),
                 color=species_colors.get(atm),
                 marker="o" if inst == "1_F_earth" else "^",
                 s=80,
+            )
+
+            ax.scatter(
+                invalid["lambda_j"],
+                np.log10(invalid["Mdot_kg_s"].replace(0, np.nan)),
+                color=species_colors.get(atm),
+                marker="x",
+                s=90,
+                linewidths=2,
             )
 
     ax.axvline(1.5, color="grey", linestyle="--", linewidth=1)
@@ -305,11 +354,22 @@ for idx, mas in enumerate(mass):
             if s.empty:
                 continue
 
+            valid = s[s["jeans_valid"]]
+            invalid = s[~s["jeans_valid"]]
+
             ax.plot(
-                s["T_inf"],
-                s["lambda_j"],
+                valid["T_inf"],
+                valid["lambda_j"],
                 color=species_colors.get(atm),
                 marker="o" if inst == "1_F_earth" else "^",
+                linewidth=1.8,
+                markersize=6,
+            )
+            ax.plot(
+                invalid["T_inf"],
+                invalid["lambda_j"],
+                color=species_colors.get(atm),
+                marker="x",
                 linewidth=1.8,
                 markersize=6,
             )
