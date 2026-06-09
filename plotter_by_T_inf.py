@@ -63,6 +63,21 @@ atm_handles = [
     for atm in atm_archetype
 ]
 
+invalid_handle = Line2D(
+    [0], [0],
+    marker="x",
+    color="black",
+    linestyle="None",
+    markersize=8,
+    markeredgewidth=2,
+    label=r"Outside Jeans Validity ($\lambda_J < 1.5$)"
+)
+
+all_handles = (
+    atm_handles
+    + flux_handles
+    + [invalid_handle]
+)
 
 df = pd.read_csv("proteus_jeans_case_summary_dissociation.csv")
 
@@ -90,14 +105,14 @@ def plot_vs_Tinf(ycol, ylabel, filename, ylog=False):
                 if s.empty:
                     continue
 
-                ax.plot(
-                    valid["T_inf"],
-                    valid[ycol],
-                    color=species_colors[atm],
-                    linestyle="-",
-                    linewidth=1.5,
-                    alpha=0.7,
-                )
+                #ax.plot(
+                    #valid["T_inf"],
+                    #valid[ycol],
+                    #color=species_colors[atm],
+                    #linestyle="-",
+                    #linewidth=1.5,
+                    #alpha=0.7,
+                #)
 
                 ax.scatter(
                     valid["T_inf"],
@@ -112,6 +127,7 @@ def plot_vs_Tinf(ycol, ylabel, filename, ylog=False):
                     invalid[ycol],
                     color=species_colors[atm],
                     marker="x",
+                    label="Hydrodynamic onset",
                     s=90,
                     linewidths=2,
                 )
@@ -125,13 +141,20 @@ def plot_vs_Tinf(ycol, ylabel, filename, ylog=False):
 
     axes[0].set_ylabel(ylabel, fontsize=13)
 
-    fig.legend(handles=atm_handles, title="Atmosphere", bbox_to_anchor=(1.07, 1), loc="outside upper right")
+    fig.legend(
+        handles=all_handles,
+        loc="lower center",
+        title="Legend",
+        bbox_to_anchor=(0.5, -0.02),
+        ncol=len(all_handles),
+        frameon=False,
+        fontsize=12,
+    )
+    #axes[1].legend(handles=flux_handles + [invalid_handle], title="Markers", loc="lower right")
 
-    axes[1].legend(handles=flux_handles, title="Instellation", loc="lower right")
+    #axes[0].legend(handles=flux_handles, title="Instellation", loc="lower right")
 
-    axes[0].legend(handles=flux_handles, title="Instellation", loc="lower right")
-
-    plt.tight_layout()
+    plt.tight_layout(rect=[0, 0.08, 1, 1])
     plt.savefig(os.path.join(outdir, filename), dpi=300, bbox_inches="tight")
     plt.close()
 
@@ -262,12 +285,20 @@ for idx, mas in enumerate(mass):
 
 axes[0].set_ylabel(r"Dominant species Jeans parameter $\lambda_J$", fontsize=13)
 
-fig.legend(handles=atm_handles, title="Atmosphere", bbox_to_anchor=(1.07, 1), loc="outside upper right")
-axes[1].legend(handles=flux_legend, title="Instellation", loc="lower left")
+fig.legend(
+    handles=all_handles,
+    loc="lower center",
+    title="Legend",
+    bbox_to_anchor=(0.5, -0.02),
+    ncol=len(all_handles),
+    frameon=False,
+    fontsize=12,
+)
+
 
 plt.suptitle(r"Dominant-species Jeans parameter vs $T_{\infty}$", fontsize=15)
-plt.tight_layout()
-plt.savefig("Plots/PROTEUS_Bates_sensitivity/dominant_lambda_vs_Tinf.png", dpi=300, bbox_inches="tight")
+plt.tight_layout(rect=[0, 0.08, 1, 1])
+plt.savefig("Plots/PROTEUS_Bates_sensitivity/Dissociation/dominant_lambda_vs_Tinf.png", dpi=300, bbox_inches="tight")
 plt.close()
 
 
@@ -323,13 +354,20 @@ for idx, mas in enumerate(mass):
     ax.tick_params(axis="both", which="major", labelsize=12)
 
 axes[0].set_ylabel(r"$\log_{10}(\dot{M}_{\rm dominant})$ [kg/s]", fontsize=13)
-fig.legend(handles=atm_handles, title="Atmosphere",  bbox_to_anchor=(1.07, 1), loc="outside upper right")
 
-axes[1].legend(handles=flux_legend, title="Instellation", loc="lower left")
+fig.legend(
+    handles=all_handles,
+    loc="lower center",
+    title="Legend",
+    bbox_to_anchor=(0.5, -0.02),
+    ncol=len(all_handles),
+    frameon=False,
+    fontsize=12,
+)
 
 plt.suptitle(r"Dominant species mass loss versus Jeans parameter", fontsize=15)
-plt.tight_layout()
-plt.savefig("Plots/PROTEUS_Bates_sensitivity/dominant_mass_loss_vs_lambda.png", dpi=300, bbox_inches="tight")
+plt.tight_layout(rect=[0, 0.08, 1, 1])
+plt.savefig("Plots/PROTEUS_Bates_sensitivity/Dissociation/dominant_mass_loss_vs_lambda.png", dpi=300, bbox_inches="tight")
 plt.close()
 
 
@@ -384,10 +422,17 @@ for idx, mas in enumerate(mass):
 
 axes[0].set_ylabel(r"Hydrogen Jeans parameter $\lambda_{J,\mathrm{H}}$", fontsize=13)
 
-fig.legend(handles=atm_handles, title="Atmosphere",  bbox_to_anchor=(1.07, 1), loc="outside upper right")
-axes[1].legend(handles=flux_legend, title="Instellation", loc="lower left")
+fig.legend(
+    handles=all_handles,
+    loc="lower center",
+    title="Legend",
+    bbox_to_anchor=(0.5, -0.02),
+    ncol=len(all_handles),
+    frameon=False,
+    fontsize=12,
+)
 
 plt.suptitle(r"Hydrogen Jeans parameter vs $T_{\infty}$", fontsize=15)
-plt.tight_layout()
-plt.savefig("Plots/PROTEUS_Bates_sensitivity/hydrogen_lambda_vs_Tinf.png", dpi=300, bbox_inches="tight")
+plt.tight_layout(rect=[0, 0.08, 1, 1])
+plt.savefig("Plots/PROTEUS_Bates_sensitivity/Dissociation/hydrogen_lambda_vs_Tinf.png", dpi=300, bbox_inches="tight")
 plt.close()

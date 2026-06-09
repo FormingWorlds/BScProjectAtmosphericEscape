@@ -119,6 +119,8 @@ def run_one_file(path, bulk):
                     "exobase_radius_m": result["exobase_radius"],
                     "T_exo_K": result["exobase_temperature"],
                     "exobase_index": result["exobase_index"],
+                    "jeans_valid": res["lambda_j"] >= 1.5,
+                    "escape_regime": "Jeans" if res["lambda_j"] >= 1.5 else "hydrodynamic_candidate",
                     })
 
     return rows

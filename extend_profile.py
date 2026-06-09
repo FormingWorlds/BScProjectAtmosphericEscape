@@ -50,7 +50,7 @@ def extend_profile_exobase(
         for sp in species_current
     )
 
-    P_target = 1e-7         # bar for space like pressure
+    P_target = 1e-12         # bar for space like pressure
     P_top = n_top * k * T_top
 
     zeta_max = np.log(P_top / P_target)
