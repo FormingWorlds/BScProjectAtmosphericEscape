@@ -219,7 +219,7 @@ def get_L_EUV(L_x, semi_major_axis):
 
     return L_EUV
 
-def get_fluxes(mass, age, semi_major_axis):
+def get_escape_fluxes(mass, age, semi_major_axis):
     '''
     This function takes the mass and age of a star and the distance from the star to the planet and returns the bolometric and XUV flux received by the planet.
 
@@ -232,7 +232,7 @@ def get_fluxes(mass, age, semi_major_axis):
     L_X = get_L_x(mass, age) #[W]
     L_EUV = get_L_EUV(L_X, semi_major_axis)
     L_XUV = L_X + L_EUV #[W]
-    
+
     F_XUV = get_F(L_XUV, semi_major_axis) #[W m^-2]
 
     return F_bol, F_XUV
