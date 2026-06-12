@@ -41,7 +41,6 @@ for comp in ['H2', 'H2O', 'CO2', 'N2']:
                         M_p=case['M_planet [kg]'],
                         R_p=case['R_int [m]'],
                         F_xuv=case['F_xuv [W/m2]'], 
-                        F_ins=case['F_ins [W/m2]'],
                         temperatures=df_atmospheric_profile['Temperature [K]'].values,
                         pressures=df_atmospheric_profile['Pressure [Pa]'].values,
                         heights=df_atmospheric_profile['Height [m]'].values,
