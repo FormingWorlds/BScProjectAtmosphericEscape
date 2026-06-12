@@ -21,14 +21,14 @@ F_xuv        = 10**2.93 * erg_to_joule * cm_to_m**(-2)                #[kg s^-3]
 nu_0         = 4.835981008048 * 10**15      #[Hz]        20eV. Maybe this value because of helium in mix. For ionising the atoms.
 R_p          = 2.73 * 6.371 * 10**6            #[m]         planetary radius. 2 times earth radius
 P_0          = 2000                         #[Pa]        pressure at the optical photosphere
-T_eq         = np.full(5000, 553)                         #[K]         equilibrium temperature of the planet
+T_eq         = np.full(5000, 567)                         #[K]         equilibrium temperature of the planet
 mu_photo     = 2.5                            #[dimless]   mean molecular weight at the optical photosphere, assumed to be entirely molecular hydrogen
 
 radii = np.linspace(R_p, 5*R_p, 5000) #[m] array of radii from the planetary radius to 10 times the planetary radius
 
 pressures = P_0 * np.exp(G * M_p * mu_photo * m_p / (k_b * T_eq) * (1/radii - 1/R_p) ) #[Pa] pressure profile of the atmosphere based on the barometric formula, where P_0: pressure at the optical photosphere, G: gravitational constant, M_p: planetary mass, mu_photo: mean molecular weight at the optical photosphere, m_p: proton mass, k_b: Boltzmann constant, T_eq: equilibrium temperature of the planet, radii: array of radii from the planetary radius to 10 times the planetary radius
 
-atm_H2He_mix = Atmosphere(
+atm_gj1214b = Atmosphere(
     T_wind=T_wind, 
     mu_wind=mu_wind, 
     M_p=M_p, 
@@ -40,4 +40,23 @@ atm_H2He_mix = Atmosphere(
     pressures=pressures, 
     temperatures=T_eq, #using the constant T_eq as a starting array
     heights=radii - R_p,
+    )
+
+
+T_eq_wasp80b         = np.full(7000, 800)                         #[K]         equilibrium temperature of the planet
+                         
+M_p_wasp80b          = 174.80 * 5.9722 * 10**24
+R_p_wasp80b          = 10.65 * 6.371 * 10**6            #[m]         planetary radius
+radii_wasp80b = np.linspace(R_p_wasp80b, 5*R_p_wasp80b, 7000) #[m] array of radii from the planetary radius to 10 times the planetary radius
+F_xuv_wasp80b = 10**4.03 * erg_to_joule * cm_to_m**(-2) 
+pressures_wasp80b = P_0 * np.exp(G * M_p_wasp80b * mu_photo * m_p / (k_b * T_eq_wasp80b) * (1/radii_wasp80b - 1/R_p_wasp80b) ) 
+atm_wasp80b = Atmosphere(
+    T_wind=T_wind, 
+    M_p=M_p_wasp80b, 
+    dominant_species='H2He',
+    F_xuv=F_xuv_wasp80b, 
+    R_p=R_p_wasp80b, 
+    pressures=pressures_wasp80b, 
+    temperatures=T_eq_wasp80b, #using the constant T_eq as a starting array
+    heights=radii_wasp80b - R_p_wasp80b,
     )
