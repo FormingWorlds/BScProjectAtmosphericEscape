@@ -70,9 +70,4 @@ DISSOCIATION = {
     "S2":  {"S": 2},
     "SO2": {"S": 1, "O": 2},
     # atoms pass through unchanged
-    "H": {"H": 1},
-    "O": {"O": 1},
-    "N": {"N": 1},
-    "C": {"C": 1},
-    "He": {"He": 1},
 }

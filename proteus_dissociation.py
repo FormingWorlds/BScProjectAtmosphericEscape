@@ -78,7 +78,7 @@ def run_one_file(path, bulk):
         print("No exobase found, extending profile")
 
     if profile_extended == True: 
-        T_inf_values = [200, 300, 500, 1000, 2000, 3000, 5000, 6000, 7000] #sensitivity testing
+        T_inf_values = [200, 300, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000] #sensitivity testing
         rows = []
         for T_inf in T_inf_values:
             try:

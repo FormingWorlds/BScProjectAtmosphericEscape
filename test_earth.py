@@ -21,7 +21,7 @@ T_exo = 1000.0          # K, thermospheric/exospheric temperature
 
 # H density chosen for present-day Earth order-of-magnitude Jeans escape.
 
-n_H_exo = 1.8e7        # m^-3
+n_H_exo = 10e11        # m^-3 where to get this from?
 
 sigma = 3e-19           # m^2, approximate
 
@@ -66,10 +66,10 @@ print(f"v_th(H): {H['v_th (m/s)']:.3e} m/s")
 print(f"effusion velocity: {H['effusion_velocity (m/s)']:.3e} m/s")
 print(f"Mdot_H: {H['Mdot (kg/s)']:.3e} kg/s")
 
-target = 1e-4
+target = 3 #kg/s
 factor = H["Mdot (kg/s)"] / target
 
-print(f"Target scale: ~1e-4 kg/s")
+print(f"Target scale: ~3 kg/s")
 print(f"Model / target: {factor:.2f}")
 
 if 0.1 < factor < 10:
@@ -84,7 +84,7 @@ print(
     f"{physical_altitude:.1f} km"
 )
 
-n_H_values = [1e6, 3e6, 1e7, 3e7, 1e8, 1e9, 1e10]  # m^-3
+n_H_values = [1e6, 3e6, 1e7, 3e7, 1e8, 1e9, 1e10, 1e11]  # m^-3
 T_values = [700, 900, 1000, 1200, 1500]
 
 rows = []
@@ -140,7 +140,7 @@ for i, T_exo in enumerate(T_values):
         color=CB_color_cycle[i]
         )
 
-plt.axhline(1e-4, color="black", linestyle="--", label=r"$10^{-4}$ kg/s target")
+plt.axhline(3, color="black", linestyle="--", label=r"$3$ kg/s target")
 
 plt.xscale("log")
 plt.yscale("log")

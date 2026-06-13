@@ -19,7 +19,7 @@ atm_archetype = ["H2", "H2O", "CO2", "N2"]
 masses = ["1_M_earth", "10_M_earth"]
 fluxes = ["1_F_earth", "1000_F_earth"]
 
-T_inf_values = [200, 300, 500, 1000, 2000, 3000, 5000, 7000]
+T_inf_values = [200, 300, 500, 1000, 2000, 3000, 4000, 5000, 7000]
 
 
 def compute_pressure(T, species):
