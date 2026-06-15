@@ -38,7 +38,7 @@ def H_mean_free_path(vmr_dict, rho, mmw):
                 sigma = np.pi * ((kinetic_radii["H"] + kinetic_radii[specie])**2)
                 specie_density = (rho[i] * vmr_dict[specie][i])/(mmw[i]/N_A)
                 this_inv_mfp = this_inv_mfp + (sigma*specie_density)
-        mfp_list.append(1/this_inv_mfp)
+        mfp_list.append(1/((2**0.5)*this_inv_mfp))
     
     mfp = np.asarray(mfp_list, dtype='float64')
     return(mfp)

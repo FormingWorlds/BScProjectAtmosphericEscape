@@ -79,7 +79,7 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
         hom_pressure_list = []
         hom_temp_list = []
         
-        T_inf = np.array([200, 300, 500, 1000, 2000, 3000, 5000, 6000, 7000]) #[K]
+        T_inf = np.array([200, 300, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000]) #[K]   
         
         for temp in T_inf:               
             #extending as a Bates profile above homopause 
@@ -96,6 +96,7 @@ def proteus_improved_limiting_flux(atm, system, disso_fracs):
             mfp = H_mean_free_path(VMR_b, rho_b, mmw_b)
             H = H_scale_height(T_b, R, z_b, M, molarmasses)
             exo_id = exobase_index_finder(H, mfp)
+            
             
             if isinstance(exo_id, np.int64):
                 #limiting flux calculation
