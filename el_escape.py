@@ -24,8 +24,8 @@ def el_escape_rate(epsilon_xuv, F_xuv, R_base, M_p, K_tide=1):
 
     return M_el_rate
 
-evaporation_efficiencies = {'H2': 0.1, #dummyvalue until calculated
+evaporation_efficiencies = {'H2': 0.1, #From Lopez 2017. Assumed to be 10% for Hydrogen and Helium, lighter elements, and 1% for heavier mixes
                             'H2He': 0.1,
                             'H2O':  0.01,
-                            'CO2':  0.1, #dummyvalue 
-                            'N2': 0.1} #dummyvalue
+                            'CO2':  0.01,  
+                            'N2': 0.01} 
