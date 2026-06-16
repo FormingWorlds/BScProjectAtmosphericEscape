@@ -3,20 +3,21 @@ This is useful for testing the function with different atmospheric compositions,
 import numpy as np
 import scipy.constants as sp
 from radiation_recombination_coefficient_cauldron import species_rr_coefficients_case_B
+from el_escape import evaporation_efficiencies
 
 ### Dictionary of the most relevant dominant species for the wind, which comes with their own values for hte microphysics ###
 wind_microphysics = {
         #NB, these are the values for the singly ionised and fully dissociated equivalents!!!!!
-        'H2': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1, 'rr_coeff': species_rr_coefficients_case_B['H2']},
-        'H': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1, 'rr_coeff': species_rr_coefficients_case_B['H']}, 
-        'H2O': {'nu_0': 3.293303066481 * 10**15 , 'mu_wind': 3, 'mu_plus_wind': 6, 'rr_coeff': species_rr_coefficients_case_B['H2O']},
-        'CO2' : {'nu_0' : 3.293303066481 * 10**15, 'mu_wind': 7.333, 'mu_plus_wind': 14.667, 'rr_coeff': species_rr_coefficients_case_B['CO2']}, 
-        'N2' : {'nu_0' : 3.513340202347 * 10**15, 'mu_wind': 7, 'mu_plus_wind': 14, 'rr_coeff': species_rr_coefficients_case_B['N2']},
-        'H2He' : {'nu_0' : 5.948256639899 * 10**15, 'mu_wind': 0.62, 'mu_plus_wind': 1.3 , 'rr_coeff': species_rr_coefficients_case_B['H2He']},
+        'H2': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1, 'rr_coeff': species_rr_coefficients_case_B['H2'], 'epsilon_xuv': evaporation_efficiencies['H2']},
+        'H': {'nu_0': 3.288467085473 * 10**15, 'mu_wind': 0.5, 'mu_plus_wind': 1, 'rr_coeff': species_rr_coefficients_case_B['H'], 'epsilon_xuv': evaporation_efficiencies['H']}, 
+        'H2O': {'nu_0': 3.293303066481 * 10**15 , 'mu_wind': 3, 'mu_plus_wind': 6, 'rr_coeff': species_rr_coefficients_case_B['H2O'], 'epsilon_xuv': evaporation_efficiencies['H2O']},
+        'CO2' : {'nu_0' : 3.293303066481 * 10**15, 'mu_wind': 7.333, 'mu_plus_wind': 14.667, 'rr_coeff': species_rr_coefficients_case_B['CO2'], 'epsilon_xuv': evaporation_efficiencies['CO2']}, 
+        'N2' : {'nu_0' : 3.513340202347 * 10**15, 'mu_wind': 7, 'mu_plus_wind': 14, 'rr_coeff': species_rr_coefficients_case_B['N2'], 'epsilon_xuv': evaporation_efficiencies['N2']},
+        'H2He' : {'nu_0' : 5.948256639899 * 10**15, 'mu_wind': 0.62, 'mu_plus_wind': 1.3 , 'rr_coeff': species_rr_coefficients_case_B['H2He'], 'epsilon_xuv': evaporation_efficiencies['H2He']},
     }
 class Atmosphere:
     
-    def __init__(self, M_p, pressures, heights, temperatures, F_xuv=None, dominant_species=None, T_wind=10**(4), vmrs=None, P_base=10**(-4), nu_0=None, mu_wind=None, mu_plus_wind=None, R_p=None, determine_radius=False, rr_coeff=None):
+    def __init__(self, M_p, pressures, heights, temperatures, F_xuv=None, dominant_species=None, T_wind=10**(4), vmrs=None, P_base=10**(-4), nu_0=None, mu_wind=None, mu_plus_wind=None, R_p=None, determine_radius=False, rr_coeff=None, epsilon_xuv=None):
         #input chosen by user
         self.P_base = P_base #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
         
@@ -46,7 +47,7 @@ class Atmosphere:
         self.vmrs = vmrs if vmrs is not None else None
                 
         self.read_off_wind_base_parameters()    
-        self.determine_wind_microphysics(nu_0, mu_wind, mu_plus_wind, dominant_species, rr_coeff)
+        self.determine_wind_microphysics(nu_0, mu_wind, mu_plus_wind, dominant_species, rr_coeff, epsilon_xuv)
         
         # First check if user provided a recombination coefficient manually, if not check if the dominant species is in the microphysics dictionary, else raise an error
         if rr_coeff is not None:
@@ -84,7 +85,7 @@ class Atmosphere:
             #print(f"Dominant species at the base of the escaping atmosphere: {self.dominant_species} with VMR of {self.vmrs_base[self.dominant_species]:.2e}")
         
 
-    def determine_wind_microphysics(self, nu_0, mu_wind, mu_plus_wind, dominant_species, rr_coeff):
+    def determine_wind_microphysics(self, nu_0, mu_wind, mu_plus_wind, dominant_species, rr_coeff, epsilon_xuv):
         '''
         Determines the microphysics parameters for the escaping wind based on the dominant species at the base of the escaping atmosphere.
 
@@ -104,6 +105,7 @@ class Atmosphere:
             self.mu_wind = mu_wind
             self.mu_plus_wind = mu_plus_wind
             self.rr_coeff = rr_coeff
+            self.epsilon_xuv = epsilon_xuv
             self.dominant_species_found_in_dict = False
             return
         
@@ -117,6 +119,7 @@ class Atmosphere:
                 self.mu_wind = wind_microphysics[spec]['mu_wind']
                 self.mu_plus_wind = wind_microphysics[spec]['mu_plus_wind']
                 self.rr_coeff = wind_microphysics[spec]['rr_coeff']
+                self.epsilon_xuv = wind_microphysics[spec]['epsilon_xuv']
                 return
             else:
                 raise ValueError(f'{self.dominant_species} found to be dominant, but not defined in microphysics dictionary. \n Add parameters (nu_0, mu_wind, mu_plus_wind, rr_coeff) there or provide them manually.')
@@ -130,10 +133,11 @@ class Atmosphere:
                 self.mu_wind = wind_microphysics[dominant_species]['mu_wind']
                 self.mu_plus_wind = wind_microphysics[dominant_species]['mu_plus_wind']
                 self.rr_coeff = wind_microphysics[dominant_species]['rr_coeff']
+                self.epsilon_xuv = wind_microphysics[dominant_species]['epsilon_xuv']
             else:
                 raise ValueError(f'{dominant_species} specified as dominant, but not defined in microphysics dictionary. \n Add parameters (nu_0, mu_wind, mu_plus_wind, rr_coeff) there or provide them manually.')
         else:
-            raise ValueError("Microphysics parameters (nu_0, mu_wind, mu_plus_wind, rr_coeff) could not be determined. Please input vmrs or the values manually.)")
+            raise ValueError("Microphysics parameters (nu_0, mu_wind, mu_plus_wind, rr_coeff, epsilon_xuv) could not be determined. Please input vmrs or the values manually.)")
 
     @staticmethod
     def determine_radius_from_MR_relation(M_p):
