@@ -23,3 +23,9 @@ def el_escape_rate(epsilon_xuv, F_xuv, R_base, M_p, K_tide=1):
     M_el_rate = epsilon_xuv * np.pi * F_xuv * R_base**3 / (sp.constants.G * M_p * K_tide)
 
     return M_el_rate
+
+evaporation_efficiencies = {'H2': 0.1, #dummyvalue until calculated
+                            'H2He': 0.1,
+                            'H2O':  0.01,
+                            'CO2':  0.1, #dummyvalue 
+                            'N2': 0.1} #dummyvalue
