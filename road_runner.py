@@ -1,11 +1,11 @@
 ### Importing the escape functions ###
-from rr_escape import examine_atmosphere_for_rr_escape, get_rr_escape_diagnostics
+from rr_escape import examine_atmosphere_for_rr_escape, get_escape_diagnostics
 
 ### Importing the single atmospheres we want to examine ###
 from proteus_fetch import proteus_atmosphere_cases
 
 from atmospheres.simple_H2 import atm_H2
-from atmospheres.simple_H2He_mix import atm_H2He_mix
+from atmospheres.simple_H2He_mix import atm_wasp80b, atm_gj1214b
 from atmospheres.simple_H2O import atm_H2O
 import os
 width = os.get_terminal_size().columns 
@@ -14,6 +14,8 @@ width = os.get_terminal_size().columns
 ### Doing escape calculations ###
 #print(dict.keys(proteus_atmosphere_cases))
 #atm = proteus_atmosphere_cases['H2_1_M_earth_1_F_earth']
+examine_atmosphere_for_rr_escape(atm_wasp80b)
+examine_atmosphere_for_rr_escape(atm_gj1214b)
 print('-' * width)
 print('SIMPLE ATMOSPHERES')
 print('-' * width)
@@ -21,7 +23,7 @@ print('H2')
 examine_atmosphere_for_rr_escape(atm_H2)
 print('-' * width)
 print('H2He')
-examine_atmosphere_for_rr_escape(atm_H2He_mix)
+#examine_atmosphere_for_rr_escape(atm_H2He_mix)
 print('-' * width)
 print('H2O')
 examine_atmosphere_for_rr_escape(atm_H2O)

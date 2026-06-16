@@ -2,7 +2,7 @@
 
 import numpy as np
 import scipy as sp
-from rr_escape import calc_sound_speed, calc_sonic_point_radius
+
 
 def el_escape_rate(epsilon_xuv, F_xuv, R_base, M_p, K_tide=1):
     '''
@@ -26,6 +26,7 @@ def el_escape_rate(epsilon_xuv, F_xuv, R_base, M_p, K_tide=1):
 
 evaporation_efficiencies = {'H2': 0.1, #From Lopez 2017. Assumed to be 10% for Hydrogen and Helium, lighter elements, and 1% for heavier mixes
                             'H2He': 0.1,
+                            'H':  0.1,
                             'H2O':  0.01,
                             'CO2':  0.01,  
                             'N2': 0.01} 
