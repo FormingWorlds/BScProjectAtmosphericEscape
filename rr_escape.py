@@ -102,7 +102,10 @@ def get_escape_diagnostics(atm):
     escape_rate_rr = rr_escape_rate(rho_s, c_s, R_s)
 
     #### EL escape rate ####
-    escape_rate_el = el_escape_rate(atm.epsilon_xuv, atm.F_xuv, atm.R_base, atm.M_p, K_tide=1)
+    if atm.epsilon_xuv is None:
+        escape_rate_el = 0
+    else:
+        escape_rate_el = el_escape_rate(atm.epsilon_xuv, atm.F_xuv, atm.R_base, atm.M_p, K_tide=1)
 
     is_rr_limited = escape_rate_rr < escape_rate_el
     
