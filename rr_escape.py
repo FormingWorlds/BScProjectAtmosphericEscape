@@ -7,6 +7,7 @@ Radiation-recombination-limited escape mechanism.
 import numpy as np
 import scipy as sp
 from conversions import cm_to_m
+from el_escape import el_escape_rate
 
 
 
@@ -85,7 +86,7 @@ def rr_escape_rate(rho_s, c_s, R_s):
 
     return M_rr_rate 
 
-def get_rr_escape_diagnostics(atm):
+def get_escape_diagnostics(atm):
     '''
     Calculates the radiation-recombination-limited escape rate and all the necessary parameters for the calculation.
 
@@ -93,23 +94,32 @@ def get_rr_escape_diagnostics(atm):
 
     All calculations done in SI units.
     '''
+    #### RR escape rate ####
     c_s = calc_sound_speed(atm.T_wind, atm.mu_wind)
     R_s, is_transonic, R_s_calc = calc_sonic_point_radius(atm.M_p, c_s, atm.R_base)
 
     rho_s = calc_density_at_sonic_point(atm.M_p, atm.F_xuv, atm.nu_0, R_s, c_s, atm.R_base, atm.mu_plus_wind, atm.rr_coeff)
-    escape_rate = rr_escape_rate(rho_s, c_s, R_s)
+    escape_rate_rr = rr_escape_rate(rho_s, c_s, R_s)
 
+    #### EL escape rate ####
+    escape_rate_el = el_escape_rate(atm.epsilon_xuv, atm.F_xuv, atm.R_base, atm.M_p, K_tide=1)
+
+    is_rr_limited = escape_rate_rr < escape_rate_el
+    
     return {
         "R_base [m]": atm.R_base,
         "c_s [m/s]": c_s,
         "R_s [m]": R_s,
         "rho_s [kg/m^3]": rho_s,
-        "escape_rate [kg/s]": escape_rate,
+        "escape_rate_rr [kg/s]": escape_rate_rr,
         "dominant_species": atm.dominant_species,
         "dominant_species_found_in_dict": atm.dominant_species_found_in_dict,
         "P_base_at_R_base [Pa]": atm.P_base_at_R_base,
         "is_transonic" : is_transonic,
-        "R_s_calc [m]" : R_s_calc
+        "R_s_calc [m]" : R_s_calc,
+        "escape_rate_el [kg/s]": escape_rate_el,
+        "is_rr_limited": is_rr_limited
+
     }
 
 def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
@@ -144,7 +154,7 @@ def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
         print(f"Planet is in intermediate regime of gravitationally binding atmosphere, wind strength declines rapidly")
 
 
-    results = get_rr_escape_diagnostics(atm)
+    results = get_escape_diagnostics(atm)
 
     print()
     print("Escape diagnostics for the atmosphere:")
@@ -156,6 +166,9 @@ def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
     if results['is_transonic'] is False:
         print(f"The calculated sonic point radius was {results['R_s_calc [m]']:.2g} m")
     print(f"rho_s: {results['rho_s [kg/m^3]']:.2g} kg/m^3")
-    print(f"Escape rate: {results['escape_rate [kg/s]']:.2g} kg/s")
+    print(f"RR Escape rate: {results['escape_rate_rr [kg/s]']:.2g} kg/s")
+    print(f"EL Escape rate: {results['escape_rate_el [kg/s]']:.2g} kg/s")
+    print(f"Is the escape rate RR limited? {results['is_rr_limited']}")
+    
     
 
