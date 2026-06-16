@@ -153,7 +153,7 @@ def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
     print(f"c_s: {results['c_s [m/s]']:.2g} m/s")
     print(f"R_s: {results['R_s [m]']:.2g} m")
     print(f"Is the wind transonic? {results['is_transonic']}")
-    if results['is_rr_limited'] is False:
+    if results['is_transonic'] is False:
         print(f"The calculated sonic point radius was {results['R_s_calc [m]']:.2g} m")
     print(f"rho_s: {results['rho_s [kg/m^3]']:.2g} kg/m^3")
     print(f"Escape rate: {results['escape_rate [kg/s]']:.2g} kg/s")
