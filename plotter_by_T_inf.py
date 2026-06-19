@@ -6,7 +6,7 @@ from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 
-outdir = "Plots/PROTEUS_Bates_sensitivity/Constant VMR" #change either Dissociation or Constant VMR 
+outdir = "Plots/PROTEUS_Bates_sensitivity/Dissociation" #change either Dissociation or Constant VMR 
 os.makedirs(outdir, exist_ok=True)
 
 atm_archetype = ["CO2", "N2", "H2O", "H2"]
@@ -80,7 +80,7 @@ all_handles = (
     + [invalid_handle]
 )
 
-df = pd.read_csv("proteus_jeans_case_summary.csv") #change if dissociation
+df = pd.read_csv("proteus_jeans_case_summary_dissociation.csv") #change if dissociation
 
 df["log10_weighted_mass_loss"] = np.log10(df["weighted_mass_loss_kg_s"])
 
@@ -224,7 +224,7 @@ plot_vs_Tinf(
 
 # 6. Dominant-species lambda_J vs T_inf
 
-full = pd.read_csv("proteus_jeans_escape_results.csv")
+full = pd.read_csv("proteus_jeans_escape_results_dissociation.csv")
 
 # Make sure column exists for older files
 if "unphysical_extension" not in full.columns:
@@ -313,7 +313,7 @@ fig.legend(
 
 plt.suptitle(r"Dominant-species Jeans parameter vs $T_{\infty}$", fontsize=15)
 plt.tight_layout(rect=[0, 0.08, 1, 1])
-plt.savefig("Plots/PROTEUS_Bates_sensitivity/Constant VMR/dominant_lambda_vs_Tinf.png", dpi=300, bbox_inches="tight")
+plt.savefig("Plots/PROTEUS_Bates_sensitivity/Dissociation/dominant_lambda_vs_Tinf.png", dpi=300, bbox_inches="tight")
 plt.close()
 
 
@@ -379,7 +379,7 @@ fig.legend(
 
 plt.suptitle(r"Dominant species mass loss versus Jeans parameter", fontsize=15)
 plt.tight_layout(rect=[0, 0.08, 1, 1])
-plt.savefig("Plots/PROTEUS_Bates_sensitivity/Constant VMR/dominant_mass_loss_vs_lambda.png", dpi=300, bbox_inches="tight")
+plt.savefig("Plots/PROTEUS_Bates_sensitivity/Dissociation/dominant_mass_loss_vs_lambda.png", dpi=300, bbox_inches="tight")
 plt.close()
 
 # 8. Hydrogen lambda_J vs T_inf
@@ -455,5 +455,5 @@ fig.legend(
 
 plt.suptitle(r"Hydrogen Jeans parameter vs $T_{\infty}$", fontsize=15)
 plt.tight_layout(rect=[0, 0.08, 1, 1])
-plt.savefig("Plots/PROTEUS_Bates_sensitivity/Constant VMR/hydrogen_lambda_vs_Tinf.png", dpi=300, bbox_inches="tight")
+plt.savefig("Plots/PROTEUS_Bates_sensitivity/Dissociation/hydrogen_lambda_vs_Tinf.png", dpi=300, bbox_inches="tight")
 plt.close()
