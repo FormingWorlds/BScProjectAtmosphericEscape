@@ -39,9 +39,9 @@ case_styles = {
     "Full dissociation": "--",
 }
 
-# =========================
+
 # Load lower and upper cases
-# =========================
+
 
 constant = pd.read_csv("proteus_jeans_case_summary.csv")
 diss = pd.read_csv("proteus_jeans_case_summary_dissociation.csv")
@@ -59,9 +59,9 @@ df["log10_weighted_mass_loss"] = np.log10(
     df["weighted_mass_loss_kg_s"].replace(0, np.nan)
 )
 
-# =========================
+
 # Legend handles
-# =========================
+
 
 atm_handles = [
     Line2D([0], [0], color=species_colors[a], lw=2, label=a)
@@ -89,25 +89,11 @@ hydro_handle = Line2D(
     label=r"Hydrodynamic onset ($\lambda_J < 1.5$)"
 )
 
-unphysical_handle = Line2D(
-    [0], [0],
-    marker="s",
-    markerfacecolor="none",
-    markeredgecolor="black",
-    linestyle="None",
-    markersize=8,
-    markeredgewidth=2,
-    label="Unphysical extension"
-)
 
 all_handles = atm_handles + case_handles + flux_handles + [
-    hydro_handle,
-    unphysical_handle,
-]
+    hydro_handle]
 
-# =========================
-# Helper split function
-# =========================
+
 
 def split_regimes(s):
     valid = s[
@@ -125,9 +111,9 @@ def split_regimes(s):
     return valid, hydro, unphysical
 
 
-# ==================================================
+
 # 1. Escape bracket: constant VMR vs full dissociation
-# ==================================================
+
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
 
@@ -176,15 +162,6 @@ for idx, mass in enumerate(mass_cases):
                     linewidths=2,
                 )
 
-                ax.scatter(
-                    unphysical["T_inf"],
-                    unphysical["log10_weighted_mass_loss"],
-                    facecolors="none",
-                    edgecolors=species_colors[atm],
-                    marker="s",
-                    s=80,
-                    linewidths=2,
-                )
 
     ax.set_xlabel(r"$T_{\infty}$ [K]", fontsize=13)
     ax.set_title(mass_labels[mass], fontsize=14)
@@ -198,7 +175,7 @@ axes[0].set_ylabel(
 fig.legend(
     handles=all_handles,
     loc="lower center",
-    bbox_to_anchor=(0.5, -0.14),
+    bbox_to_anchor=(0.5, -0.05),
     ncol=4,
     frameon=False,
     fontsize=9,
@@ -210,9 +187,9 @@ plt.savefig(os.path.join(outdir, "escape_bracket_vs_Tinf.png"),
 plt.close()
 
 
-# ==================================================
+
 # 2. Dominant lambda transition plot
-# ==================================================
+
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
 
@@ -242,8 +219,8 @@ for idx, mass in enumerate(mass_cases):
                     physical["dominant_lambda_j"],
                     color=species_colors[atm],
                     linestyle=linestyle,
-                    linewidth=1.6,
-                    alpha=0.85,
+                    linewidth=0.8,
+                    alpha=0.55,
                 )
 
                 ax.scatter(
@@ -251,7 +228,7 @@ for idx, mass in enumerate(mass_cases):
                     valid["dominant_lambda_j"],
                     color=species_colors[atm],
                     marker=flux_markers[flux],
-                    s=45,
+                    s=35,
                 )
 
                 ax.scatter(
@@ -259,20 +236,10 @@ for idx, mass in enumerate(mass_cases):
                     hydro["dominant_lambda_j"],
                     color=species_colors[atm],
                     marker="x",
-                    s=80,
+                    s=35,
                     linewidths=2,
                 )
 
-                # no real lambda exists for unphysical cases
-                ax.scatter(
-                    unphysical["T_inf"],
-                    np.full(len(unphysical), 1.5),
-                    facecolors="none",
-                    edgecolors=species_colors[atm],
-                    marker="s",
-                    s=80,
-                    linewidths=2,
-                )
 
     ax.axhline(1.5, color="grey", linestyle="--", linewidth=1)
     ax.axhline(10, color="grey", linestyle=":", linewidth=1)
@@ -290,22 +257,20 @@ axes[0].set_ylabel(
 fig.legend(
     handles=all_handles,
     loc="lower center",
-    bbox_to_anchor=(0.5, -0.16),
+    bbox_to_anchor=(0.5, -0.05),
     ncol=4,
     frameon=False,
     fontsize=9,
 )
 
-plt.suptitle("Transition from Jeans to non-Jeans escape", fontsize=15)
+#plt.suptitle("Transition from Jeans to non-Jeans escape", fontsize=15)
 plt.tight_layout(rect=[0, 0.16, 1, 1])
 plt.savefig(os.path.join(outdir, "dominant_lambda_transition_vs_Tinf.png"),
             dpi=300, bbox_inches="tight")
 plt.close()
 
 
-# ==================================================
 # 3. Lifetime plot
-# ==================================================
 
 def read_bulk(comp, mass_case, flux_case):
     path = (
@@ -383,7 +348,7 @@ for idx, mass in enumerate(mass_cases):
                     valid["log10_lifetime_yr"],
                     color=species_colors[atm],
                     marker=flux_markers[flux],
-                    s=45,
+                    s=35,
                 )
 
                 ax.scatter(
@@ -391,11 +356,9 @@ for idx, mass in enumerate(mass_cases):
                     hydro["log10_lifetime_yr"],
                     color=species_colors[atm],
                     marker="x",
-                    s=80,
+                    s=35,
                     linewidths=2,
                 )
-
-                # Unphysical cases have no meaningful lifetime, so do not plot them.
 
     ax.axhline(6, color="grey", linestyle=":", linewidth=1)
     ax.axhline(9, color="grey", linestyle="--", linewidth=1)
@@ -427,22 +390,21 @@ lifetime_handles = atm_handles + case_handles + flux_handles + [hydro_handle]
 fig.legend(
     handles=lifetime_handles,
     loc="lower center",
-    bbox_to_anchor=(0.5, -0.12),
+    bbox_to_anchor=(0.5, -0.05),
     ncol=4,
     frameon=False,
     fontsize=9,
 )
 
-plt.suptitle("Predicted lifetime of a 1-bar equivalent atmosphere", fontsize=15)
+#plt.suptitle("Predicted lifetime of a 1-bar equivalent atmosphere", fontsize=15)
 plt.tight_layout(rect=[0, 0.14, 1, 1])
 plt.savefig(os.path.join(outdir, "lifetime_1bar_vs_Tinf.png"),
             dpi=300, bbox_inches="tight")
 plt.close()
 
 
-# ==================================================
 # 4. Dissociation / constant VMR ratio plot
-# ==================================================
+
 
 const = pd.read_csv("proteus_jeans_case_summary.csv")
 diss = pd.read_csv("proteus_jeans_case_summary_dissociation.csv")
@@ -497,7 +459,6 @@ ratio_handles = atm_handles + flux_handles + [
         markeredgewidth=2,
         label=r"At least one case has $\lambda_J < 1.5$",
     ),
-    unphysical_handle,
 ]
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
@@ -551,16 +512,6 @@ for idx, mass in enumerate(mass_cases):
                 linewidths=2,
             )
 
-            ax.scatter(
-                unphysical["T_inf"],
-                unphysical["delta_log10_Mdot"],
-                facecolors="none",
-                edgecolors=species_colors[atm],
-                marker="s",
-                s=85,
-                linewidths=2,
-            )
-
     ax.axhline(0, color="grey", linestyle="--", linewidth=1)
 
     ax.set_xlabel(r"$T_{\infty}$ [K]", fontsize=13)
@@ -576,13 +527,13 @@ axes[0].set_ylabel(
 fig.legend(
     handles=ratio_handles,
     loc="lower center",
-    bbox_to_anchor=(0.5, -0.14),
+    bbox_to_anchor=(0.5, -0.05),
     ncol=4,
     frameon=False,
     fontsize=9,
 )
 
-plt.suptitle("Effect of full photodissociation on predicted Jeans escape", fontsize=15)
+#plt.suptitle("Effect of full photodissociation on predicted Jeans escape", fontsize=15)
 plt.tight_layout(rect=[0, 0.14, 1, 1])
 plt.savefig(os.path.join(outdir, "dissociation_effect_ratio.png"),
             dpi=300, bbox_inches="tight")
