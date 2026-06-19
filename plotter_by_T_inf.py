@@ -73,6 +73,7 @@ invalid_handle = Line2D(
     label=r"Outside Jeans Validity ($\lambda_J < 1.5$)"
 )
 
+
 all_handles = (
     atm_handles
     + flux_handles
@@ -82,6 +83,7 @@ all_handles = (
 df = pd.read_csv("proteus_jeans_case_summary.csv") #change if dissociation
 
 df["log10_weighted_mass_loss"] = np.log10(df["weighted_mass_loss_kg_s"])
+
 
 
 def plot_vs_Tinf(ycol, ylabel, filename, ylog=False):
@@ -99,8 +101,18 @@ def plot_vs_Tinf(ycol, ylabel, filename, ylog=False):
                     (df["flux_case"] == flux)
                 ].sort_values("T_inf")
 
-                valid = s[s["jeans_valid"]]
-                invalid = s[~s["jeans_valid"]]
+                valid = s[
+                    (s["jeans_valid"])
+                    &
+                    (~s["unphysical_extension"])
+                ]
+
+                hydro = s[
+                    (~s["jeans_valid"])
+                    &
+                    (~s["unphysical_extension"])
+                ]
+
 
                 if s.empty:
                     continue
@@ -123,8 +135,8 @@ def plot_vs_Tinf(ycol, ylabel, filename, ylog=False):
                 )
 
                 ax.scatter(
-                    invalid["T_inf"],
-                    invalid[ycol],
+                    hydro["T_inf"],
+                    hydro[ycol],
                     color=species_colors[atm],
                     marker="x",
                     label="Hydrodynamic onset",
@@ -212,22 +224,23 @@ plot_vs_Tinf(
 
 # 6. Dominant-species lambda_J vs T_inf
 
-full = pd.read_csv("proteus_jeans_escape_results.csv") #change if dissociation
+full = pd.read_csv("proteus_jeans_escape_results.csv")
 
-valid = full["jeans_valid"]
-invalid = full[~full["jeans_valid"]]
+# Make sure column exists for older files
+if "unphysical_extension" not in full.columns:
+    full["unphysical_extension"] = False
 
-# pick the species with largest Mdot for each atmosphere/T_inf case
+# Remove placeholder rows before choosing dominant species
+physical_full = full[~full["unphysical_extension"]].copy()
+
 dominant = (
-    full.sort_values("Mdot_kg_s", ascending=False)
+    physical_full.sort_values("Mdot_kg_s", ascending=False)
     .groupby(["atmosphere_type", "mass_case", "flux_case", "T_inf"], as_index=False)
     .first()
 )
 
-flux_legend = [
-    Line2D([0], [0], marker="o", color="black", linestyle="None", label=r"1 $F_{\oplus}$"),
-    Line2D([0], [0], marker="^", color="black", linestyle="None", label=r"1000 $F_{\oplus}$"),
-]
+# Add unphysical rows separately from full file
+unphysical_cases = full[full["unphysical_extension"]].copy()
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
 
@@ -236,32 +249,35 @@ for idx, mas in enumerate(mass):
 
     for atm in atm_archetype:
         for inst in instellation:
+
             s = dominant[
                 (dominant["atmosphere_type"] == atm) &
                 (dominant["mass_case"] == mas) &
-                (dominant["flux_case"] == inst) 
+                (dominant["flux_case"] == inst)
             ].sort_values("T_inf")
-
-            valid = s[s["jeans_valid"]]
-            invalid = s[~s["jeans_valid"]]
 
 
             if s.empty:
                 continue
 
+            valid = s[s["jeans_valid"]]
+            hydro = s[~s["jeans_valid"]]
+
             ax.scatter(
                 valid["T_inf"],
                 valid["lambda_j"],
                 color=species_colors.get(atm),
-                marker="o" if inst == "1_F_earth" else "^",
+                marker=flux_markers[inst],
                 s=80,
             )
 
             ax.scatter(
-                invalid["T_inf"],
-                invalid["lambda_j"],
+                hydro["T_inf"],
+                hydro["lambda_j"],
                 color=species_colors.get(atm),
                 marker="x",
+                s=90,
+                linewidths=2,
             )
 
             for _, row in s.iterrows():
@@ -275,7 +291,7 @@ for idx, mas in enumerate(mass):
                     va="bottom",
                 )
 
-    ax.axhline(2, color="grey", linestyle="--", linewidth=1)
+    ax.axhline(1.5, color="grey", linestyle="--", linewidth=1)
     ax.axhline(10, color="grey", linestyle=":", linewidth=1)
 
     ax.set_yscale("log")
@@ -295,7 +311,6 @@ fig.legend(
     fontsize=12,
 )
 
-
 plt.suptitle(r"Dominant-species Jeans parameter vs $T_{\infty}$", fontsize=15)
 plt.tight_layout(rect=[0, 0.08, 1, 1])
 plt.savefig("Plots/PROTEUS_Bates_sensitivity/Constant VMR/dominant_lambda_vs_Tinf.png", dpi=300, bbox_inches="tight")
@@ -304,7 +319,6 @@ plt.close()
 
 # 7. Mass loss vs dominant-species lambda_J
 
-
 fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
 
 for idx, mas in enumerate(mass):
@@ -312,32 +326,30 @@ for idx, mas in enumerate(mass):
 
     for atm in atm_archetype:
         for inst in instellation:
+
             s = dominant[
                 (dominant["atmosphere_type"] == atm) &
                 (dominant["mass_case"] == mas) &
                 (dominant["flux_case"] == inst)
             ]
 
-            valid = s[s["jeans_valid"]]
-            invalid = s[~s["jeans_valid"]]
-
             if s.empty:
                 continue
 
             valid = s[s["jeans_valid"]]
-            invalid = s[~s["jeans_valid"]]
+            hydro = s[~s["jeans_valid"]]
 
             ax.scatter(
                 valid["lambda_j"],
                 np.log10(valid["Mdot_kg_s"].replace(0, np.nan)),
                 color=species_colors.get(atm),
-                marker="o" if inst == "1_F_earth" else "^",
+                marker=flux_markers[inst],
                 s=80,
             )
 
             ax.scatter(
-                invalid["lambda_j"],
-                np.log10(invalid["Mdot_kg_s"].replace(0, np.nan)),
+                hydro["lambda_j"],
+                np.log10(hydro["Mdot_kg_s"].replace(0, np.nan)),
                 color=species_colors.get(atm),
                 marker="x",
                 s=90,
@@ -370,11 +382,10 @@ plt.tight_layout(rect=[0, 0.08, 1, 1])
 plt.savefig("Plots/PROTEUS_Bates_sensitivity/Constant VMR/dominant_mass_loss_vs_lambda.png", dpi=300, bbox_inches="tight")
 plt.close()
 
-
 # 8. Hydrogen lambda_J vs T_inf
 
-
-hydrogen = full[full["species"] == "H"].copy()
+hydrogen = physical_full[physical_full["species"] == "H"].copy()
+unphysical_h = full[full["unphysical_extension"]].copy()
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
 
@@ -383,6 +394,7 @@ for idx, mas in enumerate(mass):
 
     for atm in atm_archetype:
         for inst in instellation:
+
             s = hydrogen[
                 (hydrogen["atmosphere_type"] == atm) &
                 (hydrogen["mass_case"] == mas) &
@@ -393,24 +405,33 @@ for idx, mas in enumerate(mass):
                 continue
 
             valid = s[s["jeans_valid"]]
-            invalid = s[~s["jeans_valid"]]
+            hydro = s[~s["jeans_valid"]]
 
             ax.plot(
                 valid["T_inf"],
                 valid["lambda_j"],
                 color=species_colors.get(atm),
-                marker="o" if inst == "1_F_earth" else "^",
                 linewidth=1.8,
-                markersize=6,
+                alpha=0.8,
             )
-            ax.plot(
-                invalid["T_inf"],
-                invalid["lambda_j"],
+
+            ax.scatter(
+                valid["T_inf"],
+                valid["lambda_j"],
+                color=species_colors.get(atm),
+                marker=flux_markers[inst],
+                s=60,
+            )
+
+            ax.scatter(
+                hydro["T_inf"],
+                hydro["lambda_j"],
                 color=species_colors.get(atm),
                 marker="x",
-                linewidth=1.8,
-                markersize=6,
+                s=90,
+                linewidths=2,
             )
+
 
     ax.axhline(1.5, color="grey", linestyle="--", linewidth=1)
     ax.axhline(10, color="grey", linestyle=":", linewidth=1)

@@ -28,6 +28,8 @@ def extend_profile_exobase(
     - hydrostatic relation dr/dzeta = H"""
 
     T0 = T[-1]
+    max_radius = 20 * r[0]
+
     r_current = r.copy()
     T_current = T.copy()
     species_current = {sp: n.copy() for sp, n in species.items()}
@@ -73,9 +75,6 @@ def extend_profile_exobase(
 
     r_ext =  r_top + dr_ext
 
-    if r_ext[-1] > 1e12:   # more than ~7000 R_earth, unphysical?
-        raise ValueError("Extension reached unphysical radius: exobase not found")
-
     n_extended = n_top * np.exp(-zeta) * (T_top/T_ext)
 
     r_ext = r_ext[1:]    # remove duplicate r_top
@@ -112,20 +111,18 @@ def extend_profile_exobase(
             M_planet,
             sigma_new,
         )
-
-        r_final = r_new[:idx + 1]
-        T_final = T_new[:idx + 1]
-
-        species_final = {
-            sp: species_new[sp][:idx + 1]
-            for sp in species_new
-        }
-
-        return r_final, T_final, species_final
-
     except ValueError:
-        r_current = r_new
-        T_current = T_new
-        species_current = species_new
+        raise ValueError("NO_EXOBASE_FOUND")
 
-    raise ValueError("No exobase found after extending profile with Bates")
+    if r_new[idx] > max_radius:
+        raise ValueError("UNPHYSICAL EXTENSION")
+
+    r_final = r_new[:idx + 1]
+    T_final = T_new[:idx + 1]
+
+    species_final = {
+        sp: species_new[sp][:idx + 1]
+        for sp in species_new
+    }
+
+    return r_final, T_final, species_final

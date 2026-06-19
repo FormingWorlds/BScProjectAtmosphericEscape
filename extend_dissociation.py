@@ -111,8 +111,8 @@ def extend_profile_exobase(
 
     r_ext =  r_top + dr_ext
 
-    if r_ext[-1] > 1e12:   # more than ~7000 R_earth, unphysical?
-        raise ValueError("Extension reached unphysical radius: exobase not found")
+    if r_ext[-1] > 20 * r[0]:   # more than ~7000 R_earth, unphysical?
+        raise ValueError("UNPHYSICAL EXTENSION")
 
     n_extended = n_top * np.exp(-zeta) * (T_top/T_ext)
 
@@ -126,7 +126,6 @@ def extend_profile_exobase(
     }
 
     species_ext = apply_full_photodissociation(species_ext) #change to dissociation instead of ct VMR
-
 
     r_new = np.concatenate([r_current, r_ext])
     T_new = np.concatenate([T_current, T_ext])

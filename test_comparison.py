@@ -166,7 +166,6 @@ for X_CO2 in sorted(subset["CO2_fraction"].unique()):
 plt.xlabel(r"EUV flux [$F_{\mathrm{EUV},\oplus}$]")
 plt.ylabel(r"Exobase temperature K")
 plt.legend()
-plt.grid(alpha=0.4)
 plt.title("Trend validation: temperature exobase and EUV")
 plt.tight_layout()
 plt.savefig('Plots/exobase_EUV.png')
@@ -182,16 +181,15 @@ for X_CO2 in sorted(subset["CO2_fraction"].unique()):
                 color = colors[X_CO2], label=f"N2:{(1-X_CO2)*10**2:.0f}%, CO2:{X_CO2*10**2:.0f}%")
 
 plt.xlabel(r"EUV flux [$F_{\mathrm{EUV},\oplus}$]")
-plt.ylabel(r"log10 weighted mass-loss rate [kg/s]")
+plt.ylabel(r"Weighted mass-loss rate [$log_{10}{\dot{M}} (kg/s$)]")
 plt.legend()
-plt.grid(alpha=0.4)
 plt.title("Trend validation: composition and EUV")
 plt.tight_layout()
 plt.savefig('Plots/trend_validation_mass_loss_EUV.png')
 plt.show()
 
 # Fig. 5-like: Jeans parameter vs FEUV for 1 Earth mass
-plt.figure()
+plt.figure(figsize=(5.5,4))
 for X_CO2 in sorted(subset["CO2_fraction"].unique(), reverse = True):
     s = subset[subset["CO2_fraction"] == X_CO2]
     plt.scatter(s["FEUV"], np.log10(s["lambda_weighted"]), marker="o", linewidths=0.5, edgecolor ='black',
@@ -199,10 +197,9 @@ for X_CO2 in sorted(subset["CO2_fraction"].unique(), reverse = True):
 
 plt.axhline(np.log10(1.5), linestyle="--", label="blow-off limit")
 plt.xlabel(r"EUV flux [$F_{\mathrm{EUV},\oplus}$]")
-plt.ylabel(r"log10 Jeans parameter")
-plt.grid(alpha = 0.4)
-plt.legend()
-plt.title("Trend validation: Jeans parameter")
+plt.ylabel(r"Jeans parameter [$log_{10}{\lambda_J}]$")
+plt.legend(fontsize=7)
+#plt.title("Trend validation: Jeans parameter")
 plt.savefig('Plots/trend_validation_jeans_parameter.png')
 plt.show()
 
@@ -218,7 +215,7 @@ for i, M_factor in enumerate(sorted(subset_mass["Mplanet_Mearth"].unique())):
                 label=f"{M_factor:.1f} Mearth")
 
 plt.xlabel(r"EUV flux [$F_{\mathrm{EUV},\oplus}$]")
-plt.ylabel(r"log10 weighted mass-loss rate [kg/s]")
+plt.ylabel(r"Weighted mass-loss rate [$log_{10}{\dot{M}} (kg/s)]$")
 plt.legend()
 plt.grid(alpha = 0.4)
 plt.title("Trend validation: planet mass")

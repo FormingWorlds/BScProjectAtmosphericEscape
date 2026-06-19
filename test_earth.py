@@ -21,7 +21,7 @@ T_exo = 1000.0          # K, thermospheric/exospheric temperature
 
 # H density chosen for present-day Earth order-of-magnitude Jeans escape.
 
-n_H_exo = 10e11        # m^-3 where to get this from?
+n_H_exo = 1e11        # m^-3 where to get this from?
 
 sigma = 3e-19           # m^2, approximate
 
