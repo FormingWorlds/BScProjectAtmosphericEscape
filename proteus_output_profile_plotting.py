@@ -1,3 +1,5 @@
+#p-T and D vs mfp
+
 import pandas as pd
 import numpy as np
 from proteus_fetch import Atmosphere, import_atmosphere
@@ -59,25 +61,27 @@ for inst in instellations:
             else:             
                 #5 H 6 mfp  
                 
+                #print(np.shape(res[6]))
+                
                 homo = res[3][0]
                 exo = int(res[4][0])
                 
                 fig, ax = plt.subplots(1, 2, figsize=(11,5))
                 
-                ax[1].plot(res[6][0][homo-1:exo+10], res[0][0][homo-1:exo+10]/100000, label=f'H mean free path; T_inf = {res[2][0]}K', alpha=0.9, c=colorstyle[0])
-                ax[1].plot(res[5][0][homo-1:exo+10], res[0][0][homo-1:exo+10]/100000, label=f'H scale height; T_inf = {res[2][0]}K', alpha=0.9, c=colorstyle[0], linestyle='dashed')
+                ax[1].plot(res[6][0][homo-1:exo+60], res[0][0][homo-1:exo+60]/100000, label=f'H mean free path; T_inf = {res[2][0]}K', alpha=0.9, c=colorstyle[0])
+                ax[1].plot(res[5][0][homo-1:exo+60], res[0][0][homo-1:exo+60]/100000, label=f'H scale height; T_inf = {res[2][0]}K', alpha=0.9, c=colorstyle[0], linestyle='dashed')
                 ax[1].axhline(y = res[0][0][int(res[4][0])]/100000, color =colorstyle[0], linestyle ="-.", alpha=0.3)
                 
-                ax[1].plot(res[6][9][homo-1:exo+10], res[0][9][homo-1:exo+10]/100000, label=f'H mean free path; T_inf = {res[2][9]}K', alpha=0.9, c=colorstyle[4])
-                ax[1].plot(res[5][9][homo-1:exo+10], res[0][9][homo-1:exo+10]/100000, label=f'H scale height; T_inf = {res[2][9]}K', alpha=0.9, c=colorstyle[4], linestyle='dashed')
+                ax[1].plot(res[6][9][homo-1:exo+60], res[0][9][homo-1:exo+60]/100000, label=f'H mean free path; T_inf = {res[2][9]}K', alpha=0.9, c=colorstyle[4])
+                ax[1].plot(res[5][9][homo-1:exo+60], res[0][9][homo-1:exo+60]/100000, label=f'H scale height; T_inf = {res[2][9]}K', alpha=0.9, c=colorstyle[4], linestyle='dashed')
                 ax[1].axhline(y = res[0][9][int(res[4][9])]/100000, color =colorstyle[4], linestyle ="-.", alpha=0.3)
                 
                 ax[1].set_yscale('log')
                 ax[1].set_xscale('log')
                 ax[1].yaxis.set_inverted(True)
-                ax[1].set_xlabel('Scale height/mean free path [m]')
-                ax[1].set_ylabel('Pressure [bar]')
-                ax[1].legend()
+                ax[1].set_xlabel('Scale height/mean free path [m]', fontsize=11)
+                ax[1].set_ylabel('Pressure [bar]', fontsize=11)
+                ax[1].legend(fontsize=11)
                 
                  
                 ax[0].plot(res[1][0], res[0][0]/100000, label=f'T_inf = {res[2][0]}K', alpha=0.6)
@@ -101,19 +105,20 @@ for inst in instellations:
                 ax[0].axhline(y = res[0][0][res[3]]/100000, color ="#882255", linestyle ="--", label='Homopause', alpha=0.8)
                 
                 #fig.suptitle(f'p-T profiles of {system}, {m}, {instellation}')
-                ax[0].set_xlabel('Temperature [K]')
-                ax[0].set_ylabel('Pressure [bar]')
+                ax[0].set_xlabel('Temperature [K]', fontsize=11)
+                ax[0].set_ylabel('Pressure [bar]', fontsize=11)
                 ax[0].set_yscale('log')
                 #plt.xscale('log')
                 ax[0].yaxis.set_inverted(True)
-                ax[0].legend()
+                ax[0].legend(fontsize=11)
+                ax[0].tick_params(axis='both', which='major', labelsize=11)    
+                ax[1].tick_params(axis='both', which='major', labelsize=11)    
                 
                 plt.tight_layout()
-                plt.savefig(f'{specie}_{m}_{inst}_p-T_mfpH.png')
-                plt.savefig(f'{specie}_{m}_{inst}_p-T_mfpH.pdf')
+                #plt.savefig(f'{specie}_{m}_{inst}_p-T_mfpH.png')
+                #plt.savefig(f'{specie}_{m}_{inst}_p-T_mfpH.pdf')
                 plt.show()
                 plt.close() 
-                
                 
                 
                 

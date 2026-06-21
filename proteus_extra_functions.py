@@ -83,7 +83,7 @@ def Bates_extension(homopause_index, T_inf, M, R, T, p, z, rho, mmw, VMR, Kzz):
     Kzz = Kzz[:homopause_index+1]
         
     #extending p
-    steps = 30
+    steps = 200
     p_ext = np.logspace(np.log10(p[-1]), -12, steps+1)[1:]  
         
     #extending the constant values: mmw, vmr, Kzz

@@ -1,3 +1,5 @@
+#species vs jeans 
+
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
@@ -18,7 +20,9 @@ T_infs = np.array([200, 300, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
 
 diff_jeans = pd.read_csv('analysis/proteus_diff_vs_jeans.csv')
 
-fig, ax = plt.subplots(figsize=(8,6))
+fig = plt.figure(figsize=(8,6))
+gs = fig.add_gridspec(2, 2, hspace=0, wspace=0)
+(ax1, ax2), (ax3, ax4) = gs.subplots(sharex='col', sharey='row')
 
 
 colors = {
@@ -37,7 +41,6 @@ flux_markers = {
 }
 
 
-
 for atm in atm_archetype:
     for inst in instellations:
         for m in mass:  
@@ -53,66 +56,99 @@ for atm in atm_archetype:
                 
                 lim_diss_cgs = float(row['Lim_flux_disso[cgs]'].values[0])    
                 lim_H_cgs = float(row['Lim_flux_H[cgs]'].values[0])    
-                     
-                if((atm=='N2')&(m=='1_M_earth')&(inst=='1000_F_earth')):
                     
-                    ax.scatter(
-                        T, lim_H_cgs,
-                        color=colors[atm],
-                        alpha=0.5,
-                        marker = 'o',
-                        s=80
-                    )
-                    ax.scatter(
-                        T, lim_diss_cgs,
-                        color=colors[atm],
-                        alpha=0.5,
-                        marker = '^',
-                        s=80
-                    )
-
-                elif((atm=='H2O')&(m=='1_M_earth')&(inst=='1000_F_earth')):
-                    ax.scatter(
-                        T, lim_H_cgs,
-                        color=colors[atm],
-                        alpha=0.5,
-                        marker = 'o',
-                        s=80
-                    )
-                    ax.scatter(
-                        T, lim_diss_cgs,
-                        color=colors[atm],
-                        alpha=0.5,
-                        marker = '^',
-                        s=80
-                    )             
+                if(atm=='CO2'):   
+                    if((m=='1_M_earth') and (inst=='1_F_earth')):
+                        ax1.scatter(
+                            T, jeans_H,
+                            color="#332288",
+                            alpha=0.5,
+                            marker = 'x',
+                            s=20
+                        )
+                        ax1.scatter(
+                            T, lim_H,
+                            color=colors[atm],
+                            alpha=0.5,
+                            marker = specie_markers[m],
+                            s=flux_markers[inst]
+                        )
+                    elif((m=='10_M_earth') and (inst=='1_F_earth')):
+                        ax2.scatter(
+                            T, jeans_H,
+                            color="#332288",
+                            alpha=0.5,
+                            marker = 'x',
+                            s=20
+                        )
+                        ax2.scatter(
+                            T, lim_H,
+                            color=colors[atm],
+                            alpha=0.5,
+                            marker = specie_markers[m],
+                            s=flux_markers[inst]
+                        )
+                    elif((m=='1_M_earth') and (inst=='1000_F_earth')):
+                        ax3.scatter(
+                            T, jeans_H,
+                            color="#332288",
+                            alpha=0.5,
+                            marker = 'x',
+                            s=20
+                        )
+                        ax3.scatter(
+                            T, lim_H,
+                            color=colors[atm],
+                            alpha=0.5,
+                            marker = specie_markers[m],
+                            s=flux_markers[inst]
+                        )
+                    elif((m=='10_M_earth') and (inst=='1000_F_earth')):
+                        ax4.scatter(
+                            T, jeans_H,
+                            color="#332288",
+                            alpha=0.5,
+                            marker = 'x',
+                            s=20
+                        )
+                        ax4.scatter(
+                            T, lim_H,
+                            color=colors[atm],
+                            alpha=0.5,
+                            marker = specie_markers[m],
+                            s=flux_markers[inst]
+                        )
+                         
                                  
-ax.set_yscale('log')
+ax1.set_yscale('log')
+ax2.set_yscale('log')
+ax3.set_yscale('log')
+ax4.set_yscale('log')
+
 
 fig.supxlabel('Exobase extension limit [K]')
-fig.supylabel('Diffusion limited flux [cm$^{-2}$ $\cdot$ s$^{-1}$]')
+fig.supylabel('Diffusion limited flux [kg $\cdot$ s$^{-1}$]')
 
-legend_handles1 = [
-    Line2D([0], [0], color=colors['H2O'],
-        label='H2O', marker='o', linewidth=0, alpha=0.5),
-    Line2D([0], [0], color=colors['N2'],
-        label='N2', marker='o', linewidth=0, alpha=0.5),
-]
-legend1 = fig.legend(handles=legend_handles1, loc='outside upper left', ncols=2, bbox_to_anchor=(0.102, 0.995),
-    borderaxespad=0.)
-fig.add_artist(legend1)
 
 legend_handles2 = [
-    Line2D([0], [0], color="#332288",
-        label='Full dissociation', marker='^', linewidth=0, markersize=8, alpha=0.5),
+    Line2D([0], [0], color=colors['CO2'],
+        label='$M_{\mathrm{p}} = 1M_{\mathrm{Earth}}$, $F = 1F_{\mathrm{Earth}}$', marker=specie_markers['1_M_earth'], linewidth=0, markersize=5, alpha=0.5),
 
+    Line2D([0], [0], color=colors['CO2'],
+        label='$M_{\mathrm{p}} = 1M_{\mathrm{Earth}}$, $F = 1000F_{\mathrm{Earth}}$', marker=specie_markers['1_M_earth'], linewidth=0, markersize=10, alpha=0.5),
+    
+    Line2D([0], [0], color=colors['CO2'],
+        label='$M_{\mathrm{p}} = 10M_{\mathrm{Earth}}$, $F = 1F_{\mathrm{Earth}}$', marker=specie_markers['10_M_earth'], linewidth=0, markersize=5, alpha=0.5),
+    
+    Line2D([0], [0], color=colors['CO2'],
+        label='$M_{\mathrm{p}} = 10M_{\mathrm{Earth}}$, $F = 1000F_{\mathrm{Earth}}$', marker=specie_markers['10_M_earth'], linewidth=0, markersize=10, alpha=0.5),
+    
     Line2D([0], [0], color="#332288",
-        label='Only atomic H', marker='o', linewidth=0, markersize=8, alpha=0.5),
-
+        label='Calculated Jeans escape flux', marker='x', linewidth=0, markersize=5, alpha=0.5)
 ]
-legend2 = fig.legend(handles=legend_handles2, loc='outside upper right', ncols=2, bbox_to_anchor=(0.98, 0.997),
+legend2 = fig.legend(handles=legend_handles2, loc='outside upper center', ncols=3, bbox_to_anchor=(0.52, 0.995),
     borderaxespad=0.) 
 
 
-plt.tight_layout(rect=[0, 0, 1, 0.975])
+plt.tight_layout(rect=[0, 0, 1, 0.94])
 plt.show() 

@@ -75,4 +75,4 @@ export_dict = {
 }
                 
 df = pd.DataFrame(export_dict)
-df.to_csv('proteus_diffusion_limit_results_full_disso.csv', index=False)
+df.to_csv('proteus_diffusion_limit_results_only_H.csv', index=False)
