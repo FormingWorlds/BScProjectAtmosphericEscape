@@ -10,12 +10,12 @@ alpha     = -0.25       #from Yelle
 #each of the 6 diffusing species has a changeable "dissociation" parameter controlling the amount of free hydrogen diffusing
 #fraction of the initial molecules that are fully dissociated (the physics module takes into account the differing amount of atoms in different molecules)
 disso_fracs = {   
-    "H2" : 0,
-    "H2O": 0,
+    "H2" : 1,
+    "H2O": 1,
     "H"  : 1,
-    "CH4": 0,
-    "NH3": 0,
-    "H2S": 0
+    "CH4": 1,
+    "NH3": 1,
+    "H2S": 1
 }
 
 

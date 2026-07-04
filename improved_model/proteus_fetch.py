@@ -22,24 +22,7 @@ class Atmosphere:
         self.diff_coeffs = diff_coeffs  #[cgs]
         self.planet_mass = planet_mass  #[kg]
         self.planet_rad  = planet_rad   #[m]
-        
-    
-    # def Kzz_extension(self):
-    #     """extends Kzz up to 10^-13 bar assuming its a power law"""
-        
-    #     steps = 30
-        
-    #     K = self.Kzz
-    #     p = self.pressure
-        
-    #     slope = (np.log10(K[-1]) - np.log10(K[-10]))/(np.log10(p[-1]) - np.log10(p[-10]))
-    #     p_ext = np.logspace(np.log10(p[-1]), -8, steps)
-    #     K_ext = ((p_ext/p[-1])**slope) * K[-1]
-        
-    #     K = np.concatenate((K, K_ext), axis=0)
-    #     p = np.concatenate((p, p_ext), axis=0)
-        
-    #     return(K, p)
+
     
     
     def Kzz_extension(self):
