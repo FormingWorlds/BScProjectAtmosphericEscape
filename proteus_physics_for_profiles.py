@@ -109,7 +109,7 @@ def proteus_profiles(atm, system, disso_fracs):
             
             
             
-            p_b_list.append(p_b)
+            #p_b_list.append(p_b)
             T_b_list.append(T_b)
             z_b_list.append(z_b)
             rho_b_list.append(rho_b)
@@ -125,52 +125,52 @@ def proteus_profiles(atm, system, disso_fracs):
             H_list.append(H)
             exo_id_list.append(exo_id)
             
-        T_b_arr = np.asarray(T_b_list, dtype='float64')
-        p_b_arr = np.asarray(p_b_list, dtype='float64')
-        z_b_arr = np.asarray(z_b_list, dtype='float64')
-        rho_b_arr = np.asarray(rho_b_list, dtype='float64')
-        exo_id_arr = np.asarray(exo_id_list, dtype='float64')
-        H_arr = np.asarray(H_list, dtype='float64')
-        mfp_arr = np.asarray(mfp_list, dtype='float64')
-        return(p_b_arr, T_b_arr, T_inf, hom_list, exo_id_arr, H_arr, mfp_arr)
+        # T_b_arr = np.asarray(T_b_list, dtype='float64')
+        # p_b_arr = np.asarray(p_b_list, dtype='float64')
+        # z_b_arr = np.asarray(z_b_list, dtype='float64')
+        # rho_b_arr = np.asarray(rho_b_list, dtype='float64')
+        # exo_id_arr = np.asarray(exo_id_list, dtype='float64')
+        # H_arr = np.asarray(H_list, dtype='float64')
+        # mfp_arr = np.asarray(mfp_list, dtype='float64')
+        # return(p_b_arr, T_b_arr, T_inf, hom_list, exo_id_arr, H_arr, mfp_arr)
             
 
 
-        #     if isinstance(exo_id, np.int64):
-        #         #limiting flux calculation
-        #         #minor constituent (here - atomic hydrogen) mean molecular mass, [kg]
-        #         m_i = molarmasses['H']/N_A
+            if isinstance(exo_id, np.int64):
+                #limiting flux calculation
+                #minor constituent (here - atomic hydrogen) mean molecular mass, [kg]
+                m_i = molarmasses['H']/N_A
                 
-        #         #re-defining the arrays with the new limits for easier use
-        #         z_hom = z_b[hom_id]
-        #         z_exo = z_b[exo_id+1]
-        #         T_b = T_b[hom_id:exo_id+1]
-        #         p_b = p_b[hom_id:exo_id+1]
-        #         D_b = D[hom_id:exo_id+1]
-        #         rho_b = rho_b[hom_id:exo_id+1]
-        #         K_b = K_b[hom_id:exo_id+1]
-        #         mmw_b = mmw_b[hom_id:exo_id+1]
-        #         for specie in VMR_b:
-        #             VMR_b[specie] = VMR_b[specie][hom_id:exo_id+1]
+                #re-defining the arrays with the new limits for easier use
+                z_hom = z_b[hom_id]
+                z_exo = z_b[exo_id+1]
+                T_b = T_b[hom_id:exo_id+1]
+                p_b = p_b[hom_id:exo_id+1]
+                D_b = D[hom_id:exo_id+1]
+                rho_b = rho_b[hom_id:exo_id+1]
+                K_b = K_b[hom_id:exo_id+1]
+                mmw_b = mmw_b[hom_id:exo_id+1]
+                for specie in VMR_b:
+                    VMR_b[specie] = VMR_b[specie][hom_id:exo_id+1]
                     
-        #         #extending D
-        #         p_atm = p_b/101325 #pressure in [atm], needed for Slattery function
-        #         m_a = mmw_b/N_A #overall mean molecular mass of a single molecule, [kg]
-        #         n_b = (rho_b/m_a) * 1e-4  #particle number density in cgs [1/cm^3]
+                #extending D
+                p_atm = p_b/101325 #pressure in [atm], needed for Slattery function
+                m_a = mmw_b/N_A #overall mean molecular mass of a single molecule, [kg]
+                n_b = (rho_b/m_a) * 1e-4  #particle number density in cgs [1/cm^3]
                 
-        #         A = atm.diff_coeffs['H']['A']
-        #         s = atm.diff_coeffs['H']['s']
+                A = atm.diff_coeffs['H']['A']
+                s = atm.diff_coeffs['H']['s']
                 
-        #         if np.shape(atm.diff_coeffs['H']['A'])[0] == 0:
-        #             D_b = slattery_diff(T_b, p_atm, 'H', system)
-        #         else:
-        #             b = A*(T_b**s)
-        #             D_b = b/n_b
+                if np.shape(atm.diff_coeffs['H']['A'])[0] == 0:
+                    D_b = slattery_diff(T_b, p_atm, 'H', system)
+                else:
+                    b = A*(T_b**s)
+                    D_b = b/n_b
                     
                     
-        #         D_list.append(D_b)
-        #         p_b_list.append(p_b)
-        # return(D_list, p_b_list)
+                D_list.append(D_b)
+                p_b_list.append(p_b)
+        return(D_list, p_b_list)
                     
                 
         #         #the definition of xi from Yelle
