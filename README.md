@@ -17,7 +17,7 @@ The files **exobase.py**, **physics.py**, and **jeans.py** implement the core eq
 # Running the code
 
 The **proteus_ct_VMR.py** and **proteus_dissociation.py** are the files that should be run to generate the output CSV files of the Jeans escape rates for the two cases taken into account: constant VMR and photodissociation, respectively. They depend on **extend_ct_VMR.py** and **extend_dissociation** to create the extension in the two upper-atmosphere assumptions.
-# Figure Mapping (from the Plotting Code and Validation checks folder)
+# Figure Mapping (from the Plotting Code and Validation Checks folder)
 
 The plotting scripts read the CSV files produced by **proteus_ct_VMR.py** and **proteus_dissociation.py** to reproduce the figures in the thesis.
 
@@ -25,6 +25,7 @@ For the Validation section, the folder Validation Checks contains all the necess
 1. **testcase.py** is the first check (Table 3.1)
 2. **test_earth.py** is the Earth case test (Table 3.2)
 3. **test_comparison.py** is the Van Looveren comparison: Figures 3.1, 3.2, 3.3
+
 The **geometry_test.py** script tests whether the day-side area loss is exactly half of the full-side area and is just a physical check.
 
 For the rest of the results:
