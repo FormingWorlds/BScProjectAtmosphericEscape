@@ -12,13 +12,29 @@ from el_escape import el_escape_rate
 
 
 def calc_sound_speed(T_wind, mu_wind):
-    '''
-    Calculates the sound speed of the escaping atmosphere.
+    """
+    Calculate the isothermal sound speed of the escaping atmosphere.
 
-    Takes input parameters: x [unit], y [unit], z [unit], ...
+    Parameters
+    ----------
+    T_wind : float
+        Wind temperature in K.
+    mu_wind : float
+        Mean molecular weight of the wind in proton masses.
 
-    All calculations done in SI units.
-    '''
+    Returns
+    -------
+    float
+        Sound speed in m s^-1.
+
+    Notes
+    -----
+    The sound speed is calculated as
+
+        c_s = sqrt(k_B T / (mu m_p))
+
+    where k_B is the Boltzmann constant and m_p is the proton mass.
+    """
     k_b = sp.constants.k #[J K^-1]
     m_p = sp.constants.m_p #[kg]
     c_s = np.sqrt((k_b * T_wind) / (mu_wind * m_p)) #[m s^-1] sound speed, where k_B: Boltzmann constant, T: temperature, mu: mean molecular weight, m_p: proton mass
@@ -27,13 +43,35 @@ def calc_sound_speed(T_wind, mu_wind):
 
 
 def calc_sonic_point_radius(M_p, c_s, R_base):
-    '''
-    Calculates the radius to the sonic point of the atmosphere.
+    """
+    Calculate the radius of the sonic point.
 
-    Takes input parameters: planetary mass [kg], speed of sound for medium [m s^-1], and the radius to the XUV photosphere [m]
+    Parameters
+    ----------
+    M_p : float
+        Planetary mass in kg.
+    c_s : float
+        Sound speed in m s^-1.
+    R_base : float
+        Radius of the XUV photosphere in m.
 
-    All calculations done in SI units.
-    '''
+    Returns
+    -------
+    tuple
+        (R_s, is_transonic, R_s_calc), where
+
+        - R_s : float
+            Sonic point radius in m.
+        - is_transonic : bool
+            True if the calculated sonic point lies above the wind base.
+        - R_s_calc : float
+            Sonic point radius from the Parker wind solution before any adjustment.
+
+    Notes
+    -----
+    If the calculated sonic point lies below the wind base, the wind is
+    assumed not to become transonic and R_s is set equal to R_base.
+    """
     ### calculates R_s based on input ###
     G = sp.constants.G #[m^3 kg^-1 s^-2] 
     R_s_calc = G * M_p / (2 * c_s**2) #[m] radius to the sonic point, where G: gravitational constant, M_p: planetary mass, c_s: sound speed
@@ -48,14 +86,39 @@ def calc_sonic_point_radius(M_p, c_s, R_base):
 
 
 def calc_density_at_sonic_point(M_p, F_xuv, nu_0, R_s, c_s, R_base, mu_plus_wind, rr_coeff):
-    '''
-    Calculates the density at the sonic point.
+    """
+    Calculate the mass density at the sonic point.
 
-    Takes input parameters: x [unit], y [unit], z [unit], ...
+    Parameters
+    ----------
+    M_p : float
+        Planetary mass in kg.
+    F_xuv : float
+        Incident XUV flux in W m^-2.
+    nu_0 : float
+        Ionization threshold frequency in Hz.
+    R_s : float
+        Sonic point radius in m.
+    c_s : float
+        Sound speed in m s^-1.
+    R_base : float
+        Radius of the XUV photosphere in m.
+    mu_plus_wind : float
+        Mean molecular weight of the ionized wind in proton masses.
+    rr_coeff : float
+        Case B radiative recombination coefficient in cm^3 s^-1.
 
-    All calculations done in SI units. So it will convert the rr_coeff from cm^3 s^-1 to m^3 s^-1 if it is given, and if not it will use the hydrogen formula for the recombination coefficient.
-    '''
+    Returns
+    -------
+    float
+        Density at the sonic point in kg m^-3.
 
+    Notes
+    -----
+    The recombination coefficient is converted internally from cm^3 s^-1
+    to m^3 s^-1 before calculating the base density and propagating it to
+    the sonic point.
+    """
     h = sp.constants.h #[J s] 
     
     alpha_rec_B = rr_coeff * cm_to_m**3 #[m^3 s^-1] recombination coefficient for case B recombination for the dominant species in the escaping atmosphere, where rr_coeff: recombination coefficient for radiative case B recombination for the dominant species in the escaping atmosphere in cm^3 s^-1
@@ -74,26 +137,45 @@ def calc_density_at_sonic_point(M_p, F_xuv, nu_0, R_s, c_s, R_base, mu_plus_wind
 
 #In the input box I put the so-far necessary inputs from atmosphere profile for this func to work
 def rr_escape_rate(rho_s, c_s, R_s):
-    '''
-    Calculates the radiation-recombination-limited escape rate.
+    """
+    Calculate the radiation-recombination-limited mass-loss rate.
 
-    Takes input parameters: x [unit], y [unit], z [unit], ...
+    Parameters
+    ----------
+    rho_s : float
+        Density at the sonic point in kg m^-3.
+    c_s : float
+        Sound speed in m s^-1.
+    R_s : float
+        Sonic point radius in m.
 
-    All calculations done in SI units.
-    '''
+    Returns
+    -------
+    float
+        Mass-loss rate in kg s^-1.
+    """
  
     M_rr_rate = 4 * np.pi* rho_s * c_s * R_s**2 #[kg s^-1] radiation-recombination-limited escape rate REFERENCE: Lopez 2017 eq. 4, where rho_s: density at the sonic point, c_s: sound speed, R_s: radius to the sonic point
 
     return M_rr_rate 
 
 def get_escape_diagnostics(atm):
-    '''
-    Calculates the radiation-recombination-limited escape rate and all the necessary parameters for the calculation.
+    """
+    Calculate radiation-recombination escape diagnostics.
 
-    Takes input parameters: x [unit], y [unit], z [unit], ...
+    Parameters
+    ----------
+    atm : Atmosphere
+        Atmosphere object containing the planetary, stellar, and wind
+        properties required for the calculations.
 
-    All calculations done in SI units.
-    '''
+    Returns
+    -------
+    dict
+        Dictionary containing the calculated wind properties, escape rates,
+        and diagnostic flags used to determine whether the atmosphere is in
+        the radiation-recombination-limited regime.
+    """
     #### RR escape rate ####
     c_s = calc_sound_speed(atm.T_wind, atm.mu_wind)
     R_s, is_transonic, R_s_calc = calc_sonic_point_radius(atm.M_p, c_s, atm.R_base)
@@ -125,14 +207,23 @@ def get_escape_diagnostics(atm):
 
     }
 
-def examine_atmosphere_for_rr_escape(atm, P_base=10**(-4)):
-    '''
-    Examines whether the atmosphere is in the radiation-recombination-limited escape regime and prints the necessary diagnostics.
+def examine_atmosphere_for_rr_escape(atm):
+    """
+    Print a summary of radiation-recombination escape diagnostics.
 
-    Takes input parameters: x [unit], y [unit], z [unit], ...
+    Parameters
+    ----------
+    atm : Atmosphere
+        Atmosphere object containing the planetary, stellar, and wind
+        properties.
 
-    All calculations done in SI units.
-    '''
+    Notes
+    -----
+    The function prints the atmospheric properties, evaluates whether the
+    planet is expected to support a hydrodynamic wind based on the
+    gravitational potential criterion of Salz et al. (2016), and reports the
+    calculated radiation-recombination- and energy-limited escape rates.
+    """
     print("Examining the following atmosphere:")
     
     print(f"Dominant species at the base of the escaping atmosphere: {atm.dominant_species}")

@@ -1,7 +1,6 @@
 ### This file will give birth to different stellar types which will be used to investigate the effect of different stellar types on the escape regime and rate of an atmosphere. ###
 import numpy as np
 import scipy as sp
-from matplotlib import pyplot as plt
 from conversions import cm_to_m, erg_to_joule
 
 solar_mass = 1.989 * 10**30 #kg

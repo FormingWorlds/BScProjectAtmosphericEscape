@@ -9,6 +9,7 @@ from atmospheres.simple_H2He_mix import atm_wasp80b, atm_gj1214b
 from atmospheres.simple_H2O import atm_H2O
 import os
 width = os.get_terminal_size().columns 
+import numpy as np
 
 
 ### Doing escape calculations ###
@@ -16,6 +17,12 @@ width = os.get_terminal_size().columns
 #atm = proteus_atmosphere_cases['H2_1_M_earth_1_F_earth']
 examine_atmosphere_for_rr_escape(atm_wasp80b)
 examine_atmosphere_for_rr_escape(atm_gj1214b)
+print('-' * width)
+results_wasp =get_escape_diagnostics(atm_wasp80b)
+results_gj = get_escape_diagnostics(atm_gj1214b)
+print(f'Wasp80b: log10 rr: {np.log10(results_wasp["escape_rate_rr [kg/s]"]):.3g}, log10 el: {np.log10(results_wasp["escape_rate_el [kg/s]"]):.3g}, rr: {results_wasp['escape_rate_rr [kg/s]']:.2g}, el: {results_wasp["escape_rate_el [kg/s]"]:.2g}')
+print()
+print(f'GJ1214b: log10 rr: {np.log10(results_gj["escape_rate_rr [kg/s]"]):.3g}, log10 el: {np.log10(results_gj["escape_rate_el [kg/s]"]):.3g}, rr: {results_gj["escape_rate_rr [kg/s]"]:.2g}, el: {results_gj["escape_rate_el [kg/s]"]:.2g}')
 print('-' * width)
 print('SIMPLE ATMOSPHERES')
 print('-' * width)

@@ -18,6 +18,53 @@ wind_microphysics = {
 class Atmosphere:
     
     def __init__(self, M_p, pressures, heights, temperatures, F_xuv=None, dominant_species=None, T_wind=10**(4), vmrs=None, P_base=10**(-4), nu_0=None, mu_wind=None, mu_plus_wind=None, R_p=None, determine_radius=False, rr_coeff=None, epsilon_xuv=None):
+        """
+        Initialize an atmosphere object for escape calculations.
+
+        Parameters
+        ----------
+        M_p : float
+            Planetary mass in kg.
+        pressures : ndarray
+            Atmospheric pressure profile in Pa.
+        heights : ndarray
+            Altitude profile above the planetary radius in m.
+        temperatures : ndarray
+            Atmospheric temperature profile in K.
+        F_xuv : float
+            Incident stellar XUV flux in W m^-2.
+        dominant_species : str, optional
+            Dominant atmospheric species. Used to assign wind microphysics if
+            volume mixing ratios are not provided.
+        T_wind : float, optional
+            Assumed wind temperature in K. Default is 1e4 K.
+        vmrs : dict, optional
+            Dictionary mapping species names to arrays of volume mixing ratios.
+        P_base : float, optional
+            Pressure defining the base of the escaping atmosphere in Pa.
+            Default is 1e-4 Pa.
+        nu_0 : float, optional
+            Ionization threshold frequency in Hz.
+        mu_wind : float, optional
+            Mean molecular weight of the neutral wind in proton masses.
+        mu_plus_wind : float, optional
+            Mean molecular weight of the ionized wind in proton masses.
+        R_p : float, optional
+            Planetary radius in m.
+        determine_radius : bool, optional
+            If True, estimate the planetary radius from the mass-radius relation
+            of Parc et al. (2024). Otherwise, `R_p` must be supplied.
+        rr_coeff : float, optional
+            Case B radiative recombination coefficient in cm^3 s^-1.
+        epsilon_xuv : float, optional
+            Energy-limited evaporation efficiency.
+
+        Notes
+        -----
+        After initialization, the wind base is identified, the wind
+        microphysics are determined, and all parameters required for
+        radiation-recombination-limited escape calculations are stored.
+        """
         #input chosen by user
         self.P_base = P_base #[Pa] pressure at the base of the escaping atmosphere, REFERENCE Lopez et. al. 2017
         
@@ -60,13 +107,25 @@ class Atmosphere:
 
     
     def read_off_wind_base_parameters(self):
-        '''
-        Reads off the necessary parameters for the radiation-recombination-limited escape rate calculation at the base of the escaping atmosphere.
+        """
+        Determine the properties at the base of the escaping atmosphere.
 
-        Takes input parameters: x [unit], y [unit], z [unit], ...
+        The wind base is defined as the point in the atmospheric profile whose
+        pressure is closest to `self.P_base`.
 
-        All calculations done in SI units.
-        '''
+        Sets
+        ----
+        P_base_at_R_base : float
+            Pressure at the selected wind base in Pa.
+        R_base : float
+            Radius of the wind base in m.
+        T_base : float
+            Temperature at the wind base in K.
+        vmrs_base : dict, optional
+            Volume mixing ratios at the wind base.
+        dominant_species : str, optional
+            Species with the highest volume mixing ratio at the wind base.
+        """
         #finds the absolute difference between the pressure profile and the target pressure at the base of the escaping atmosphere
         difference_array = np.absolute(self.pressures - self.P_base) #[Pa] array of the absolute difference between the pressure profile and the pressure at the base of the escaping atmosphere, where pressures: pressure profile of the atmosphere based on the barometric formula, P_base: pressure at the base of the escaping atmosphere
         
@@ -86,14 +145,38 @@ class Atmosphere:
         
 
     def determine_wind_microphysics(self, nu_0, mu_wind, mu_plus_wind, dominant_species, rr_coeff, epsilon_xuv):
-        '''
-        Determines the microphysics parameters for the escaping wind based on the dominant species at the base of the escaping atmosphere.
+        """
+        Assign the microphysical properties of the escaping wind.
 
-        Takes input parameters: 
-        Atmosphere object, must have a vmrs attribute to determine the dominant species at the base of the escaping atmosphere from. 
+        Parameters
+        ----------
+        nu_0 : float or None
+            Ionization threshold frequency in Hz.
+        mu_wind : float or None
+            Mean molecular weight of the neutral wind.
+        mu_plus_wind : float or None
+            Mean molecular weight of the ionized wind.
+        dominant_species : str or None
+            Dominant atmospheric species.
+        rr_coeff : float or None
+            Case B radiative recombination coefficient in cm^3 s^-1.
+        epsilon_xuv : float or None
+            Energy-limited evaporation efficiency.
 
-        All calculations done in SI units.
-        '''
+        Notes
+        -----
+        The parameters are determined using the following priority:
+
+        1. User-supplied microphysics.
+        2. Dominant species inferred from the atmospheric composition.
+        3. User-supplied dominant species matched against the internal
+        microphysics dictionary.
+
+        Raises
+        ------
+        ValueError
+            If the required wind microphysics cannot be determined.
+        """
         #Checks for manual input first
         if nu_0 is not None and mu_wind is not None and mu_plus_wind is not None and rr_coeff is not None:
             if dominant_species is not None:
@@ -141,6 +224,25 @@ class Atmosphere:
 
     @staticmethod
     def determine_radius_from_MR_relation(M_p):
+        """
+        Estimate the planetary radius from its mass.
+
+        Parameters
+        ----------
+        M_p : float
+            Planetary mass in kg.
+
+        Returns
+        -------
+        float
+            Estimated planetary radius in m.
+
+        Notes
+        -----
+        Uses the piecewise mass-radius relation presented by Parc et al. (2024).
+        The input mass is converted to Earth masses, the empirical relation is
+        evaluated, and the resulting radius is returned in SI units.
+        """
         M_earth = 5.9722 * 10**24  # [kg]
         R_earth = 6.371 * 10**6    # [m] (Mean Earth radius in SI meters)
     

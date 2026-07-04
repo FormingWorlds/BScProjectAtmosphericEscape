@@ -1,7 +1,6 @@
 #functions for plotting parameters of the planets and the escape stuff
-import os
+
 import matplotlib.pyplot as plt
-import scienceplots
 import numpy as np
 plt.style.use('science') 
 
@@ -9,11 +8,10 @@ output_dir = "plots/latest_plots"
 
 def plot_R_over_P(atm):
     '''
-    Plots the pressure profile of the atmosphere as a function of radius.
+    
+    Takes input parameters: atmosphere object with attributes radii and pressures.
 
-    Takes input parameters: x [unit], y [unit], z [unit], ...
-
-    All calculations done in SI units.
+    Saves a plot of the pressure profile of the atmosphere as a function of radius, with the x-axis inverted to make it more intuitive.
     '''
     plt.figure(figsize=(8,6))
     plt.plot(atm.pressures, atm.radii)
@@ -29,11 +27,8 @@ def plot_R_over_P(atm):
 
 def plot_R_over_T(atm):
     '''
-    Plots the temperature profile of the atmosphere as a function of radius.
-
     Takes input parameters: atmosphere object with attributes radii and temperatures.
-
-    All calculations done in SI units.
+    Saves a plot of the temperature profile of the atmosphere as a function of radius.
     '''
     plt.figure(figsize=(8,6))
     plt.plot(atm.T, atm.radii)
@@ -47,11 +42,8 @@ def plot_R_over_T(atm):
 
 def plot_P_over_T(atm):
     '''
-    Plots the temperature profile of the atmosphere as a function of pressure.
-
     Takes input parameters: atmosphere object with attributes pressures and temperatures.
-
-    All calculations done in SI units.
+    Saves a plot of the temperature profile of the atmosphere as a function of pressure.
     '''
     plt.figure(figsize=(8,6))
     plt.plot(atm.T, atm.pressures)
@@ -68,9 +60,8 @@ def plot_M_planet_over_M_dot(masses, M_dots, regime_break_index=None):
     '''
     Plots the mass loss rate of the atmosphere as a function of planetary mass.
 
-    Takes input parameters: atmosphere object with attribute M_p, and mass loss rate M_dot.
+    Takes input parameters: planetary masses, corresponding mass loss rates, and optionally at which mass the regime break occurs.
 
-    All calculations done in SI units.
     '''
     plt.figure(figsize=(8,6))
     plt.plot(masses, M_dots, label="Mass loss rate per mass")
@@ -89,9 +80,9 @@ def plot_R_planet_over_M_dot(radii, M_dots, regime_break_index=None):
     '''
     Plots the mass loss rate of the atmosphere as a function of planetary mass.
 
-    Takes input parameters: atmosphere object with attribute M_p, and mass loss rate M_dot.
+    Takes input parameters: planetary radii, corresponding mass loss rates, and optionally at which radius the regime break occurs.
 
-    All calculations done in SI units.
+
     '''
     plt.figure(figsize=(8,6))
     plt.plot(M_dots, radii, label="Mass loss rate per radius")
@@ -109,9 +100,8 @@ def plot_xuv_flux_over_M_dot(fluxes, M_dots, regime_break_index=None, compare=Fa
     '''
     Plots the mass loss rate of the atmosphere as a function of XUV flux.
 
-    Takes input parameters: 
+    Takes input parameters: XUV fluxes, corresponding mass loss rates, and optionally at which flux the regime break occurs.
 
-    All calculations done in SI units.
     '''
     plt.figure(figsize=(8,6))
     plt.plot(fluxes, M_dots, label="Modelled")
