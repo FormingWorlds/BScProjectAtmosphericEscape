@@ -1,3 +1,8 @@
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from jeans import *
 from scipy.integrate import cumulative_trapezoid
 
@@ -46,7 +51,7 @@ for sp, res in result["results"].items():
     print(f"Mass loss rate:           {res['Mdot (kg/s)']:.3e} kg/s")
     print(f"Thermal velocity:         {res['v_th (m/s)']:.2f} m/s")
     print(f"Effusion velocity:        {res['effusion_velocity (m/s)']:.3e} m/s")
-    print(f"Number density (exobase): {res['number_density (m^3)']:.3e} m⁻³")
+    print(f"Number density (exobase): {res['number_density (m^3)']:.3e} m^-3")
 
 
 m_H = 1 * 1.6605e-27
@@ -97,5 +102,5 @@ for sp, res in result["results"].items():
     print(f"Mass loss rate:           {res['Mdot (kg/s)']:.3e} kg/s")
     print(f"Thermal velocity:         {res['v_th (m/s)']:.2f} m/s")
     print(f"Effusion velocity:        {res['effusion_velocity (m/s)']:.3e} m/s")
-    print(f"Number density (exobase): {res['number_density (m^3)']:.3e} m⁻³")
+    print(f"Number density (exobase): {res['number_density (m^3)']:.3e} m^-3")
 

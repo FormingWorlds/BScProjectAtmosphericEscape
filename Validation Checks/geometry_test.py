@@ -1,3 +1,8 @@
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from jeans import *
 from scipy.integrate import cumulative_trapezoid
 from scipy.constants import G, k

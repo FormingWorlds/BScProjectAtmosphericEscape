@@ -4,15 +4,18 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.constants import k
 import seaborn as sns
+import sys
+from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from constants import SPECIES_MASSES
-from proteus_escape import read_proteus_profile, read_bulk_properties
-from extend_dissociation import extend_profile_exobase
+from proteus_ct_VMR import read_proteus_profile, read_bulk_properties
+from extend_dissociation import extend_profile_exobase #change to extend_ct_VMR for other scenario
 
 sns.set_palette("colorblind")
 
 
-OUTDIR = "Plots/PROTEUS_PT_extensions/PT extension with dissociation"
+OUTDIR = "Plots/PROTEUS_PT_extensions/PT_dissociation"  #change to PT_ct_VMR for other scenario
 os.makedirs(OUTDIR, exist_ok=True)
 
 atm_archetype = ["H2", "H2O", "CO2", "N2"]

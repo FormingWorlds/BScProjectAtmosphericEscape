@@ -2,6 +2,11 @@ import numpy as np
 from scipy.constants import G, k, pi, atomic_mass
 import pandas as pd
 
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from jeans import jeans_escape
 
 R_EARTH = 6.371e6       # m
