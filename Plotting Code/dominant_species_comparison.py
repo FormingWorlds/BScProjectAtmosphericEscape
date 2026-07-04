@@ -7,7 +7,7 @@ from matplotlib.lines import Line2D
 outdir = "Plots/Dissociation_comparison"
 os.makedirs(outdir, exist_ok=True)
 
-T_choice = 5000
+T_choice = 1000
 mass_choice = "10_M_earth"
 flux_choice = "1000_F_earth"
 

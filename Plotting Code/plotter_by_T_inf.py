@@ -1,7 +1,5 @@
 import os
 import matplotlib.pyplot as plt
-import scienceplots
-#plt.style.use('science') 
 from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd

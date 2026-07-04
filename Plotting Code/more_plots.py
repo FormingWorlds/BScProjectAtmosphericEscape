@@ -243,7 +243,7 @@ for idx, mass in enumerate(mass_cases):
 
     ax.axhline(1.5, color="grey", linestyle="--", linewidth=1)
     ax.axhline(10, color="grey", linestyle=":", linewidth=1)
-    ax.set_ylim(1,10.5)
+    #ax.set_ylim(1,10.5)
 
     ax.set_yscale("log")
     ax.set_xlabel(r"$T_{\infty}$ [K]", fontsize=13)
