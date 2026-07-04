@@ -16,7 +16,7 @@ The files **exobase.py**, **physics.py**, and **jeans.py** implement the core eq
 
 # Running the code
 
-The **proteus_ct_VMR.py** and **proteus_dissociation.py** are the files that should be run to generate the output CSV files of the Jeans escape rates for the two cases taken into account: constant VMR and photodissociation, respectively. They depend on **extend_ct_VMR.py** and **extend_dissociation** to create the extension in the two upper-atmosphere assumptions.
+The **proteus_ct_VMR.py** and **proteus_dissociation.py** are the files that should be run to generate the output CSV files of the Jeans escape rates for the two cases taken into account: constant VMR and photodissociation, respectively. They depend on **extend_ct_VMR.py** and **extend_dissociation.py** to create the extension in the two upper-atmosphere assumptions.
 # Figure Mapping (from the Plotting Code and Validation Checks folder)
 
 The plotting scripts read the CSV files produced by **proteus_ct_VMR.py** and **proteus_dissociation.py** to reproduce the figures in the thesis.
