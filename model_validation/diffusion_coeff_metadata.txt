@@ -1,0 +1,3 @@
+this dataset contains 'A' and 's' terms for the binary diffusion coefficient, D_12 = AT^s/n, taken from banks&cockarts[1973] and hunten[1973]
+the values are such that the units of D_12 are [cm^2 sec^-1], and they are valid for 250K - 2000K
+the first column provides minor species, second the major species
