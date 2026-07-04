@@ -12,7 +12,7 @@ Required packages are listed in requirements.txt.
 
 # Main Physics
 
-The files **exobase.py**, **physics.py**, and **jeans.py** implement the core equations that are needed for the Jeans escape formalism according to Van Looveren et al. (2024), equations 1-6. 
+The files **exobase.py**, **cross_section.py**, **physics.py**, and **jeans.py** implement the core equations that are needed for the Jeans escape formalism according to Van Looveren et al. (2024), equations 1-6. 
 
 # Running the code
 
