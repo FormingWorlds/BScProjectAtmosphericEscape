@@ -18,7 +18,7 @@ mass = ["1_M_earth", "10_M_earth"]
 T_infs = np.array([200, 300, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000])
 
 
-diff_jeans = pd.read_csv('analysis/proteus_diff_vs_jeans.csv')
+diff_jeans = pd.read_csv('proteus_diff_vs_jeans.csv')
 
 fig = plt.figure(figsize=(8,6))
 gs = fig.add_gridspec(2, 2, hspace=0, wspace=0)
