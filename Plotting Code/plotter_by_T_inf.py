@@ -80,7 +80,7 @@ all_handles = (
     + [invalid_handle]
 )
 
-df = pd.read_csv("proteus_jeans_case_summary_dissociation.csv") #change if dissociation
+df = pd.read_csv("Outputs/proteus_jeans_case_summary_dissociation.csv") #change if dissociation
 
 df["log10_weighted_mass_loss"] = np.log10(df["weighted_mass_loss_kg_s"])
 
@@ -224,7 +224,7 @@ plot_vs_Tinf(
 
 # 6. Dominant-species lambda_J vs T_inf
 
-full = pd.read_csv("proteus_jeans_escape_results_dissociation.csv")
+full = pd.read_csv("Outputs/proteus_jeans_escape_results_dissociation.csv")
 
 # Make sure column exists for older files
 if "unphysical_extension" not in full.columns:

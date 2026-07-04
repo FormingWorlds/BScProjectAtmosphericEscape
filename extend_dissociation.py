@@ -111,7 +111,7 @@ def extend_profile_exobase(
 
     r_ext =  r_top + dr_ext
 
-    if r_ext[-1] > 20 * r[0]:   # more than ~7000 R_earth, unphysical?
+    if r_ext[-1] > 20 * r[0]:   # more than ~20 Rp, unphysical
         raise ValueError("UNPHYSICAL EXTENSION")
 
     n_extended = n_top * np.exp(-zeta) * (T_top/T_ext)

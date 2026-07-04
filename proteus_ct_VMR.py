@@ -5,7 +5,7 @@ from scipy.constants import k, atomic_mass
 
 from jeans import jeans_escape
 from constants import *
-from extend_profile import *
+from extend_ct_VMR import *
 
 def read_proteus_profile(path, R_planet, min_vmr=1e-21):
 
@@ -143,6 +143,7 @@ def run_one_file(path, bulk):
                     "weighted_mass_loss_kg_s": result["weighted_mass_loss_kg_s"],
                     "species": sp,
                     "Mdot_kg_s": res["Mdot (kg/s)"],
+                    "M_total_kg_s": result["total_mass_loss_kg_s"],
                     "lambda_j": res["lambda_j"],
                     "v_th_m_s": res["v_th (m/s)"],
                     "effusion_velocity_m_s": res["effusion_velocity (m/s)"],
@@ -207,6 +208,7 @@ def summarize_case(rows):
         "flux_case": rows[0]["flux_case"],
 
         "weighted_mass_loss_kg_s": physical_rows[0]["weighted_mass_loss_kg_s"],
+        "M_total_kg_s": rows[0]["M_total_kg_s"],
         "dominant_escaping_species": dominant["species"],
         "dominant_lambda_j": dominant["lambda_j"],
         "dominant_species_Mdot_kg_s": dominant["Mdot_kg_s"],
@@ -282,7 +284,7 @@ for comp in ['H2', 'H2O', 'CO2', 'N2']:
 results = pd.DataFrame(proteus_atmospheres)
 
 results.to_csv(
-    "proteus_jeans_escape_results.csv",
+    "Outputs/proteus_jeans_escape_results.csv",
     index=False
 )
 
@@ -291,6 +293,6 @@ print(results.head())
 summary_results = pd.DataFrame(summary_rows)
 
 summary_results.to_csv(
-    "proteus_jeans_case_summary.csv",
+    "Outputs/proteus_jeans_case_summary.csv",
     index=False
 )

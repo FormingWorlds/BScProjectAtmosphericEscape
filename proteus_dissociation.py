@@ -144,6 +144,7 @@ def run_one_file(path, bulk):
                     "T_inf": T_inf,
                     "weighted_mass_loss_kg_s": result["weighted_mass_loss_kg_s"],
                     "species": sp,
+                    "M_total_kg_s": result["total_mass_loss_kg_s"],
                     "Mdot_kg_s": res["Mdot (kg/s)"],
                     "lambda_j": res["lambda_j"],
                     "v_th_m_s": res["v_th (m/s)"],
@@ -200,6 +201,7 @@ def summarize_case(rows):
         "flux_case": rows[0]["flux_case"],
 
         "weighted_mass_loss_kg_s": rows[0]["weighted_mass_loss_kg_s"], #same for all species
+        "M_total_kg_s": rows[0]["M_total_kg_s"],
         "dominant_escaping_species": dominant["species"],
         "dominant_lambda_j": dominant["lambda_j"],
         "dominant_species_Mdot_kg_s": dominant["Mdot_kg_s"],
@@ -277,7 +279,7 @@ for comp in ['H2', 'H2O', 'CO2', 'N2']:
 results = pd.DataFrame(proteus_atmospheres)
 
 results.to_csv(
-    "proteus_jeans_escape_results_dissociation.csv",
+    "Outputs/proteus_jeans_escape_results_dissociation.csv",
     index=False
 )
 
@@ -286,6 +288,6 @@ print(results.head())
 summary_results = pd.DataFrame(summary_rows)
 
 summary_results.to_csv(
-    "proteus_jeans_case_summary_dissociation.csv",
+    "Outputs/proteus_jeans_case_summary_dissociation.csv",
     index=False
 )

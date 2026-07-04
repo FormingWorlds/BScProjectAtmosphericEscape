@@ -27,6 +27,7 @@ def jeans_escape(r, T, species, species_masses, M, sigma = 1e-19, dayside=True):
     results = {}
 
     M_weighted = 0
+    M_total = 0
     
     for sp, n in species.items():
         m = species_masses[sp]
@@ -39,6 +40,7 @@ def jeans_escape(r, T, species, species_masses, M, sigma = 1e-19, dayside=True):
         Mdot = n_exo * f_j * A * m
         X_exo = n_exo / n_tot[idx]
         M_weighted += X_exo * Mdot
+        M_total += Mdot
         
         results[sp] = {
             "Mdot (kg/s)": float(Mdot),
@@ -50,6 +52,7 @@ def jeans_escape(r, T, species, species_masses, M, sigma = 1e-19, dayside=True):
     
     return {
         "weighted_mass_loss_kg_s": M_weighted,
+        "total_mass_loss_kg_s": M_total,
         "results": results,
         "exobase_index": int(idx) , 
         "exobase_radius": float(r_exo),

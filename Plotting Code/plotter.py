@@ -54,7 +54,7 @@ atm_handles = [
     for atm in atm_archetype
 ]
 
-df = pd.read_csv("proteus_jeans_case_summary.csv")
+df = pd.read_csv("Outputs/proteus_jeans_case_summary.csv")
 df["log10_weighted_mass_loss"] = np.log10(df["weighted_mass_loss_kg_s"])
 
 #print(df[["atmosphere_type", "mass_case", "flux_case"]])

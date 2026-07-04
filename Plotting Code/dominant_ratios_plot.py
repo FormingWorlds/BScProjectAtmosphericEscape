@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 os.makedirs("Plots/PROTEUS plots", exist_ok=True)
 
-df = pd.read_csv("proteus_jeans_escape_results.csv")
+df = pd.read_csv("Outputs/proteus_jeans_escape_results.csv")
 
 case_cols = ["file", "T_inf", "atmosphere_type", "mass_case", "flux_case"]
 
@@ -68,21 +68,9 @@ for case, group in df.groupby(case_cols):
     })
 
 ratio_df = pd.DataFrame(ratios)
-ratio_df.to_csv("dominant_to_second_species_ratios.csv", index=False)
+ratio_df.to_csv("Outputs/dominant_to_second_species_ratios.csv", index=False)
 
-plt.figure(figsize=(7, 5))
-plt.hist(ratio_df["log10_ratio"], bins=20, edgecolor="black")
-
-plt.xlabel(r"$\log_{10}(\dot{M}_{\rm dominant}/\dot{M}_{\rm second})$", fontsize=13)
-plt.ylabel("Number of cases", fontsize=13)
-plt.title("Dominance of the largest escaping species", fontsize=14)
-plt.tight_layout()
-plt.savefig("Plots/PROTEUS plots/hist_dominant_to_second_ratio.png", dpi=300, bbox_inches="tight")
-plt.show()
-
-
-
-full = pd.read_csv("proteus_jeans_escape_results.csv")
+full = pd.read_csv("Outputs/proteus_jeans_escape_results.csv")
 
 ratio_rows = []
 

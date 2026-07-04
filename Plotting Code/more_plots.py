@@ -43,8 +43,8 @@ case_styles = {
 # Load lower and upper cases
 
 
-constant = pd.read_csv("proteus_jeans_case_summary.csv")
-diss = pd.read_csv("proteus_jeans_case_summary_dissociation.csv")
+constant = pd.read_csv("Outputs/proteus_jeans_case_summary.csv")
+diss = pd.read_csv("Outputs/proteus_jeans_case_summary_dissociation.csv")
 
 for table in [constant, diss]:
     if "unphysical_extension" not in table.columns:
@@ -138,7 +138,7 @@ for idx, mass in enumerate(mass_cases):
 
                 ax.plot(
                     valid["T_inf"],
-                    valid["log10_weighted_mass_loss"],
+                    np.log10(valid["M_total_kg_s"]),
                     color=species_colors[atm],
                     linestyle=linestyle,
                     linewidth=1.7,
@@ -147,7 +147,7 @@ for idx, mass in enumerate(mass_cases):
 
                 ax.scatter(
                     valid["T_inf"],
-                    valid["log10_weighted_mass_loss"],
+                    np.log10(valid["M_total_kg_s"]),
                     color=species_colors[atm],
                     marker=flux_markers[flux],
                     s=50,
@@ -155,7 +155,7 @@ for idx, mass in enumerate(mass_cases):
 
                 ax.scatter(
                     hydro["T_inf"],
-                    hydro["log10_weighted_mass_loss"],
+                    np.log10(hydro["M_total_kg_s"]),
                     color=species_colors[atm],
                     marker="x",
                     s=80,
@@ -168,7 +168,7 @@ for idx, mass in enumerate(mass_cases):
     ax.tick_params(axis="both", which="major", labelsize=12)
 
 axes[0].set_ylabel(
-    r"$\log_{10}(\dot{M}_{\rm weighted})$ [kg/s]",
+    r"$\log_{10}(\dot{M}_{\rm total})$ [kg/s]",
     fontsize=13,
 )
 
@@ -243,6 +243,7 @@ for idx, mass in enumerate(mass_cases):
 
     ax.axhline(1.5, color="grey", linestyle="--", linewidth=1)
     ax.axhline(10, color="grey", linestyle=":", linewidth=1)
+    ax.set_ylim(1,10.5)
 
     ax.set_yscale("log")
     ax.set_xlabel(r"$T_{\infty}$ [K]", fontsize=13)
@@ -311,7 +312,7 @@ df["log10_lifetime_yr"] = np.log10(
     df["lifetime_yr"].replace([np.inf, 0], np.nan)
 )
 
-df.to_csv("prediction_lifetimes_1bar.csv", index=False)
+df.to_csv("Outputs/prediction_lifetimes_1bar.csv", index=False)
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
 
@@ -406,8 +407,8 @@ plt.close()
 # 4. Dissociation / constant VMR ratio plot
 
 
-const = pd.read_csv("proteus_jeans_case_summary.csv")
-diss = pd.read_csv("proteus_jeans_case_summary_dissociation.csv")
+const = pd.read_csv("Outputs/proteus_jeans_case_summary.csv")
+diss = pd.read_csv("Outputs/proteus_jeans_case_summary_dissociation.csv")
 
 for table in [const, diss]:
     if "unphysical_extension" not in table.columns:
@@ -447,7 +448,7 @@ comp["both_jeans_valid"] = (
     (~comp["either_unphysical"])
 )
 
-comp.to_csv("dissociation_vs_constant_comparison.csv", index=False)
+comp.to_csv("Outputs/dissociation_vs_constant_comparison.csv", index=False)
 
 ratio_handles = atm_handles + flux_handles + [
     Line2D(
