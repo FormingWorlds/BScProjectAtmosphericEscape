@@ -32,7 +32,7 @@ For the rest of the results:
 
 1. **extension_height.py** is Figure 3.4.
 2. **dominant_species_comparison.py**: Figure 3.6
-3. **plotter_by_T_inf**: Figures 3.8, B.1, B.2, B.3, B.4. This code can be run for both extension cases by changing the outdir, input csv files, and the location where the figures are saved.
+3. **plotter_by_T_inf.py**: Figures 3.8, B.1, B.2, B.3, B.4. This code can be run for both extension cases by changing the outdir, input csv files, and the location where the figures are saved.
 4. **more_plots.py**: Figures 3.5, 3.7, 3.9
 
 The rest of the scripts in the Plotting Code were used in other stages of the thesis writing for visualisation purposes. The **pT_plots.py** creates the profile-temperature plots using the Bates extension for all cases. The **plotter.py** uses the first valid T∞ case (typically 200 K) from the summary table as a representative point, and it was used before the temperature sensitivity study was introduced.
