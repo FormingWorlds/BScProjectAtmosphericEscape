@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 plt.rc('text', usetex=True)
 from improved_limit import improved_limiting_flux
 from classical_limit import classical_limiting_flux
-from classical_limit_grad0 import classical_limiting_flux_grad0
+from classical_limit_no_T_grad import classical_limiting_flux_grad0
 
 
 #this code is for performing temperature sweeps and plots of the classical and improved limiting fluxes on test planets

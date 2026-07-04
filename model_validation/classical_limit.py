@@ -67,4 +67,4 @@ def classical_limiting_flux(T_inf, minor_const, major_const, M_minor, M_major, m
     
     flux = mole_frac_homop * (b_hom/H) * (1-(m_tilde/m_a)) * 1e-4  #[1/cm^2*s]
     
-    return(flux)    
+    return(flux)  
