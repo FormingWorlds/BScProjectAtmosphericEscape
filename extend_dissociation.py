@@ -88,7 +88,7 @@ def extend_profile_exobase(
         for sp in species_current
     )
 
-    P_target = 1e-12          # bar, for space like pressure
+    P_target = 1e-12          # Pa, for space like pressure
     P_top = n_top * k * T_top
 
     zeta_max = np.log(P_top / P_target)
@@ -169,10 +169,12 @@ def extend_profile_exobase(
         }
 
         return r_final, T_final, species_final
+    
 
     except ValueError:
         r_current = r_new
         T_current = T_new
         species_current = species_new
+
 
     raise ValueError("No exobase found after extending profile with Bates")
