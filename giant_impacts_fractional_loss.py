@@ -1,6 +1,6 @@
 import numpy as np
 
-# x = (v_imp*m) / (v_esc*M)
+# x = (v_imp*m) / (v_esc*M) --> x-axis of graphs
 
 x = np.linspace(0.0, 1.0, 100)
 
