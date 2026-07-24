@@ -3,7 +3,7 @@ from radius_cutoffs import *
 from Earth_constants import *
 from figure14 import r
 
-def cap_mass(rho_atm, h):
+def cap_mass(rho_atm, h, R):
 	"""Total cap mass for terrestial planets"""
 	M_cap = 2 * np.pi * rho_atm * (h**2) * R
 	return M_cap
