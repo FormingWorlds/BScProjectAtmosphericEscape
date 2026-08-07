@@ -1,11 +1,8 @@
-def open_PROTEUS_csv(filename, sep = None):
+def open_PROTEUS_csv(filename, sep = ","):
 	"""Opens the PROTEUS atmosphere csv files using  Pandas.
 	Returns density and height of the atmosphere from surface going upwards
 	"""
 	import pandas as pd
-
-	if sep != None:
-		sep = "\t"
 
 	file = pd.read_csv(filename, sep = sep)
 
