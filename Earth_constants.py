@@ -1,4 +1,4 @@
-from scipy.constants import k, N_A
+from scipy.constants import k, N_A, G
 
 R_Earth = 6378e3	# Earth radius [m]
 M_Earth = 5.98e24	# Earth mass [kg]
@@ -9,4 +9,4 @@ rho_pl = 2000		# density planetesimal [kg/m^3]
 
 N_A = N_A		# Avogadro's number
 k = k			# Boltzmann constant
-
+G = G			# gravitational constant

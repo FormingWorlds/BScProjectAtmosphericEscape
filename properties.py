@@ -1,6 +1,10 @@
+import numpy as np
+
 def total_M_atmos(height, rho_atm, R):
-	"""Calculate the total mass of the atmosphere using the height and density profiles, as well as the radius of the planet"""	
-	import numpy as np
+	"""Calculate the total mass of the atmosphere
+	using the height and density profiles, 
+	as well as the radius of the planet
+	"""
 
 	int_values = []
 	for r, d in zip(height, rho_atm):
@@ -14,3 +18,10 @@ def total_M_atmos(height, rho_atm, R):
 	return M_atm
 
 
+def scaleheight(T, mmw, z, M):
+	"""Calculate scaleheight"""
+
+	g = (G * M) / (r**2)
+	h = (k * T) / (m * g)
+
+	return h
