@@ -3,7 +3,7 @@ import numpy as np
 # x = (v_imp*m) / (v_esc*M) --> x-axis of graphs
 
 
-def X_loss(x, gamma):
+def X_loss(gamma):
         """Fractional mass loss of atmosphere
         x = (v_imp*m) / (v_esc*M)       --> x-axis
         Gamma: adiabatic index
