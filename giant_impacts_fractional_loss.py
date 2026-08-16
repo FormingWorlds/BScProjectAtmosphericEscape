@@ -18,6 +18,6 @@ def X_loss(gamma):
         elif gamma == 4/3:
                 X_loss = 0.4*x + 1.8*(x**2) - 1.2*(x**3)
 
-        return X_loss
+        return X_loss, x
 
 
