@@ -1,6 +1,6 @@
 import pandas as pd
 
-def open_PROTEUS_csv(filename, sep = ','):
+def open_PROTEUS_csv(filename, sep = '\t'):
 	"""Opens the PROTEUS atmosphere csv files using  Pandas.
 	Returns density, height, temperature, mean molecular weight 
 	of the atmosphere from surface going upwards
@@ -23,7 +23,7 @@ def open_PROTEUS_csv(filename, sep = ','):
 	return rho, height, T, mmw
 
 
-def open_bulk_PROTEUS(filename, sep = ','):
+def open_bulk_PROTEUS(filename, sep = '\t'):
 	"""Opens the bulk properties files from PROTEUS
 	Gives time, planet radius, planet mass, flux and MMW
 	"""
