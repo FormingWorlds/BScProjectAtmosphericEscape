@@ -1,9 +1,10 @@
-def open_PROTEUS_csv(filename, sep = ","):
+import pandas as pd
+
+def open_PROTEUS_csv(filename, sep = ','):
 	"""Opens the PROTEUS atmosphere csv files using  Pandas.
 	Returns density, height, temperature, mean molecular weight 
 	of the atmosphere from surface going upwards
 	"""
-	import pandas as pd
 
 	file = pd.read_csv(filename, sep = sep)
 
@@ -20,4 +21,24 @@ def open_PROTEUS_csv(filename, sep = ","):
 	mmw = mmw[::-1]
 	
 	return rho, height, T, mmw
+
+
+def open_bulk_PROTEUS(filename, sep = ','):
+	"""Opens the bulk properties files from PROTEUS
+	Gives time, planet radius, planet mass, flux and MMW
+	"""
+
+	file = pd.read_csv(filename, sep = sep)
+
+	mass = file["M_planet [kg]"]
+	mass_1F = mass[1]
+	mass_1000F = mass[0]
+
+	radius = file["R_int [m]"]
+	rad_1F = radius[1]
+	rad_1000F = radius[0]
+
+	return mass_1F, mass_1000F, rad_1F, rad_1000F
+
+
 
