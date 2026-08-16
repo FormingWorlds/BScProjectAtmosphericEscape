@@ -14,10 +14,10 @@ def open_PROTEUS_csv(filename, sep = ','):
 	height = file["Height [m]"].tolist()
 	height = height[::-1]
 
-	T = file["Temperature [K]"]
+	T = file["Temperature [K]"].tolist()
 	T = T[::-1]
 
-	mmw = file["MMW [g/mol]"]
+	mmw = file["MMW [g/mol]"].tolist()
 	mmw = mmw[::-1]
 	
 	return rho, height, T, mmw
@@ -30,11 +30,11 @@ def open_bulk_PROTEUS(filename, sep = ','):
 
 	file = pd.read_csv(filename, sep = sep)
 
-	mass = file["M_planet [kg]"]
+	mass = file["M_planet [kg]"].tolist()
 	mass_1F = mass[1]
 	mass_1000F = mass[0]
 
-	radius = file["R_int [m]"]
+	radius = file["R_int [m]"].tolist()
 	rad_1F = radius[1]
 	rad_1000F = radius[0]
 
