@@ -10,7 +10,7 @@ def X_loss(gamma):
                 - 5/3 (isothermal)
                 - 4/3 (adiabatic)
         """
-	x = np.linspace(0.0, 1.0, 100)
+        x = np.linspace(0.0, 1.0, 100)
 
         if gamma == 5/3:
                 X_loss = 0.4*x + 1.4*(x**2) - 0.8*(x**3)
