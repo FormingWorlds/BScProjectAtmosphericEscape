@@ -18,10 +18,11 @@ def total_M_atmos(height, rho_atm, R):
 	return M_atm
 
 
-def scaleheight(T, mmw, z, M):
+def scaleheight(T, R, z, M, mmw):
 	"""Calculate scaleheight"""
+	
+	g = (G * M) / ((R + z)**2)
 
-	g = (G * M) / (r**2)
-	h = (k * T) / (m * g)
+	h = (k * T) / ((mmw/N_A) * g)
 
 	return h
