@@ -1,5 +1,6 @@
 import numpy as np
-from Earth_constants import *
+from properties import scaleheight
+from constants import k, N_A, G, rho_pl
 
 
 
