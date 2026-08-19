@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.constants import G, k, N_A
 
 def total_M_atmos(height, rho_atm, R):
 	"""Calculate the total mass of the atmosphere
