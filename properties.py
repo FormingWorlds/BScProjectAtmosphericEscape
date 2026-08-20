@@ -38,7 +38,7 @@ def scaleheight(T, R, z, M, mmw):
 	
 	g = (G * M) / ((R + np.array(z))**2)
 
-	h = (k * np.array(T)) / ((np.array(mmw)/N_A) * g)
+	h = (k * np.array(T)) / ((np.array(mmw)/N_A) * 10**(-3) * g)
 	h = np.array(h)
 	avg_h = np.mean(h)
 
