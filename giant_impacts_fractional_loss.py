@@ -16,9 +16,13 @@ def X_loss(gamma, v_V):
 	
         if gamma == 5/3:
                 X_loss = 0.4*x + 1.4*(x**2) - 0.8*(x**3)
+                if X_loss >= 1.0:
+                    break
 
         elif gamma == 4/3:
                 X_loss = 0.4*x + 1.8*(x**2) - 1.2*(x**3)
+                if X_loss >= 1.0:
+                    break
 
         return X_loss, m_M
 
