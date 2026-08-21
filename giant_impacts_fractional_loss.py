@@ -16,14 +16,15 @@ def X_loss(gamma, v_V):
 	
         if gamma == 5/3:
                 X_loss = 0.4*x + 1.4*(x**2) - 0.8*(x**3)
-                if X_loss >= 1.0:
-                    break
+                i = np.argmax(X_loss > 1.0)
+                X_loss = X_loss[:i]
+                m_M = m_M[:i]
 
         elif gamma == 4/3:
                 X_loss = 0.4*x + 1.8*(x**2) - 1.2*(x**3)
-                if X_loss >= 1.0:
-                    break
+                i = np.argmax(X_loss > 1.0)
+                X_loss = X_loss[:i]
+                m_M = m_M[:i]
 
         return X_loss, m_M
-
 
