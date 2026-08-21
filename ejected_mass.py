@@ -74,32 +74,28 @@ def ejected_mass_planetesimal(M_atm, h, R, rho, rho_pl):
 	return M_ejected, r_range
 
 
-# def ejected_mass_planetesimal(M_atm, h, R, rho, rho_pl):
-# 	"""Ejected mass by a planetesimal impactor (r < r_gi)
-# 	Once r > r_cap, the cap mass is
-# 	"""
-# 	r_min_val = r_min(rho, rho_pl, h)
-# 	r_cap_val = r_cap(rho, rho_pl, h, R)
-# 	r_gi_val = r_gi(h, R)
-
-# 	r = np.linspace(r_min_val, r_gi_val, 1000)
-
-# 	no_regime = (r < r_min_val)
-# 	regime1 = (r >= r_min_val) and (r < r_cap_val)
-# 	regime2 = (r >= r_cap_val) and (r < r_gi)
-# 	regime3 = (r >= r_gi)
-
-# 	if no_regime.any():
-# 		print("Radius of impactor too small to eject atmosphere")
-
-# 	M_eject[regime1] = (r_min_val/(2*r)) * (1 - (r_min_val/r)**2)
-# 	M_eject[regime2] = cap_mass(rho, h, R)
-
-# 	if regime3.any():
-# 		print("Impactor big enough to eject all mass: global loss")
-
-
-# 	return M_eject
+def mass_loss_rate(r_range, q, M_atm, M_pl, h, R, rho, rho_pl):
+	"""dM_atm/dt"""
+    # Ejected mass by planetesimal impactors
+    M_eject, r_range = ejected_mass_planetesimal(M_atm, h, R, rho, rho_pl)
+    
+    r_range = np.array(r_range)
+    
+    # mass of the impactor:
+    m_pl = rho_pl * (4/3) * np.pi * (r_range)**3
+    
+    
+    
+    mass_ejec = (r)**(-q) * M_eject
+    Mass_I = np.trapz(mass_int, r)
+    
+    N0_ejec = (r)**(-q) * m_pl
+    N0_I = np.trapz(N0_ejec, r)
+    
+    # Mass loss rate in kg/s
+    dM_dt = - M_pl * (Mass_I / N0_I)
+    
+    return dM_dt
 
 
 
