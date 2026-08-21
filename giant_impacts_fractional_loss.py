@@ -12,7 +12,7 @@ def X_loss(gamma, v_V):
                 - 4/3 (adiabatic)
         """
         m_M = np.linspace(0.0, 1.0, 100)
-	x = v_V * m_M
+        x = v_V * m_M
 	
         if gamma == 5/3:
                 X_loss = 0.4*x + 1.4*(x**2) - 0.8*(x**3)
