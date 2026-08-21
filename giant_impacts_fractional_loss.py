@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def X_loss(gamma, v_V = 1):
         """Fractional mass loss of atmosphere
         x = (v_imp*m) / (v_esc*M)       --> x-axis
