@@ -20,6 +20,6 @@ def X_loss(gamma, v_V):
         elif gamma == 4/3:
                 X_loss = 0.4*x + 1.8*(x**2) - 1.2*(x**3)
 
-        return X_loss, x
+        return X_loss, m_M
 
 
