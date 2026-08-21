@@ -7,7 +7,7 @@ def X_loss(gamma, v_V):
         """Fractional mass loss of atmosphere
         x = (v_imp*m) / (v_esc*M)       --> x-axis
         v_V = (v_imp)/(v_esc)
-	Gamma: adiabatic index
+        Gamma: adiabatic index
                 - 5/3 (isothermal)
                 - 4/3 (adiabatic)
         """
