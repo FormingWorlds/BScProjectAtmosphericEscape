@@ -51,9 +51,9 @@ velocity_legend = [
     Line2D([0], [0], color="#A2C8EC", label=r"$v_{imp}/v_{esc}=$0.2")
 ]
 
-plt.legend(handles = linestyle_legend + [divider] + velocity_legend, loc = 'lower right', dpi = 300, bbox_to_anchor=(1.4, 0.1))
+plt.legend(handles = linestyle_legend + [divider] + velocity_legend, loc = 'lower right', bbox_to_anchor=(1.4, 0.1))
 
-plt.savefig('Fractional_global_loss.png', bbox_inches="tight")
+plt.savefig('Fractional_global_loss.png', dpi = 300, bbox_inches="tight")
 plt.show()
 
 
