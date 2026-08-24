@@ -50,3 +50,10 @@ def mM_to_r(m_M, M, rho_pl = 2000):
 	
 	return r
 
+
+# Getting fraction global mass loss for an adiabatic atmosphere and corresponding radius:
+
+X_loss_adia, x = X_loss(v_V = 1, atm_type = "adiabatic")
+
+r_1M = mM_to_r(x, M_1Earth)
+r_10M = mM_to_r(x, M_10Earth) 
