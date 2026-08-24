@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+from open_PROTEUS_csv import elements, masses, fluxes
 
 # Get data from csv
 df = pd.read_csv("Outputs/Global_mass_loss_data.csv")
