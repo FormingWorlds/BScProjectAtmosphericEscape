@@ -1,10 +1,15 @@
 import numpy as np
-from properties import scaleheight
-from constants import k, N_A, G, rho_pl
+import pandas as pd
+from open_PROTEUS_csv import profiles, bulk_data
+from open_PROTEUS_csv import elements, masses, fluxes
+
+# Impactor density:
+
+rho_pl = 2000
 
 # Define the threshold radii:
 
-def r_min(rho, rho_pl, h):
+def r_min(rho, h, rho_pl=2000):
 	"""Minimum radius of planetesimal impacts
 	* rho = atmosphere density planet
 	* rho_pl = density planetesimal impactor
@@ -14,7 +19,7 @@ def r_min(rho, rho_pl, h):
 	return r_min
 
 
-def r_cap(rho, rho_pl, h, R):
+def r_cap(rho, h, R, rho_pl=2000):
 	""" Cap size of planetesimal impactor radius
 	* rho = atm. density planet
 	* rho_pl = density planetesimal impactor
@@ -56,8 +61,8 @@ def ejected_mass_planetesimal(h, R, rho, rho_pl = 2000):
 	* rho = atmosphere density at surface
 	* rho_pl = impactor density; set to 2000 kg/m^3
 	"""
-	r_min_val = r_min(rho, rho_pl, h)
-	r_cap_val = r_cap(rho, rho_pl, h, R)
+	r_min_val = r_min(rho, h, rho_pl)
+	r_cap_val = r_cap(rho, h, R, rho_pl)
 	r_gi_val = r_gi(h, R)
 
 	r_range = np.linspace(r_min_val, r_gi_val, 1000)
@@ -110,14 +115,182 @@ def mass_loss_rate(q, M_pl, h, R, rho, rho_pl = 2000):
 	# print("Integral ratio =", ratio)
 
 	# Mass loss rate in kg/s (without minus sign: positive mass loss)
-	dM_dt = M_pl * (Mass_I / N0_I)
+	dM_dt = M_pl * ratio
 
 	return dM_dt
 
 
-    
+# Adding threshold radii, cap mass, and planetesimal mass loss to the dictionary:
 
-    
+for e in elements:
+    for m in masses:
+        for f in fluxes:
+            if e == "H2" and m == "1_M" and f == "1000_F":
+                continue
+            
+            atm = profiles[e][m][f]
+            bulk = bulk_data[e][m][f]
+            
+            r_min_val = r_min(atm["rho"][0], bulk["h_avg"], rho_pl = 2000)
+            r_cap_val = r_cap(atm["rho"][0], bulk["h_avg"], bulk["radius"], rho_pl=2000)
+            r_gi_val = r_gi(bulk["h_avg"], bulk["radius"])
+            
+            bulk_data[e][m][f]["r_min"] = r_min_val
+            bulk_data[e][m][f]["r_cap"] = r_cap_val
+            bulk_data[e][m][f]["r_gi"] = r_gi_val
+            
+            M_cap = cap_mass(atm["rho"][0], bulk["h_avg"], bulk["radius"])
+            bulk_data[e][m][f]["M_cap"] = M_cap
+            
+            M_eject, r = ejected_mass_planetesimal(bulk["h_avg"], bulk["radius"], atm["rho"][0], rho_pl = 2000)
+            profiles[e][m][f]["M_eject_pl"] = M_eject
+            profiles[e][m][f]["r_imp_pl"] = r
+            
+            
+# Adding the data for planetesimal mass loss to a csv file:
+
+data = []
+
+for e in elements:
+    for m in masses:
+        for f in fluxes:
+            if e == "H2" and m == "1_M" and f == "1000_F":
+                continue
+            
+            atm = profiles[e][m][f]
+            bulk = bulk_data[e][m][f]
+
+            filename = f"{e}_atmosphere_{m}_earth_{f}_earth.csv"
+
+            r_imp_arr = atm["r_imp_pl"]
+            Mloss_arr = atm["M_eject_pl"]
+            h_arr = atm["h_eff"]
+
+            for rimp, Mloss, h_eff in zip(r_imp_arr, Mloss_arr, h_arr):
+                data.append({
+                    "Filename": filename,
+                    "Element": e,
+                    "Planet mass": m,
+                    "Earth Flux": f,
+                    "r_min [m]": bulk["r_min"],
+                    "r_cap [m]": bulk["r_cap"],
+                    "r_gi [m]": bulk["r_gi"],
+                    "rho_0 [kg/m^3]": atm["rho"][0],
+                    "Cap mass [kg]": bulk["M_cap"],
+                    "Effective scale height [m]": h_eff,
+                    "Atmospheric mass [kg]": bulk["atm_mass"],
+                    "Radius impactor [m]": rimp,
+                    "Planetesimal mass loss [kg]": Mloss
+                })
+
+df = pd.DataFrame(data)
+df.to_csv("Outputs/Planetesimal_mass_loss_data.csv", index=False)
 
 
+# Defining ranges for mass loss rate calculations:
+# Set q, different M_pl:
+q_set= 3.0
+M_pl_range = np.logspace(2, 13, 500)
+
+# Different q, set M_pl:
+q_range = np.linspace(1.1, 4.0, 500)
+M_pl_set = 10**7
+
+
+# Calculating mass loss rate vs. total impactor mass per time:
+for e in elements:
+    for m in masses:
+        for f in fluxes:
+            if e == "H2" and m == "1_M" and f == "1000_F":
+                continue
+            
+            atm = profiles[e][m][f]
+            bulk = bulk_data[e][m][f]
+            
+            MLR_vs_Mpl = mass_loss_rate(q_set, M_pl_range, bulk["h_avg"], bulk["radius"], atm["rho"][0], rho_pl = 2000)
+            MLR_vs_q = [mass_loss_rate(q, M_pl_set, bulk["h_avg"], bulk["radius"], atm["rho"][0], rho_pl = 2000) for q in q_range]
+            
+            # dM/dt for set q and changing impactor mass
+            profiles[e][m][f]["MLR_per_Mpl"] = MLR_vs_Mpl
+            profiles[e][m][f]["M_pl_range"] = M_pl_range
+            bulk_data[e][m][f]["Set_q"] = q_set
+            
+            # dM/dt for varying q and set M_pl:
+            profiles[e][m][f]["MLR_per_q"] = MLR_vs_q
+            profiles[e][m][f]["q_range"] = q_range
+            bulk_data[e][m][f]["Set_M_pl"] = M_pl_set
+
+
+# Adding the data for MLR per M_pl to a csv file:
+
+data2 = []
+
+for e in elements:
+    for m in masses:
+        for f in fluxes:
+            if e == "H2" and m == "1_M" and f == "1000_F":
+                continue
+            
+            atm = profiles[e][m][f]
+            bulk = bulk_data[e][m][f]
+
+            filename = f"{e}_atmosphere_{m}_earth_{f}_earth.csv"
+
+            Mpl_arr = atm["M_pl_range"]
+            MLR_arr = atm["MLR_per_Mpl"]
+
+            for Mpl, MLR in zip(Mpl_arr, MLR_arr):
+                data2.append({
+                    "Filename": filename,
+                    "Element": e,
+                    "Planet mass": m,
+                    "Earth Flux": f,
+                    "r_min [m]": bulk["r_min"],
+                    "r_cap [m]": bulk["r_cap"],
+                    "r_gi [m]": bulk["r_gi"],
+                    "Cap mass [kg]": bulk["M_cap"],
+                    "Differential power law index q": bulk["Set_q"],
+                    "Total impactor mass [kg/s]": Mpl,
+                    "Mass loss rate [kg/s]": rimp
+                })
+
+df = pd.DataFrame(data2)
+df.to_csv("Outputs/Mass_loss_rate_vs_M_pl.csv", index=False)
+
+
+# Adding the data for MLR per q to a csv file:
+
+data3 = []
+
+for e in elements:
+    for m in masses:
+        for f in fluxes:
+            if e == "H2" and m == "1_M" and f == "1000_F":
+                continue
+            
+            atm = profiles[e][m][f]
+            bulk = bulk_data[e][m][f]
+
+            filename = f"{e}_atmosphere_{m}_earth_{f}_earth.csv"
+
+            q_arr = atm["q_range"]
+            MLR_arr = atm["MLR_per_q"]
+
+            for q, MLR in zip(q_arr, MLR_arr):
+                data3.append({
+                    "Filename": filename,
+                    "Element": e,
+                    "Planet mass": m,
+                    "Earth Flux": f,
+                    "r_min [m]": bulk["r_min"],
+                    "r_cap [m]": bulk["r_cap"],
+                    "r_gi [m]": bulk["r_gi"],
+                    "Cap mass [kg]": bulk["M_cap"],
+                    "Total impactor mass [kg]/s": bulk["Set_M_pl"],
+                    "Differential power law index q": q,
+                    "Mass loss rate [kg/s]": MLR,
+                })
+
+df = pd.DataFrame(data3)
+df.to_csv("Outputs/Mass_loss_rate_vs_q.csv", index=False)
 
