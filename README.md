@@ -24,11 +24,11 @@ The mass loss rate (MLR) for a distribution of impactors is also calculated in p
 # Running the Code
 The files mentioned above contain the main physics and give the outputs. Running said files would give the output files. As they are already given, this is no longer necessary to run. However, they can be run by changing the values for inputs, if one wants to research what effect a change in variables can have. The files under Plot_code/ need to be run to produce the plots. These files use the date from Outputs/ and produce figures. The figures are presented in figures.ipynb, so that this is not necessary.
 
-# Outputs
+# Outputs/
 Like mentioned above, outputs from the code are given in the folder Outputs/.
 
 # Plotting figures
 The code for plotting figures is given under Plot_code/. The figures themselves can be seen in the notebook figures.ipynb.
 
-# Validation
-The folder Validation/ contains frac_global_adia_vs_iso.py, a code to plot the difference between isothermal and adiabatic atmospheres.
+# Validation/
+The folder Validation/ contains frac_global_adia_vs_iso.py, a code to plot the difference between isothermal and adiabatic atmospheres. It also contains radius_cutoffs_validation.py. Running this will show the radius thresholds for Earth conditions. They agree with Schlichting et al. (2015).
