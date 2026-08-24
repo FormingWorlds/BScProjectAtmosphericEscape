@@ -1,4 +1,8 @@
 import numpy as np
+import pandas as pd
+from open_PROTEUS_csv import profiles, bulk_data
+from open_PROTEUS_csv import elements, masses, fluxes
+
 
 # Function to calculate fractional global mass loss:
 # Has input options for isothermal/adiabatic atmosphere and v_imp/v_esc
@@ -31,12 +35,6 @@ def X_loss(v_V = 1, atm_type = "adiabatic"):
 	
 	return X_loss, m_M
     
-    
-# Options for mass of planet:
-
-M_1Earth = 5.92e24
-M_10Earth = 10*M_1Earth
-    
 
 # Function to convert m/M to radius for x-axis of global mass loss
     
@@ -51,9 +49,65 @@ def mM_to_r(m_M, M, rho_pl = 2000):
 	return r
 
 
-# Getting fraction global mass loss for an adiabatic atmosphere and corresponding radius:
+# Getting fractional global mass loss for an adiabatic atmosphere and corresponding radius:
 
-X_loss_adia, x = X_loss(v_V = 1, atm_type = "adiabatic")
+X_loss_adia, m_M = X_loss(v_V = 1, atm_type = "adiabatic")
 
-r_1M = mM_to_r(x, M_1Earth)
-r_10M = mM_to_r(x, M_10Earth) 
+# Adding global mass loss to the dictionary:
+
+for e in elements:
+    for m in masses:
+        for f in fluxes:
+            if e == "H2" and m == "1_M" and f == "1000_F":
+                continue
+            
+            atm = profiles[e][m][f]
+            bulk = bulk_data[e][m][f]
+            
+            M_loss_global = X_loss_adia * bulk["atm_mass"]
+            r_imp_gl = mM_to_r(m_M, bulk["mass"], rho_pl = 2000)
+            
+            profiles[e][m][f]["M_loss_global"] = M_loss_global
+            profiles[e][m][f]["m/M_global"] = m_M
+            profiles[e][m][f]["r_imp_gl"] = r_imp_gl
+            
+
+
+            
+# Adding the data to a csv file:
+
+data = []
+
+for e in elements:
+    for m in masses:
+        for f in fluxes:
+            if e == "H2" and m == "1_M" and f == "1000_F":
+                continue
+            
+            atm = profiles[e][m][f]
+            bulk = bulk_data[e][m][f]
+
+            filename = f"{e}_atmosphere_{m}_earth_{f}_earth.csv"
+
+            r_imp_arr = atm["r_imp_gl"]
+            Mloss_arr = atm["M_loss_global"]
+            mM_arr = atm["m/M_global"]
+
+            for rimp, Mloss, mM in zip(r_imp_arr, Mloss_arr, mM_arr):
+                data.append({
+                    "Filename": filename,
+                    "Element": e,
+                    "Planet mass": m,
+                    "Earth Flux": f,
+                    "Atmospheric mass [kg]": bulk["atm_mass"],
+                    "Global mass loss [kg]": Mloss,
+                    "m/M": mM,
+                    "Radius impactor [m]": rimp
+                })
+
+df = pd.DataFrame(data)
+df.to_csv("Outputs/Global_mass_loss_data.csv", index=False)
+
+
+
+
