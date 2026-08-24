@@ -164,9 +164,8 @@ for e in elements:
 
             r_imp_arr = atm["r_imp_pl"]
             Mloss_arr = atm["M_eject_pl"]
-            h_arr = atm["h_eff"]
 
-            for rimp, Mloss, h_eff in zip(r_imp_arr, Mloss_arr, h_arr):
+            for rimp, Mloss in zip(r_imp_arr, Mloss_arr):
                 data.append({
                     "Filename": filename,
                     "Element": e,
@@ -177,7 +176,6 @@ for e in elements:
                     "r_gi [m]": bulk["r_gi"],
                     "rho_0 [kg/m^3]": atm["rho"][0],
                     "Cap mass [kg]": bulk["M_cap"],
-                    "Effective scale height [m]": h_eff,
                     "Atmospheric mass [kg]": bulk["atm_mass"],
                     "Radius impactor [m]": rimp,
                     "Planetesimal mass loss [kg]": Mloss
@@ -251,7 +249,7 @@ for e in elements:
                     "Cap mass [kg]": bulk["M_cap"],
                     "Differential power law index q": bulk["Set_q"],
                     "Total impactor mass [kg/s]": Mpl,
-                    "Mass loss rate [kg/s]": rimp
+                    "Mass loss rate [kg/s]": MLR
                 })
 
 df = pd.DataFrame(data2)
