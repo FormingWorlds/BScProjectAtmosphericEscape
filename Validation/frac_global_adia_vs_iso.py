@@ -4,8 +4,8 @@ from matplotlib.lines import Line2D
 from giant_impacts_fractional_loss import X_loss
 
 
-gamma_adia = 4/3 # index: adiabatic
-gamma_iso = 5/3 # index: isothermal
+type_adia = "adiabatic" # adiabatic atmosphere
+type_iso = "isothermal" # isothermal atmosphere
 
 
 # values of v_imp/v_esc used in Schlichting:
@@ -21,8 +21,8 @@ plt.figure(figsize=(6,5))
 plt.style.use("tableau-colorblind10")
 
 for v, c in zip(v_V, colors):
-    X_loss_is, m_M_is = X_loss(gamma_iso, v) # Isothermal mass loss
-    X_loss_ad, m_M_ad = X_loss(gamma_adia, v) # Adiabatic mass loss
+    X_loss_is, m_M_is = X_loss(v, atm_type = "isothermal") # Isothermal mass loss
+    X_loss_ad, m_M_ad = X_loss(v, atm_type = "adiabatic") # Adiabatic mass loss
     
     plt.plot(m_M_ad, X_loss_ad, color = c)
     plt.plot(m_M_is, X_loss_is, color = c, linestyle='--')
