@@ -1,4 +1,4 @@
-from figure14 import M_T
+from M_imp_tot_per_rad import M_T_plot
 from planetesimal_and_MLR import r_min, r_cap, r_gi
 import matplotlib.pyplot as plt
 
@@ -16,7 +16,7 @@ rcap = r_cap(rho_atm_Earth, h_Earth, R_Earth, rho_pl=2000)
 rgi = r_gi(h_Earth, R_Earth)
 
 # Plotting for Earth
-r, MT_Mpl = M_T(h_Earth, R_Earth, M_atm_Earth, M_Earth, rho_atm_Earth, rho_pl=2000)
+r, MT_Mpl = M_T_plot(h_Earth, R_Earth, M_atm_Earth, M_Earth, rho_atm_Earth, rho_pl=2000)
 
 plt.figure(figsize=(6,5))
 plt.style.use("tableau-colorblind10")
