@@ -7,12 +7,12 @@ This repository contains the code used in the Bachelor Thesis named 'Impact-driv
 The required versions of packages used are given in requirements.txt.
 
 # PROTEUS_data/
-The folder PROTEUS_data/ contains the model atmospheres simulated by the PROTEUS framework, specifically AGNI. The results are based on these atmospheres.
+The folder PROTEUS_data/ contains the model atmospheres simulated by the PROTEUS framework, specifically AGNI. The results are based on these atmospheres. The model atmospheres are made for planet masses of 1 and 10 M_Earth, 1 and 1000 F_Earth, and H2, H2O, N2, and CO2.
 
 The data is accessed using the file open_PROTEUS_csv.py. This file contains functions using pandas that read the files and add the needed information to a dictionary.
 
 # The Main Physics
-properties.py contains the functions to calculate scale height of the atmosphere, as well as the total atmosphere mass. The total atmosphere mass is used for global mass loss (giant_impacts_fractional_loss.py), by multiplying the fractional loss with the atmosphere mass. The scale height is used for planetesimal mass loss, as it determines radius thresholds for the impactor as well as cap mass (planetesimal_and_MLR.py).
+<b>properties.py</b> contains the functions to calculate scale height of the atmosphere, as well as the total atmosphere mass. The total atmosphere mass is used for global mass loss (giant_impacts_fractional_loss.py), by multiplying the fractional loss with the atmosphere mass. The scale height is used for planetesimal mass loss, as it determines radius thresholds for the impactor as well as cap mass (planetesimal_and_MLR.py).
 
 giant_impacts_fractional_loss.py contains the physics for global mass loss caused by giant impacts. An adiabatic atmosphere is used to model this. The outputs of this code are found in Outputs/Global_mass_loss_data.csv. It contains the mass lost in kg for the radius of the impactor (m), as well as for the ratio m_impactor/M_planet. It also contains atmospheric mass.
 
