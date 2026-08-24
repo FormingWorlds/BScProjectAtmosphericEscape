@@ -30,7 +30,7 @@ The files mentioned above contain the main physics and give the outputs. Running
 Like mentioned above, outputs from the code are given in the folder <b>Outputs/</b>.
 
 # Plotting figures
-The code for plotting figures is given under Plot_code/. The figures themselves can be seen in the notebook <b>figures.ipynb</b>, so there is no need to run the <b>Plot_code/</b>.
+The code for plotting figures is given under <b>Plot_code/</b>. The figures themselves can be seen in the notebook <b>figures.ipynb</b>, so there is no need to run the <b>Plot_code/</b>.
 
 # Validation/
 The folder <b>Validation/</b> contains <b>frac_global_adia_vs_iso.py</b>, a code to plot the difference between isothermal and adiabatic atmospheres. It also contains <b>radius_cutoffs_validation.py</b>. Running this will show the radius thresholds for Earth conditions. They agree with Schlichting et al. (2015). Finally, it has <b>Earth_total_impactor_mass_validation.py</b>, to recreate figure 14 by Schlichting et al. and see how much mass is needed to eject total atmospheres for different radii.
