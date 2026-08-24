@@ -83,4 +83,43 @@ for e in elements:
             bulk_data[e][m][f]["h_avg"] = h_avg
             profiles[e][m][f]["h_eff"] = h_eff
             
+
+# Creating a file for outputs including effective scale height:
+data = []
+
+for e in elements:
+    for m in masses:
+        for f in fluxes:
+            if e == "H2" and m == "1_M" and f == "1000_F":
+                continue
+            
+            atm = profiles[e][m][f]
+            bulk = bulk_data[e][m][f]
+
+            filename = f"{e}_atmosphere_{m}_earth_{f}_earth.csv"
+
+            T_arr = atm["T"]
+            h_arr = atm["h_eff"]
+            z_arr = atm["height"]
+            rho_arr = atm["rho"]
+            mmw_arr = atm["mmw"]
+
+            for T, h, z, rho, mmw in zip(T_arr, h_arr, z_arr, rho_arr, mmw_arr):
+                data.append({
+                    "Filename": filename,
+                    "Element": e,
+                    "Planet mass": m,
+                    "Earth Flux": f,
+                    "Planet radius": bulk["radius"],
+                    "Planet mass [kg]": bulk["mass"]
+                    "Atmospheric mass [kg]": bulk["atm_mass"]
+                    "Height [m]": z,
+                    "Density [kg/m^3]": rho,
+                    "Temperature [K]": T,
+                    "MMW [g/mol]": mmw,
+                    "Effective scale height h [m]": h
+                })
+
+df = pd.DataFrame(data)
+df.to_csv("Outputs/Planetesimal_mass_loss_data.csv", index=False)
                     
