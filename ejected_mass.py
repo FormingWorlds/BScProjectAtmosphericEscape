@@ -2,7 +2,7 @@ import numpy as np
 from properties import scaleheight
 from constants import k, N_A, G, rho_pl
 
-
+# Define the threshold radii:
 
 def r_min(rho, rho_pl, h):
 	"""Minimum radius of planetesimal impacts
@@ -34,18 +34,27 @@ def r_gi(h, R):
 	return r_gi
 
 
+# Calculate the maximum mass that can be ejected by a single planetesimal impactor:
 
-
-def cap_mass(rho_atm, h, R):
-	"""Total cap mass for terrestial planets"""
-	M_cap = 2 * np.pi * rho_atm * (h**2) * R
+def cap_mass(rho, h, R):
+	"""Total cap mass for terrestial planets
+	* rho = atmosphere density at the surface
+	* h = (average) scale height of the atmosphere
+	* R = radius of the planet
+	"""
+	M_cap = 2 * np.pi * rho * (h**2) * R
 	return M_cap
 
 
+# The ejected mass by a single planetesimal impactor:
 
-def ejected_mass_planetesimal(M_atm, h, R, rho, rho_pl):
+def ejected_mass_planetesimal(h, R, rho, rho_pl = 2000):
 	"""Ejected mass by a planetesimal impactor (r < r_gi)
-	Once r > r_cap, the cap mass is
+	Once r > r_cap, the cap mass is the total ejected mass
+	* h = scale height of atmosphere
+	* R = radius of planet
+	* rho = atmosphere density at surface
+	* rho_pl = impactor density; set to 2000 kg/m^3
 	"""
 	r_min_val = r_min(rho, rho_pl, h)
 	r_cap_val = r_cap(rho, rho_pl, h, R)
@@ -74,25 +83,41 @@ def ejected_mass_planetesimal(M_atm, h, R, rho, rho_pl):
 	return M_ejected, r_range
 
 
-def mass_loss_rate(r_range, q, M_atm, M_pl, h, R, rho, rho_pl):
-	"""dM_atm/dt"""
-	# Ejected mass by planetesimal impactors
-	M_eject, r_range = ejected_mass_planetesimal(M_atm, h, R, rho, rho_pl)
-	r_range = np.array(r_range)
+# Calculate the mass loss rate in kg/s
 
-	# mass of the impactor:
+def mass_loss_rate(q, M_pl, h, R, rho, rho_pl = 2000):
+	"""Mass loss rate dM_atm/dt in kg/s
+    * q = differential power law index
+    * M_pl = total impactor mass per unit time
+    * h = scale height
+    * R = radius of planet
+    * rho = atmosphere density at surface
+    * rho_pl = density of impactor; set to 2000 kg/m^3
+    """
+	# Ejected mass by planetesimal impactors
+	M_eject, r_range = ejected_mass_planetesimal(h, R, rho, rho_pl)
+
+	# Mass of the impactor:
 	m_pl = rho_pl * (4/3) * np.pi * (r_range)**3
 
-	mass_ejec = (r)**(-q) * M_eject
-	Mass_I = np.trapz(mass_int, r)
+	mass_int = (r_range)**(-q) * M_eject
+	Mass_I = np.trapz(mass_int, r_range)
 
-	N0_ejec = (r)**(-q) * m_pl
-	N0_I = np.trapz(N0_ejec, r)
+	m_int = (r_range)**(-q) * m_pl
+	m_I = np.trapz(m_int, r_range)
+    
+	ratio = Mass_I / m_I
+	# print("Integral ratio =", ratio)
 
-	# Mass loss rate in kg/s
-	dM_dt = - M_pl * (Mass_I / N0_I)
+	# Mass loss rate in kg/s (without minus sign: positive mass loss)
+	dM_dt = M_pl * (Mass_I / N0_I)
 
 	return dM_dt
+
+
+    
+
+    
 
 
 
