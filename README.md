@@ -21,7 +21,7 @@ planetesimal_and_MLR.py contains a lot of physics. It contains the radius thresh
 
 The mass loss rate (MLR) for a distribution of impactors is also calculated in planetesimal_and_MLR.py. MLR is compared to differential power law index q, and to total impactor mass per unit time M_pl. The outputs for these are given in csv-files, under Outputs/Mass_loss_rate_vs_q.csv and Outputs/Mass_loss_rate_vs_M_pl.csv. These files also contain cap mass and radius thresholds.
 
-Figure14.py recreates figure 14 by Schlichting et al. for the model atmospheres, showing how much impactor mass is needed for different impactor radii to eject the full atmosphere.
+M_imp_tot_per_rad.py gives a function to recreate figure 14 by Schlichting et al., showing how much impactor mass is needed for different impactor radii to eject the full atmosphere. The results for the model atmospheres are given in Plot_code/fig14_models.py.
 
 # Running the Code
 The files mentioned above contain the main physics and give the outputs. Running said files would give the output files. As they are already given, this is no longer necessary to run. However, they can be run by changing the values for inputs, if one wants to research what effect a change in variables can have. The files under Plot_code/ need to be run to produce the plots. These files use the date from Outputs/ and produce figures. The figures are presented in figures.ipynb, so that this is not necessary.
@@ -30,7 +30,7 @@ The files mentioned above contain the main physics and give the outputs. Running
 Like mentioned above, outputs from the code are given in the folder Outputs/.
 
 # Plotting figures
-The code for plotting figures is given under Plot_code/. The figures themselves can be seen in the notebook figures.ipynb.
+The code for plotting figures is given under Plot_code/. The figures themselves can be seen in the notebook figures.ipynb, so there is no need to run the Plot_code/.
 
 # Validation/
 The folder Validation/ contains frac_global_adia_vs_iso.py, a code to plot the difference between isothermal and adiabatic atmospheres. It also contains radius_cutoffs_validation.py. Running this will show the radius thresholds for Earth conditions. They agree with Schlichting et al. (2015). Finally, it has Earth_total_impactor_mass_validation.py, to recreate figure 14 by Schlichting et al. and see how much mass is needed to eject total atmospheres for different radii.
