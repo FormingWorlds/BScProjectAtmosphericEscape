@@ -17,7 +17,7 @@ The data is accessed using the file <b>open_PROTEUS_csv.py</b>. This file contai
 <b>giant_impacts_fractional_loss.py</b> contains the physics for global mass loss caused by giant impacts. An adiabatic atmosphere is used to model this. The outputs of this code are found in <b>Outputs/Global_mass_loss_data.csv</b>. It contains the mass lost in kg for the radius of the impactor (m), as well as for the ratio m_impactor/M_planet. It also contains atmospheric mass.
 
 
-<b>planetesimal_and_MLR.py</b> contains a lot of physics. It contains the radius thresholds: r_min, r_cap, r_gi. These functions are used to determine the needed size of the impactor. r_min is the minimum size an impactor needs to be to eject mass, r_gi is the size where global mass loss can happen, and r_cap is the radius at which the total cap mass is lost. The cap mass function is also given in this file, as well as the ejected mass for a single planetesimal. The ejected mass by one planetesimal impactor is given as output in <b>Outputs/Planetesimal_mass_loss_data.csv</b>, together with effective scale height, radius thresholds, cap mass, and atmospheric mass.
+<b>planetesimal_and_MLR.py</b> contains a lot of physics. It contains the radius thresholds: r_min, r_cap, r_gi. These functions are used to determine the needed size of the impactor. r_min is the minimum size an impactor needs to be to eject mass, r_gi is the size where global mass loss can happen, and r_cap is the radius at which the total cap mass is lost. The cap mass function is also given in this file, as well as the ejected mass for a single planetesimal. The ejected mass by one planetesimal impactor is given as output in <b>Outputs/Planetesimal_mass_loss_data.csv</b>, together with radius thresholds, cap mass, and atmospheric mass.
 
 The mass loss rate (MLR) for a distribution of impactors is also calculated in <b>planetesimal_and_MLR.py</b>. MLR is compared to differential power law index q, and to total impactor mass per unit time M_pl. The outputs for these are given in csv-files, under Outputs/Mass_loss_rate_vs_q.csv and <b>Outputs/Mass_loss_rate_vs_M_pl.csv</b>. These files also contain cap mass and radius thresholds.
 
@@ -28,6 +28,7 @@ The files mentioned above contain the main physics and give the outputs. Running
 
 # Outputs/
 Like mentioned above, outputs from the code are given in the folder <b>Outputs/</b>.
+<b>Outputs/Atmospheric_profiles</b> includes the given PROTEUS profiles, along with planet and atmosphere mass, as well as effective scale height h_eff.
 
 # Plotting figures
 The code for plotting figures is given under <b>Plot_code/</b>. The figures themselves can be seen in the notebook <b>figures.ipynb</b>, so there is no need to run the <b>Plot_code/</b>.
