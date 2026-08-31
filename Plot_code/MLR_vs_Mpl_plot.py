@@ -45,7 +45,7 @@ for element in ["H2", "H2O", "N2", "CO2"]:
 
 ax1.set_xscale("log")
 ax1.set_yscale("log")
-ax1.set_xlabel(r"Total impactor mass $M_{pl}$ [kg/s]")
+ax1.set_xlabel(r"Total impactor mass $\dot{M}_{imp}$ [kg/s]")
 ax1.set_ylabel(r"|$dM_{atm}/dt$| [kg/s]")
 ax1.set_title("1 M$_{Earth}$")
 ax1.grid(alpha=0.3)
@@ -71,7 +71,7 @@ for element in ["H2", "H2O", "N2", "CO2"]:
 
 ax2.set_xscale("log")
 ax2.set_yscale("log")
-ax2.set_xlabel(r"Total impactor mass $M_{pl}$ [kg/s]")
+ax2.set_xlabel(r"Total impactor mass $\dot{M}_{imp}$ [kg/s]")
 ax2.set_title("10 M$_{Earth}$")
 ax2.grid(alpha=0.3)
 

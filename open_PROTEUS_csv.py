@@ -111,8 +111,8 @@ for e in elements:
                     "Planet mass": m,
                     "Earth Flux": f,
                     "Planet radius": bulk["radius"],
-                    "Planet mass [kg]": bulk["mass"]
-                    "Atmospheric mass [kg]": bulk["atm_mass"]
+                    "Planet mass [kg]": bulk["mass"],
+                    "Atmospheric mass [kg]": bulk["atm_mass"],
                     "Height [m]": z,
                     "Density [kg/m^3]": rho,
                     "Temperature [K]": T,

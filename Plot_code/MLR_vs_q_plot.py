@@ -95,7 +95,7 @@ fig.legend(
     title="Legend"
 )
 
-fig.suptitle(r"Mass loss rate vs differential power law index q for $M_{pl}=10^7\ \mathrm{kg/s}$")
+fig.suptitle(r"Mass loss rate vs differential power law index q for $\dot{M}_{imp}=10^7\ \mathrm{kg/s}$")
 plt.tight_layout()
 plt.savefig('MLR_vs_q.png', dpi=450, bbox_inches="tight")
 plt.show()
